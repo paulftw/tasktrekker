@@ -1,0 +1,37 @@
+{
+  "name": "task-trekker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "relay-compiler && next build",
+    "start": "next start",
+    "lint": "eslint",
+    "relay": "relay-compiler",
+    "relay:watch": "relay-compiler --watch",
+    "fetch-schema": "node scripts/fetch-schema.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.103.2",
+    "next": "16.2.4",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-relay": "^20.1.1",
+    "relay-runtime": "^20.1.1",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/react-relay": "^18.2.1",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.4",
+    "graphql": "^16.13.2",
+    "relay-compiler": "^20.1.1",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

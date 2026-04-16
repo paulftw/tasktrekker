@@ -1,0 +1,22 @@
+{
+  "src": "./src",
+  "schema": "./schema.graphql",
+  "language": "typescript",
+  "artifactDirectory": "./src/__generated__",
+  "eagerEsModules": true,
+  "schemaConfig": {
+    "nodeInterfaceIdField": "nodeId",
+    "nodeInterfaceIdVariableName": "nodeId"
+  },
+  "customScalarTypes": {
+    "UUID": "string",
+    "Datetime": "string",
+    "Cursor": "string",
+    "BigInt": "string",
+    "BigFloat": "string",
+    "JSON": "string",
+    "Opaque": "string",
+    "Date": "string",
+    "Time": "string"
+  }
+}
