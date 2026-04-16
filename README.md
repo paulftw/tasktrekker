@@ -10,15 +10,34 @@ cd TaskTrekker
 npm install
 ```
 
-### Supabase
+### Quick start (demo environment)
+
+The repo ships with `.env.example` pointing at a disposable Supabase project pre-loaded with test data. To get running immediately:
+
+```bash
+cp .env.example .env.local
+npm run dev
+```
+
+> **Note:** The demo credentials are publishable (anon) keys with non-sensitive test data only. They are checked in intentionally for reviewer convenience. Do not reuse this infrastructure for anything beyond evaluation.
+
+### Self-hosted setup
+
+To run against your own Supabase project:
 
 1. Create a project at [supabase.com](https://supabase.com) (free tier)
 2. Enable the `pg_graphql` extension: Dashboard > Database > Extensions
 3. Run the schema migration: paste `supabase/schema.sql` into SQL Editor and run
-4. Seed test data:
+4. Create `.env.local` with your project's credentials:
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=https://<your-project>.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-anon-key>
+   ```
+5. Seed test data and pull the schema:
    ```bash
-   cp .env.example .env.local
-   node supabase/seed.js
+   node supabase/seed.js         # safe to re-run, truncates first
+   npm run fetch-schema          # introspect GraphQL schema from your instance
+   npm run relay                 # compile Relay artifacts
    ```
 
 > **RLS Note:** Row Level Security is disabled during development for convenience. In production, enable RLS on all tables and configure proper policies scoped to `auth.uid()`. Never ship with RLS disabled.
@@ -26,9 +45,7 @@ npm install
 ### Run
 
 ```bash
-npm run fetch-schema   # pull latest GraphQL schema from Supabase
-npm run relay          # compile Relay artifacts
-npm run dev            # start Next.js dev server
+npm run dev
 ```
 
 ## Relay + pg_graphql
@@ -109,8 +126,23 @@ This replaces `babel-plugin-relay` entirely.
 
 ## TODO
 
-- [ ] Set up semantic Tailwind design tokens (`bg-surface`, `text-muted`, etc.) so light/dark mode is handled by the theme, not manual `dark:` variants on every element
-- [ ] Replace proof-of-concept issue list with real components (filters, pagination, detail view)
+### Must have
+- [x] Tailwind design tokens — set up before heavy UI work to avoid restyle pass
+- [ ] Issue detail page with co-located Relay fragments — unlocks edit + comments
+- [ ] Edit issue: status, priority, title, description, assignee, labels — mutation infrastructure
+- [ ] Optimistic update on status change — layers on edit mutations, spec highlight
+- [ ] Create issue — reuses mutation patterns from edit
+- [ ] Comment thread with cursor-based pagination + add comment — detail page section
+- [ ] Issue list filters: status, priority, labels (multi-select) — independent of detail work
+- [ ] Issue list cursor-based pagination — independent of detail work
+- [ ] Real-time: Supabase Realtime on issue list → Relay store — needs solid list first
+
+### Should have
+- [ ] Auth: Supabase Auth with OAuth, RLS policies
+- [ ] Deploy to Vercel
+
+### Extra touch
+- [ ] Read/unread comment count on issue list items
 
 ## Trade-offs
 
@@ -128,6 +160,7 @@ This replaces `babel-plugin-relay` entirely.
 - Relay environment with Supabase GraphQL network layer
 - Basic issue list rendering (proof of concept -- data flows end-to-end)
 - Supabase Realtime enabled on issues table
+- Semantic Tailwind design tokens: light/dark via CSS variables, status/priority color system
 
 ### Pending
 - Issue list: filters (status, priority, labels), cursor-based pagination

@@ -24,6 +24,14 @@ async function seed() {
   console.log("🌱 Seeding TaskTrekker database...");
 
   try {
+    // Truncate in dependency order so re-runs are safe
+    for (const table of ["issue_labels", "comments", "issues", "labels", "users"]) {
+      const col = table === "issue_labels" ? "issue_id" : "id";
+      const { error } = await supabase.from(table).delete().gte(col, "00000000-0000-0000-0000-000000000000");
+      if (error) throw new Error(`Failed to clear ${table}: ${error.message}`);
+    }
+    console.log("✓ Cleared existing data");
+
     // Create users
     const { data: users, error: usersError } = await supabase
       .from("users")

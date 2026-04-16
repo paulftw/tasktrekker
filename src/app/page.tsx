@@ -3,6 +3,8 @@
 import { Suspense } from "react";
 import { graphql, useLazyLoadQuery } from "react-relay";
 import { ErrorBoundary } from "@/lib/ErrorBoundary";
+import { StatusIcon } from "@/components/StatusIcon";
+import { PriorityIcon } from "@/components/PriorityIcon";
 import type { pageIssuesQuery } from "@/__generated__/pageIssuesQuery.graphql";
 
 const IssuesQuery = graphql`
@@ -29,20 +31,16 @@ function IssueList() {
     <div className="w-full max-w-3xl mx-auto p-8">
       <h1 className="text-2xl font-semibold mb-6">Issues</h1>
       {edges.length === 0 ? (
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">No issues yet.</p>
+        <p className="text-sm text-text-muted">No issues yet.</p>
       ) : (
-      <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg divide-y divide-zinc-200 dark:divide-zinc-800">
+      <div className="border border-border rounded-lg divide-y divide-border">
         {edges.map(({ node }) => (
-          <div key={node.nodeId} className="flex items-center gap-4 px-4 py-3">
-            <span className="text-xs font-medium uppercase px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">
-              {node.status.replaceAll("_", " ")}
-            </span>
-            <span className="text-xs font-medium uppercase px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400">
-              {node.priority}
-            </span>
-            <span className="flex-1 text-sm font-medium text-zinc-900 dark:text-zinc-100">
+          <div key={node.nodeId} className="flex items-center gap-3 px-4 py-3 hover:bg-bg-hover transition-colors">
+            <StatusIcon status={node.status} />
+            <span className="flex-1 text-sm font-medium text-text">
               {node.title}
             </span>
+            <PriorityIcon priority={node.priority} />
           </div>
         ))}
       </div>
@@ -56,7 +54,7 @@ export default function Home() {
     <ErrorBoundary>
       <Suspense
         fallback={
-          <div className="flex items-center justify-center min-h-screen text-zinc-400">
+          <div className="flex items-center justify-center min-h-screen text-text-muted">
             Loading...
           </div>
         }
