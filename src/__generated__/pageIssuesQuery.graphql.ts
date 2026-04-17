@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ac533c632a0672eda3ee864030297bab>>
+ * @generated SignedSource<<8b51ec2e4f7279a2496e455bfa5b1092>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,6 +19,7 @@ export type pageIssuesQuery$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly nodeId: string;
+        readonly number: number;
         readonly priority: issue_priority;
         readonly status: issue_status;
         readonly title: string;
@@ -90,6 +91,13 @@ v1 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
+                "name": "number",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
                 "name": "title",
                 "storageKey": null
               },
@@ -135,16 +143,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "aa332442408c915dc477d28bd91666ba",
+    "cacheID": "03d50060537b961da294a9985f885378",
     "id": null,
     "metadata": {},
     "name": "pageIssuesQuery",
     "operationKind": "query",
-    "text": "query pageIssuesQuery(\n  $first: Int!\n) {\n  issuesCollection(first: $first, orderBy: [{created_at: DescNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        title\n        status\n        priority\n      }\n    }\n  }\n}\n"
+    "text": "query pageIssuesQuery(\n  $first: Int!\n) {\n  issuesCollection(first: $first, orderBy: [{created_at: DescNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        title\n        status\n        priority\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "40f6ef2c24dd8e88528a1800cf46f278";
+(node as any).hash = "403b4bb4ffce99047adbcee0b6222bb5";
 
 export default node;

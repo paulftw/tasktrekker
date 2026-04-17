@@ -24,10 +24,11 @@ async function seed() {
   console.log("🌱 Seeding TaskTrekker database...");
 
   try {
-    // Truncate in dependency order so re-runs are safe
+    // Truncate in dependency order so re-runs are safe.
+    // Use `not is null` as a universal match so it works for both integer and uuid PKs.
     for (const table of ["issue_labels", "comments", "issues", "labels", "users"]) {
-      const col = table === "issue_labels" ? "issue_id" : "id";
-      const { error } = await supabase.from(table).delete().gte(col, "00000000-0000-0000-0000-000000000000");
+      const col = table === "issue_labels" || table === "comments" ? "issue_id" : "id";
+      const { error } = await supabase.from(table).delete().not(col, "is", null);
       if (error) throw new Error(`Failed to clear ${table}: ${error.message}`);
     }
     console.log("✓ Cleared existing data");
@@ -49,10 +50,10 @@ async function seed() {
     const { data: labels, error: labelsError } = await supabase
       .from("labels")
       .insert([
-        { name: "bug", color: "#ff6b6b" },
-        { name: "feature", color: "#4ecdc4" },
-        { name: "docs", color: "#95e1d3" },
-        { name: "urgent", color: "#f38181" },
+        { name: "bug", color: "ff6b6b" },
+        { name: "feature", color: "4ecdc4" },
+        { name: "docs", color: "95e1d3" },
+        { name: "urgent", color: "f38181" },
       ])
       .select();
 

@@ -2,6 +2,7 @@
 
 import { Suspense } from "react";
 import { graphql, useLazyLoadQuery } from "react-relay";
+import Link from "next/link";
 import { ErrorBoundary } from "@/lib/ErrorBoundary";
 import { StatusIcon } from "@/components/StatusIcon";
 import { PriorityIcon } from "@/components/PriorityIcon";
@@ -13,6 +14,7 @@ const IssuesQuery = graphql`
       edges {
         node {
           nodeId
+          number
           title
           status
           priority
@@ -35,13 +37,20 @@ function IssueList() {
       ) : (
       <div className="border border-border rounded-lg divide-y divide-border">
         {edges.map(({ node }) => (
-          <div key={node.nodeId} className="flex items-center gap-3 px-4 py-3 hover:bg-bg-hover transition-colors">
+          <Link
+            key={node.nodeId}
+            href={`/issues/${node.number}`}
+            className="flex items-center gap-3 px-4 py-3 hover:bg-bg-hover transition-colors"
+          >
             <StatusIcon status={node.status} />
+            <span className="text-sm text-text-muted tabular-nums w-8">
+              {node.number}
+            </span>
             <span className="flex-1 text-sm font-medium text-text">
               {node.title}
             </span>
             <PriorityIcon priority={node.priority} />
-          </div>
+          </Link>
         ))}
       </div>
       )}

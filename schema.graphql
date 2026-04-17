@@ -614,8 +614,8 @@ input UUIDListFilter {
 type comments implements Node {
   """Globally Unique Record Identifier"""
   nodeId: ID!
-  id: UUID!
-  issue_id: UUID!
+  issue_id: Int!
+  number: Int!
   body: String!
   author_id: UUID!
   created_at: Datetime!
@@ -642,8 +642,8 @@ type commentsEdge {
 }
 
 input commentsFilter {
-  id: UUIDFilter
-  issue_id: UUIDFilter
+  issue_id: IntFilter
+  number: IntFilter
   body: StringFilter
   author_id: UUIDFilter
   created_at: DatetimeFilter
@@ -664,8 +664,8 @@ input commentsFilter {
 }
 
 input commentsInsertInput {
-  id: UUID
-  issue_id: UUID
+  issue_id: Int
+  number: Int
   body: String
   author_id: UUID
   created_at: Datetime
@@ -680,16 +680,16 @@ type commentsInsertResponse {
 }
 
 input commentsOrderBy {
-  id: OrderByDirection
   issue_id: OrderByDirection
+  number: OrderByDirection
   body: OrderByDirection
   author_id: OrderByDirection
   created_at: OrderByDirection
 }
 
 input commentsUpdateInput {
-  id: UUID
-  issue_id: UUID
+  issue_id: Int
+  number: Int
   body: String
   author_id: UUID
   created_at: Datetime
@@ -706,8 +706,8 @@ type commentsUpdateResponse {
 type issue_labels implements Node {
   """Globally Unique Record Identifier"""
   nodeId: ID!
-  issue_id: UUID!
-  label_id: UUID!
+  issue_id: Int!
+  label_id: Int!
   issues: issues!
   labels: labels!
 }
@@ -731,8 +731,8 @@ type issue_labelsEdge {
 }
 
 input issue_labelsFilter {
-  issue_id: UUIDFilter
-  label_id: UUIDFilter
+  issue_id: IntFilter
+  label_id: IntFilter
   nodeId: IDFilter
 
   """
@@ -750,8 +750,8 @@ input issue_labelsFilter {
 }
 
 input issue_labelsInsertInput {
-  issue_id: UUID
-  label_id: UUID
+  issue_id: Int
+  label_id: Int
 }
 
 type issue_labelsInsertResponse {
@@ -768,8 +768,8 @@ input issue_labelsOrderBy {
 }
 
 input issue_labelsUpdateInput {
-  issue_id: UUID
-  label_id: UUID
+  issue_id: Int
+  label_id: Int
 }
 
 type issue_labelsUpdateResponse {
@@ -819,9 +819,9 @@ input issue_statusFilter {
 type issues implements Node {
   """Globally Unique Record Identifier"""
   nodeId: ID!
-  id: UUID!
+  number: Int!
   title: String!
-  description: String
+  description: String!
   status: issue_status!
   priority: issue_priority!
   assignee_id: UUID
@@ -896,7 +896,7 @@ type issuesEdge {
 }
 
 input issuesFilter {
-  id: UUIDFilter
+  number: IntFilter
   title: StringFilter
   description: StringFilter
   status: issue_statusFilter
@@ -920,7 +920,6 @@ input issuesFilter {
 }
 
 input issuesInsertInput {
-  id: UUID
   title: String
   description: String
   status: issue_status
@@ -938,7 +937,7 @@ type issuesInsertResponse {
 }
 
 input issuesOrderBy {
-  id: OrderByDirection
+  number: OrderByDirection
   title: OrderByDirection
   description: OrderByDirection
   status: OrderByDirection
@@ -948,7 +947,6 @@ input issuesOrderBy {
 }
 
 input issuesUpdateInput {
-  id: UUID
   title: String
   description: String
   status: issue_status
@@ -968,7 +966,7 @@ type issuesUpdateResponse {
 type labels implements Node {
   """Globally Unique Record Identifier"""
   nodeId: ID!
-  id: UUID!
+  number: Int!
   name: String!
   color: String!
   issue_labelsCollection(
@@ -1016,7 +1014,7 @@ type labelsEdge {
 }
 
 input labelsFilter {
-  id: UUIDFilter
+  number: IntFilter
   name: StringFilter
   color: StringFilter
   nodeId: IDFilter
@@ -1036,7 +1034,6 @@ input labelsFilter {
 }
 
 input labelsInsertInput {
-  id: UUID
   name: String
   color: String
 }
@@ -1050,13 +1047,12 @@ type labelsInsertResponse {
 }
 
 input labelsOrderBy {
-  id: OrderByDirection
+  number: OrderByDirection
   name: OrderByDirection
   color: OrderByDirection
 }
 
 input labelsUpdateInput {
-  id: UUID
   name: String
   color: String
 }

@@ -124,6 +124,24 @@ This replaces `babel-plugin-relay` entirely.
 - **Generated files are committed.** Both `schema.graphql` and `src/__generated__/` are checked in. This means `npm run build` works without network access to Supabase and without running the Relay compiler first. Reviewers can also inspect the generated queries and types directly in the PR. The tradeoff is merge noise on schema changes, which is acceptable at this scale.
 - **No schema patching.** The `fetch-schema.js` script outputs the pg_graphql schema verbatim. All Relay compatibility is handled through compiler config, not by rewriting the schema. This means the schema file always matches what the server actually serves.
 
+### Deviations from the spec schema
+
+The spec defines `id uuid PK` on every table and explicitly allows type adjustments. I changed three PKs and kept two. Each deviation is documented below because the spec explicitly asks for architecture reasoning.
+
+The short-ID work (`/issues/3`, `#comment-3`) is inspired by GitHub and justified because issues and comments are the centerpiece of the tracker — they deserve the extra attention. In a real project I'd confirm with PM/UX whether the effort is worth the gain.
+
+- **`issues.id`: uuid → `integer generated always as identity`.** Sequential integer IDs give clean URLs (`/issues/3` vs `/issues/4dc7b80b-be1c-4260-a2f0-ee79e6a7a97f`) and recognizable identifiers in the UI. Every real issue tracker does this. Guessable IDs aren't a risk here since there's no auth or multi-tenancy. Considered `bigint` for overflow safety, but pg_graphql maps `bigint` to a GraphQL string scalar (JS `number` can't safely hold values beyond 2^53); `integer` keeps the native `Int` type and 2B issues is more than enough for a simple tracker.
+- **`comments`: compound PK `(issue_id, number)`, `number` assigned by a `BEFORE INSERT` trigger.** Per-issue sequential numbering enables deep links like `/issues/13#comment-3` rather than `#comment-47`. The trigger locks the parent issue row (`FOR UPDATE`), so concurrent inserts on the same issue serialize atomically with no client-side race risk. Concurrent inserts on different issues don't block each other. Global comment IDs would also have worked; the compound PK is the more natural representation given the "comment N on issue X" identity.
+- **`labels.id`: uuid → `integer generated always as identity`.** Consistency with issues, and anticipating a future label detail/filter page (`/labels/3`). Not in the spec but a natural extension.
+- **`users.id`: kept as uuid.** Intentional, with Supabase Auth in mind as a future should-have. `auth.users.id` is UUID, so `public.users.id = auth.users.id` can be bridged by an `AFTER INSERT` trigger on `auth.users` with no type coercion.
+- **`author_id`, `assignee_id`: kept as uuid.** They reference `users.id`, so the type follows naturally.
+- **Renamed `id` to `number` in the GraphQL schema for `issues` and `labels`.** Relay's runtime normalizer requires fields named `id` to be strings on Node types. Integer PKs break that check. Fix: pg_graphql column directive renames the field in GraphQL only; SQL column stays `id`. Options considered: per-query alias, SQL column rename, pg_graphql directive, revert to UUID.
+
+  ```sql
+  comment on column issues.id is e'@graphql({"name": "number"})';
+  comment on column labels.id is e'@graphql({"name": "number"})';
+  ```
+
 ## TODO
 
 ### Must have
