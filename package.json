@@ -25,6 +25,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "@swc/plugin-relay": "^12.8.0",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
@@ -46,5 +47,6 @@
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^4.1.4"
-  }
+  },
+  "packageManager": "yarn@4.14.1"
 }

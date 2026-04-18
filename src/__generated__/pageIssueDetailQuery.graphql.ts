@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<12a2520deb4b0c1d28326d331a0f9a0f>>
+ * @generated SignedSource<<53f3d65adb8ecfb139229a92a9b53440>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -377,12 +377,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "3963c3a41f10fa2ca35612e6a50e6bd1",
+    "cacheID": "3f3274fed1a3944b1b438f3e2abe3bc9",
     "id": null,
     "metadata": {},
     "name": "pageIssueDetailQuery",
     "operationKind": "query",
-    "text": "query pageIssueDetailQuery(\n  $number: Int!\n) {\n  issuesCollection(filter: {number: {eq: $number}}, first: 1) {\n    edges {\n      node {\n        nodeId\n        ...IssueHeader_issue\n        ...IssueDescription_issue\n        ...IssueSidebar_issue\n        ...IssueComments_issue\n      }\n    }\n  }\n}\n\nfragment IssueComments_issue on issues {\n  commentsCollection(first: 50, orderBy: [{number: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        body\n        created_at\n        author: users {\n          name\n          nodeId\n        }\n      }\n    }\n  }\n}\n\nfragment IssueDescription_issue on issues {\n  description\n}\n\nfragment IssueHeader_issue on issues {\n  nodeId\n  number\n  title\n  status\n  priority\n  created_at\n}\n\nfragment IssueSidebar_issue on issues {\n  assignee: users {\n    name\n    avatar_url\n    nodeId\n  }\n  issue_labelsCollection(first: 20) {\n    edges {\n      node {\n        labels {\n          nodeId\n          name\n          color\n        }\n        nodeId\n      }\n    }\n  }\n}\n"
+    "text": "query pageIssueDetailQuery(\n  $number: Int!\n) {\n  issuesCollection(filter: {number: {eq: $number}}, first: 1) {\n    edges {\n      node {\n        nodeId\n        ...IssueHeader_issue\n        ...IssueDescription_issue\n        ...IssueSidebar_issue\n        ...IssueComments_issue\n      }\n    }\n  }\n}\n\nfragment IssueComments_issue on issues {\n  commentsCollection(first: 50, orderBy: [{number: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        body\n        created_at\n        author: users {\n          name\n          nodeId\n        }\n      }\n    }\n  }\n}\n\nfragment IssueDescription_issue on issues {\n  nodeId\n  number\n  description\n}\n\nfragment IssueHeader_issue on issues {\n  nodeId\n  number\n  title\n  status\n  priority\n  created_at\n}\n\nfragment IssueSidebar_issue on issues {\n  assignee: users {\n    name\n    avatar_url\n    nodeId\n  }\n  issue_labelsCollection(first: 20) {\n    edges {\n      node {\n        labels {\n          nodeId\n          name\n          color\n        }\n        nodeId\n      }\n    }\n  }\n}\n"
   }
 };
 })();

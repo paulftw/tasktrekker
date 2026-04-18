@@ -152,14 +152,15 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 - Semantic Tailwind tokens: light/dark via CSS variables, status/priority color system.
 - Issue list rendering (data flows end-to-end).
 - Issue detail page at `/issues/[number]` with co-located Relay fragments.
+- Inline title and description editors with Zod validation mirroring DB constraints.
 - Status mutation with optimistic update. Relay auto-rolls back on server error.
 - Supabase Realtime enabled on issues table.
 - Test suite, component layer: Vitest + Testing Library + `relay-test-utils`, SWC transform (same as production, no babel fork). StatusPicker commit contract + `getDataID` normalization regression pin (README Problem 5).
 - Test suite, integration layer: hits demo Supabase directly. Comment-numbering trigger assigns 1..N per issue; StatusPickerUpdateMutation round-trips through pg_graphql; `labels.color` check rejects non-hex. Leaves rows behind — demo DB, no cleanup. Not property-based: we're demonstrating it works, not stress-testing concurrency. Runs via `npm test`.
+- Test suite, E2E layer: one Playwright golden path. List → click issue → change status via picker → assert the button's `aria-label` reflects the new status. Proves the full wiring (Relay fetch, route params, mutation commit, optimistic update, store re-read via `getDataID`). Runs via `npx playwright test`; dev server auto-spawns. Unit layer skipped — no pure business logic to pin.
 
 ### Pending
-- Test suite, E2E layer. One Playwright golden path: list → detail → status change. Unit layer skipped — no pure business logic to pin.
-- Mutations: edit title, description, priority, assignee, labels.
+- Mutations: edit priority, assignee, labels.
 - Error toast on mutation failure.
 - Real-time: Supabase Realtime subscriptions bridged into the Relay store.
 - Issue list filters: status, priority, labels (multi-select).

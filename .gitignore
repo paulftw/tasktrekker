@@ -22,6 +22,11 @@ next-env.d.ts
 # LLM wiki
 wiki/
 
+# Playwright
+playwright-report/
+test-results/
+/playwright/.cache/
+
 # Claude Code
 .claude/
 CLAUDE.md

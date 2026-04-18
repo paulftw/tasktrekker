@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { StatusPicker } from "./StatusPicker";
 import { PriorityIcon } from "./PriorityIcon";
+import { TitleEditor } from "./TitleEditor";
 import type { IssueHeader_issue$key } from "@/__generated__/IssueHeader_issue.graphql";
 
 const fragment = graphql`
@@ -46,11 +47,17 @@ export function IssueHeader({ issue }: { issue: IssueHeader_issue$key }) {
           className="mt-1"
         />
         <div className="flex-1 min-w-0">
-          <h1 className="text-xl font-semibold text-text">
-            <span className="text-text-muted tabular-nums mr-2">
+          <h1 className="text-xl font-semibold text-text flex items-start gap-2">
+            <span className="text-text-muted tabular-nums pt-0.5">
               #{data.number}
             </span>
-            {data.title}
+            <span className="flex-1 min-w-0">
+              <TitleEditor
+                nodeId={data.nodeId}
+                number={data.number}
+                title={data.title}
+              />
+            </span>
           </h1>
           <p className="text-sm text-text-muted mt-1">
             Created {DATE_FORMAT.format(new Date(data.created_at))}
