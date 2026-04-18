@@ -154,8 +154,10 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 - Issue detail page at `/issues/[number]` with co-located Relay fragments.
 - Status mutation with optimistic update. Relay auto-rolls back on server error.
 - Supabase Realtime enabled on issues table.
+- Test suite, component layer: Vitest + Testing Library + `relay-test-utils`, SWC transform (same as production, no babel fork). StatusPicker commit contract + `getDataID` normalization regression pin (README Problem 5). `npm test`.
 
 ### Pending
+- Test suite, remaining layers. Integration: property-based (`fast-check`) comment-numbering trigger, status-mutation round-trip, hex-color trigger against a test Supabase schema. E2E: one Playwright golden path. Unit layer likely skipped — no pure business logic to pin.
 - Mutations: edit title, description, priority, assignee, labels.
 - Error toast on mutation failure.
 - Real-time: Supabase Realtime subscriptions bridged into the Relay store.
