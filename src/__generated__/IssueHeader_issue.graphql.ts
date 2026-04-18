@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<119aa67b9514a2133c041ab4a9f8157e>>
+ * @generated SignedSource<<e538b52681d7e486f64ee85492055804>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type issue_status = "backlog" | "cancelled" | "done" | "in_progress" | "t
 import { FragmentRefs } from "relay-runtime";
 export type IssueHeader_issue$data = {
   readonly created_at: string;
+  readonly nodeId: string;
   readonly number: number;
   readonly priority: issue_priority;
   readonly status: issue_status;
@@ -31,6 +32,13 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "IssueHeader_issue",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "nodeId",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -71,6 +79,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "fb4f9d5fdf0d16f70f05920805fbe679";
+(node as any).hash = "b4767d593535b6968600a48ff13628a8";
 
 export default node;

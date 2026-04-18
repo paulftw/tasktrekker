@@ -48,13 +48,13 @@ npm run dev
 
 ## Relay + pg_graphql
 
-pg_graphql auto-generates a GraphQL schema from Postgres tables, but its conventions don't align with Relay's compiler expectations out of the box. Here's what I hit and how I solved each.
+pg_graphql auto-generates a GraphQL schema from Postgres tables, but it does not follow Relay conventions.
 
 ### Problem 1: Node interface uses `nodeId`, not `id`
 
-Relay's compiler expects the `Node` interface to have `id: ID!`. pg_graphql uses `nodeId: ID!` as the global identifier (base64-encoded composite of table + PK) and keeps `id` as the raw database value.
+Relay expects the `Node` interface to have `id: ID!`. pg_graphql uses `nodeId: ID!` as the global identifier (encoded table name + PK).
 
-Fix: Relay compiler v13+ supports `schemaConfig.nodeInterfaceIdField` in `relay.config.json`:
+Fix: Tell Relay to use `nodeId` instead. File `relay.config.json`:
 
 ```json
 {
@@ -99,6 +99,22 @@ compiler: {
 }
 ```
 
+### Problem 5: Runtime store keys records by path, not `nodeId`
+
+Problem 1's `nodeInterfaceIdField` tells the compiler what to emit for `node(...)` lookups but does not tell the runtime normalizer how to extract an identifier from a record during store writes. Symptom: mutations succeed server-side, but the UI doesn't update until a full reload.
+
+Fix: supply `getDataID` to the Environment so any record with a `nodeId` field is keyed by its value:
+
+```ts
+new Environment({
+  ...
+  getDataID: (record) => {
+    const nodeId = record.nodeId;
+    return typeof nodeId === "string" ? nodeId : undefined;
+  },
+});
+```
+
 ## Architecture Decisions
 
 - **Enums over text columns.** Status and priority are Postgres enums. pg_graphql turns them into GraphQL enums, giving type safety from DB to UI with no mapping layer.
@@ -136,15 +152,16 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 - Semantic Tailwind tokens: light/dark via CSS variables, status/priority color system.
 - Issue list rendering (data flows end-to-end).
 - Issue detail page at `/issues/[number]` with co-located Relay fragments.
+- Status mutation with optimistic update. Relay auto-rolls back on server error.
 - Supabase Realtime enabled on issues table.
 
 ### Pending
+- Mutations: edit title, description, priority, assignee, labels.
+- Error toast on mutation failure.
+- Real-time: Supabase Realtime subscriptions bridged into the Relay store.
 - Issue list filters: status, priority, labels (multi-select).
 - Issue list cursor-based pagination.
-- Mutations: edit title, description, status, priority, assignee, labels.
-- Optimistic update on status change with rollback + toast.
 - Comment thread cursor-based pagination and add-comment.
-- Real-time: Supabase Realtime subscriptions bridged into the Relay store.
 
 ### Punted (would do with more time)
 - Auth: Supabase Auth with OAuth, RLS policies.
@@ -154,4 +171,4 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 
 ## Tools
 
-Built with [Claude Code](https://claude.ai/code) as a development partner. Used for architectural brainstorming, researching the Relay/pg_graphql integration surface, and accelerating boilerplate. All design decisions and code are my own.
+Built with Claude Code as a development partner. Used for accelerating boilerplate, researching the Relay/pg_graphql integration, brainstorming.

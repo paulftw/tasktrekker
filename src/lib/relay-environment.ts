@@ -38,5 +38,9 @@ export function createRelayEnvironment() {
   return new Environment({
     network: Network.create(fetchFn),
     store: new Store(new RecordSource(), { gcReleaseBufferSize: 10 }),
+    getDataID: (record) => {
+      const nodeId = record.nodeId;
+      return typeof nodeId === "string" ? nodeId : undefined;
+    },
   });
 }
