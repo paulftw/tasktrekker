@@ -1,10 +1,14 @@
 "use client";
 
 import { graphql, useFragment } from "react-relay";
+import { PriorityPicker } from "./PriorityPicker";
 import type { IssueSidebar_issue$key } from "@/__generated__/IssueSidebar_issue.graphql";
 
 const fragment = graphql`
   fragment IssueSidebar_issue on issues {
+    nodeId
+    number
+    priority
     assignee: users {
       name
       avatar_url
@@ -33,6 +37,16 @@ export function IssueSidebar({ issue }: { issue: IssueSidebar_issue$key }) {
 
   return (
     <div className="space-y-6">
+      <div>
+        <h3 className="text-xs font-medium text-text-muted uppercase tracking-wide mb-2">
+          Priority
+        </h3>
+        <PriorityPicker
+          nodeId={data.nodeId}
+          number={data.number}
+          priority={data.priority}
+        />
+      </div>
       <div>
         <h3 className="text-xs font-medium text-text-muted uppercase tracking-wide mb-2">
           Assignee

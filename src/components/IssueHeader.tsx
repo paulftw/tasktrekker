@@ -4,7 +4,6 @@ import { graphql, useFragment } from "react-relay";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { StatusPicker } from "./StatusPicker";
-import { PriorityIcon } from "./PriorityIcon";
 import { TitleEditor } from "./TitleEditor";
 import type { IssueHeader_issue$key } from "@/__generated__/IssueHeader_issue.graphql";
 
@@ -14,7 +13,6 @@ const fragment = graphql`
     number
     title
     status
-    priority
     created_at
   }
 `;
@@ -63,7 +61,6 @@ export function IssueHeader({ issue }: { issue: IssueHeader_issue$key }) {
             Created {DATE_FORMAT.format(new Date(data.created_at))}
           </p>
         </div>
-        <PriorityIcon priority={data.priority} className="mt-2" />
       </div>
     </div>
   );

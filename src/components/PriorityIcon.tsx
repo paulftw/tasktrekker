@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import type { IssuePriority } from "@/types/enums";
 
-const CONFIG: Record<
+export const PRIORITY_CONFIG: Record<
   IssuePriority,
   { icon: LucideIcon; label: string; className: string }
 > = {
@@ -20,6 +20,14 @@ const CONFIG: Record<
   "%future added value": { icon: SignalZero, label: "Unknown", className: "text-priority-none" },
 };
 
+export const SELECTABLE_PRIORITIES: IssuePriority[] = [
+  "urgent",
+  "high",
+  "medium",
+  "low",
+  "none",
+];
+
 export function PriorityIcon({
   priority,
   className = "",
@@ -27,7 +35,7 @@ export function PriorityIcon({
   priority: IssuePriority;
   className?: string;
 }) {
-  const { icon: Icon, label, className: color } = CONFIG[priority];
+  const { icon: Icon, label, className: color } = PRIORITY_CONFIG[priority];
   return (
     <Icon className={`size-4 ${color}${className ? ` ${className}` : ""}`} aria-label={label}>
       <title>{label}</title>

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dbd415b2c2ef01b2007b4cb7d6e82446>>
+ * @generated SignedSource<<453743f4b97ec4a5408a83a43253ca12>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type issue_priority = "high" | "low" | "medium" | "none" | "urgent" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type IssueSidebar_issue$data = {
   readonly assignee: {
@@ -26,6 +27,9 @@ export type IssueSidebar_issue$data = {
       };
     }>;
   } | null | undefined;
+  readonly nodeId: string;
+  readonly number: number;
+  readonly priority: issue_priority;
   readonly " $fragmentType": "IssueSidebar_issue";
 };
 export type IssueSidebar_issue$key = {
@@ -38,6 +42,13 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "nodeId",
+  "storageKey": null
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 };
@@ -47,6 +58,21 @@ return {
   "metadata": null,
   "name": "IssueSidebar_issue",
   "selections": [
+    (v0/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "number",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "priority",
+      "storageKey": null
+    },
     {
       "alias": "assignee",
       "args": null,
@@ -55,7 +81,7 @@ return {
       "name": "users",
       "plural": false,
       "selections": [
-        (v0/*: any*/),
+        (v1/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -104,14 +130,8 @@ return {
                   "name": "labels",
                   "plural": false,
                   "selections": [
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "nodeId",
-                      "storageKey": null
-                    },
                     (v0/*: any*/),
+                    (v1/*: any*/),
                     {
                       "alias": null,
                       "args": null,
@@ -137,6 +157,6 @@ return {
 };
 })();
 
-(node as any).hash = "ea46952cb53aeca436c0dd54af2a38fa";
+(node as any).hash = "7ecafb5aebd6a773ecb9e0a5bf64d4fd";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e538b52681d7e486f64ee85492055804>>
+ * @generated SignedSource<<fb8059dcaa9d48752af1868eb1e06665>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,14 +9,12 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type issue_priority = "high" | "low" | "medium" | "none" | "urgent" | "%future added value";
 export type issue_status = "backlog" | "cancelled" | "done" | "in_progress" | "todo" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type IssueHeader_issue$data = {
   readonly created_at: string;
   readonly nodeId: string;
   readonly number: number;
-  readonly priority: issue_priority;
   readonly status: issue_status;
   readonly title: string;
   readonly " $fragmentType": "IssueHeader_issue";
@@ -64,13 +62,6 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "priority",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
       "name": "created_at",
       "storageKey": null
     }
@@ -79,6 +70,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "b4767d593535b6968600a48ff13628a8";
+(node as any).hash = "964df0a7f4ddb3a784a9c1a37a25904b";
 
 export default node;
