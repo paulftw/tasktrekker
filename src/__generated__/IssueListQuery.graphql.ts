@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8b51ec2e4f7279a2496e455bfa5b1092>>
+ * @generated SignedSource<<1b3f4fc550d23f094d2766f7a7c88a3d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,10 +11,10 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type issue_priority = "high" | "low" | "medium" | "none" | "urgent" | "%future added value";
 export type issue_status = "backlog" | "cancelled" | "done" | "in_progress" | "todo" | "%future added value";
-export type pageIssuesQuery$variables = {
+export type IssueListQuery$variables = {
   first: number;
 };
-export type pageIssuesQuery$data = {
+export type IssueListQuery$data = {
   readonly issuesCollection: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -27,9 +27,9 @@ export type pageIssuesQuery$data = {
     }>;
   } | null | undefined;
 };
-export type pageIssuesQuery = {
-  response: pageIssuesQuery$data;
-  variables: pageIssuesQuery$variables;
+export type IssueListQuery = {
+  response: IssueListQuery$data;
+  variables: IssueListQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -130,7 +130,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "pageIssuesQuery",
+    "name": "IssueListQuery",
     "selections": (v1/*: any*/),
     "type": "Query",
     "abstractKey": null
@@ -139,20 +139,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "pageIssuesQuery",
+    "name": "IssueListQuery",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "03d50060537b961da294a9985f885378",
+    "cacheID": "ab53c9f1d79ee377f8f3f72b88ee299f",
     "id": null,
     "metadata": {},
-    "name": "pageIssuesQuery",
+    "name": "IssueListQuery",
     "operationKind": "query",
-    "text": "query pageIssuesQuery(\n  $first: Int!\n) {\n  issuesCollection(first: $first, orderBy: [{created_at: DescNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        title\n        status\n        priority\n      }\n    }\n  }\n}\n"
+    "text": "query IssueListQuery(\n  $first: Int!\n) {\n  issuesCollection(first: $first, orderBy: [{created_at: DescNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        title\n        status\n        priority\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "403b4bb4ffce99047adbcee0b6222bb5";
+(node as any).hash = "e63f36b48638a77ce9c2f5f2fb5c42e3";
 
 export default node;

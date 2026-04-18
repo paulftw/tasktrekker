@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<69bc39127f65dc2d3f627e6e47984016>>
+ * @generated SignedSource<<50491e54bd0b92158e978f743c4fe11c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,10 +10,10 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type pageIssueDetailQuery$variables = {
+export type IssueDetailQuery$variables = {
   number: number;
 };
-export type pageIssueDetailQuery$data = {
+export type IssueDetailQuery$data = {
   readonly issuesCollection: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -23,9 +23,9 @@ export type pageIssueDetailQuery$data = {
     }>;
   } | null | undefined;
 };
-export type pageIssueDetailQuery = {
-  response: pageIssueDetailQuery$data;
-  variables: pageIssueDetailQuery$variables;
+export type IssueDetailQuery = {
+  response: IssueDetailQuery$data;
+  variables: IssueDetailQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -93,7 +93,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "pageIssueDetailQuery",
+    "name": "IssueDetailQuery",
     "selections": [
       {
         "alias": null,
@@ -157,7 +157,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "pageIssueDetailQuery",
+    "name": "IssueDetailQuery",
     "selections": [
       {
         "alias": null,
@@ -377,16 +377,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "0a292ee12438cc4f14e781d910a9a512",
+    "cacheID": "48c9388ba82a6c18b4291b4aadb4713c",
     "id": null,
     "metadata": {},
-    "name": "pageIssueDetailQuery",
+    "name": "IssueDetailQuery",
     "operationKind": "query",
-    "text": "query pageIssueDetailQuery(\n  $number: Int!\n) {\n  issuesCollection(filter: {number: {eq: $number}}, first: 1) {\n    edges {\n      node {\n        nodeId\n        ...IssueHeader_issue\n        ...IssueDescription_issue\n        ...IssueSidebar_issue\n        ...IssueComments_issue\n      }\n    }\n  }\n}\n\nfragment IssueComments_issue on issues {\n  commentsCollection(first: 50, orderBy: [{number: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        body\n        created_at\n        author: users {\n          name\n          nodeId\n        }\n      }\n    }\n  }\n}\n\nfragment IssueDescription_issue on issues {\n  nodeId\n  number\n  description\n}\n\nfragment IssueHeader_issue on issues {\n  nodeId\n  number\n  title\n  status\n  created_at\n}\n\nfragment IssueSidebar_issue on issues {\n  nodeId\n  number\n  priority\n  assignee: users {\n    name\n    avatar_url\n    nodeId\n  }\n  issue_labelsCollection(first: 20) {\n    edges {\n      node {\n        labels {\n          nodeId\n          name\n          color\n        }\n        nodeId\n      }\n    }\n  }\n}\n"
+    "text": "query IssueDetailQuery(\n  $number: Int!\n) {\n  issuesCollection(filter: {number: {eq: $number}}, first: 1) {\n    edges {\n      node {\n        nodeId\n        ...IssueHeader_issue\n        ...IssueDescription_issue\n        ...IssueSidebar_issue\n        ...IssueComments_issue\n      }\n    }\n  }\n}\n\nfragment IssueComments_issue on issues {\n  commentsCollection(first: 50, orderBy: [{number: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        body\n        created_at\n        author: users {\n          name\n          nodeId\n        }\n      }\n    }\n  }\n}\n\nfragment IssueDescription_issue on issues {\n  nodeId\n  number\n  description\n}\n\nfragment IssueHeader_issue on issues {\n  nodeId\n  number\n  title\n  status\n  created_at\n}\n\nfragment IssueSidebar_issue on issues {\n  nodeId\n  number\n  priority\n  assignee: users {\n    name\n    avatar_url\n    nodeId\n  }\n  issue_labelsCollection(first: 20) {\n    edges {\n      node {\n        labels {\n          nodeId\n          name\n          color\n        }\n        nodeId\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "54dfbfe3ab06e02b8f946a6f97db2715";
+(node as any).hash = "fe51205b6855762f34399f2d3e15c9aa";
 
 export default node;

@@ -155,14 +155,12 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 - Inline title and description editors with Zod validation mirroring DB constraints.
 - Error toasts on mutation failure using Sonner.
 - Status mutation with optimistic update. Relay auto-rolls back on server error.
-- Supabase Realtime enabled on issues table.
+- Real-time across browser windows: Supabase Realtime subscriptions on `issues` (list + detail) and `comments` (detail) bridged into the Relay store via `fetchQuery` refetch on event. Status, priority, title, description, and new comments propagate without reload. Refetch over hand-patching the store from raw row payloads: payloads carry SQL column values but not the encoded `nodeId`, joined fields (e.g. `comment.author.name`), or connection-edge plumbing — patching means re-implementing pieces of pg_graphql client-side. Refetch is one path that handles all cases. Cost is real at scale: one DB write fans out to N refetches across N open tabs, each a full query. Fine for an MVP serving small teams; at Linear scale I'd patch scalar UPDATEs from the payload and reserve refetch for joins and inserts.
 - Test suite, component layer: Vitest + Testing Library + `relay-test-utils`, SWC transform (same as production, no babel fork). StatusPicker commit contract + `getDataID` normalization regression pin (README Problem 5).
 - Test suite, integration layer: hits demo Supabase directly. Comment-numbering trigger assigns 1..N per issue; StatusPickerUpdateMutation round-trips through pg_graphql; `labels.color` check rejects non-hex. Leaves rows behind — demo DB, no cleanup. Not property-based: we're demonstrating it works, not stress-testing concurrency. Runs via `npm test`.
-- Test suite, E2E layer: one Playwright golden path. List → click issue → change status via picker → assert the button's `aria-label` reflects the new status. Proves the full wiring (Relay fetch, route params, mutation commit, optimistic update, store re-read via `getDataID`). Runs via `npx playwright test`; dev server auto-spawns. Unit layer skipped — no pure business logic to pin.
+- Test suite, E2E layer: two Playwright tests. (1) Golden path: list → click issue → change status via picker → assert the button's `aria-label` reflects the new status. Proves the full wiring (Relay fetch, route params, mutation commit, optimistic update, store re-read via `getDataID`). (2) Realtime: two browser contexts on the same issue, change status in A, assert it propagates to B. Proves the Supabase Realtime → Relay refetch bridge. Runs via `npx playwright test`; dev server auto-spawns. Unit layer skipped — no pure business logic to pin.
 
 ### Pending
-- Mutations: edit priority, assignee, labels.
-- Real-time: Supabase Realtime subscriptions bridged into the Relay store.
 - Issue list filters: status, priority, labels (multi-select).
 - Issue list cursor-based pagination.
 - Comment thread cursor-based pagination and add-comment.

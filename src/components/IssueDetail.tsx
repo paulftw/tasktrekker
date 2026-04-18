@@ -1,0 +1,65 @@
+"use client";
+
+import { graphql, useLazyLoadQuery } from "react-relay";
+import { useRealtimeRefetch } from "@/lib/useRealtimeRefetch";
+import { IssueHeader } from "./IssueHeader";
+import { IssueDescription } from "./IssueDescription";
+import { IssueSidebar } from "./IssueSidebar";
+import { IssueComments } from "./IssueComments";
+import type { IssueDetailQuery } from "@/__generated__/IssueDetailQuery.graphql";
+
+const query = graphql`
+  query IssueDetailQuery($number: Int!) {
+    issuesCollection(filter: { number: { eq: $number } }, first: 1) {
+      edges {
+        node {
+          nodeId
+          ...IssueHeader_issue
+          ...IssueDescription_issue
+          ...IssueSidebar_issue
+          ...IssueComments_issue
+        }
+      }
+    }
+  }
+`;
+
+export function IssueNotFound() {
+  return (
+    <div className="w-full max-w-4xl mx-auto p-8">
+      <p className="text-sm text-text-muted">Issue not found.</p>
+    </div>
+  );
+}
+
+export function IssueDetail({ number }: { number: number }) {
+  const data = useLazyLoadQuery<IssueDetailQuery>(query, { number });
+  useRealtimeRefetch(
+    `issue-${number}`,
+    [
+      { table: "issues", filter: `id=eq.${number}` },
+      { table: "comments", filter: `issue_id=eq.${number}` },
+    ],
+    query,
+    { number },
+  );
+  const issue = data.issuesCollection?.edges[0]?.node;
+
+  if (!issue) return <IssueNotFound />;
+
+  return (
+    <div className="w-full max-w-4xl mx-auto p-8">
+      <IssueHeader issue={issue} />
+      <div className="mt-8 flex gap-8">
+        <div className="flex-1 min-w-0 space-y-8">
+          <IssueDescription issue={issue} />
+          <hr className="border-border" />
+          <IssueComments issue={issue} />
+        </div>
+        <div className="w-56 flex-shrink-0">
+          <IssueSidebar issue={issue} />
+        </div>
+      </div>
+    </div>
+  );
+}
