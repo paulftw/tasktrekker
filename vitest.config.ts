@@ -1,6 +1,10 @@
 import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react-swc";
+import { config as loadDotenv } from "dotenv";
 import { fileURLToPath } from "node:url";
+
+loadDotenv({ path: ".env.local" });
+loadDotenv({ path: ".env" });
 
 const rootDir = fileURLToPath(new URL(".", import.meta.url));
 
