@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { RelayProvider } from "@/lib/RelayProvider";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -25,6 +26,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <RelayProvider>{children}</RelayProvider>
+        <Toaster richColors position="top-center" />
       </body>
     </html>
   );

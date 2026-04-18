@@ -153,6 +153,7 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 - Issue list rendering (data flows end-to-end).
 - Issue detail page at `/issues/[number]` with co-located Relay fragments.
 - Inline title and description editors with Zod validation mirroring DB constraints.
+- Error toasts on mutation failure using Sonner.
 - Status mutation with optimistic update. Relay auto-rolls back on server error.
 - Supabase Realtime enabled on issues table.
 - Test suite, component layer: Vitest + Testing Library + `relay-test-utils`, SWC transform (same as production, no babel fork). StatusPicker commit contract + `getDataID` normalization regression pin (README Problem 5).
@@ -161,15 +162,15 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 
 ### Pending
 - Mutations: edit priority, assignee, labels.
-- Error toast on mutation failure.
 - Real-time: Supabase Realtime subscriptions bridged into the Relay store.
 - Issue list filters: status, priority, labels (multi-select).
 - Issue list cursor-based pagination.
 - Comment thread cursor-based pagination and add-comment.
+- Deploy to Vercel.
+- Bring in claude design.
 
 ### Punted (would do with more time)
 - Auth: Supabase Auth with OAuth, RLS policies.
-- Deploy to Vercel.
 - Read/unread comment count on issue list.
 - Keyboard shortcuts.
 

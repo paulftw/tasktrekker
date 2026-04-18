@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { graphql, useMutation } from "react-relay";
+import { toast } from "sonner";
 import type { IssueStatus } from "@/types/enums";
 import type { StatusPickerUpdateMutation } from "@/__generated__/StatusPickerUpdateMutation.graphql";
 import { SELECTABLE_STATUSES, STATUS_CONFIG } from "./StatusIcon";
@@ -61,6 +62,8 @@ export function StatusPicker({
         },
       },
       onError: (err) => {
+        const msg = err instanceof Error ? err.message : "Unknown error";
+        toast.error("Failed to update status", { description: msg });
         console.error("Status update failed:", err);
       },
     });

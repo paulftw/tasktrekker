@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { graphql, useMutation } from "react-relay";
+import { toast } from "sonner";
 import { issueDescriptionSchema } from "@/lib/validation";
 import type { DescriptionEditorUpdateMutation } from "@/__generated__/DescriptionEditorUpdateMutation.graphql";
 
@@ -75,6 +76,8 @@ export function DescriptionEditor({
         },
       },
       onError: (err) => {
+        const msg = err instanceof Error ? err.message : "Unknown error";
+        toast.error("Failed to update description", { description: msg });
         console.error("Description update failed:", err);
       },
     });

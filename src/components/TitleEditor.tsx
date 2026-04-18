@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { graphql, useMutation } from "react-relay";
+import { toast } from "sonner";
 import { issueTitleSchema } from "@/lib/validation";
 import type { TitleEditorUpdateMutation } from "@/__generated__/TitleEditorUpdateMutation.graphql";
 
@@ -75,6 +76,8 @@ export function TitleEditor({
         },
       },
       onError: (err) => {
+        const msg = err instanceof Error ? err.message : "Unknown error";
+        toast.error("Failed to update title", { description: msg });
         console.error("Title update failed:", err);
       },
     });
