@@ -33,4 +33,37 @@ test('filters update URL and issue list', async ({ page }) => {
   await firstLabel.click();
 
   await expect(page).toHaveURL(new RegExp(`label=${encodeURIComponent(labelName.trim())}`, 'i'));
+  
+  // Close label menu
+  await page.keyboard.press('Escape');
+
+  // Now test Status
+  const statusTrigger = page.getByRole('button', { name: /^Status/i });
+  await expect(statusTrigger).toBeVisible();
+
+  await statusTrigger.click();
+
+  // Click 'Todo' and 'In Progress'
+  const statusMenu = page.locator('[role="menu"]');
+  await expect(statusMenu).toBeVisible();
+  await statusMenu.getByRole('menuitemcheckbox', { name: 'Todo' }).click();
+  await expect(page).toHaveURL(/\?.*status=todo/);
+  await statusMenu.getByRole('menuitemcheckbox', { name: 'In Progress' }).click();
+  await expect(page).toHaveURL(/\?.*status=todo&status=in_progress/);
+  
+  // Close the menu by pressing Escape
+  await page.keyboard.press('Escape');
+
+  // Check URL
+  await expect(page).toHaveURL(/\?.*status=todo/);
+  await expect(page).toHaveURL(/\?.*status=in_progress/);
+
+  // Assert that 'Backlog', 'Done', 'Cancelled' sections are hidden
+  await expect(page.getByRole('button', { name: 'Backlog' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Done' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Cancelled' })).toHaveCount(0);
+  
+  // Assert 'Todo' and 'In Progress' sections are visible
+  await expect(page.getByRole('button', { name: 'Todo' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'In Progress' })).toBeVisible();
 });

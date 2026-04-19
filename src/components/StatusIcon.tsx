@@ -70,7 +70,7 @@ export const STATUS_CONFIG: Record<IssueStatus, { icon: IconComponent; label: st
   '%future added value': { icon: CircleDashed, label: 'Unknown', className: 'text-status-backlog' },
 };
 
-export const SELECTABLE_STATUSES: IssueStatus[] = ['backlog', 'todo', 'in_progress', 'done', 'cancelled'];
+export const SELECTABLE_STATUSES: IssueStatus[] = ['in_progress', 'todo', 'backlog', 'done', 'cancelled'];
 
 export function StatusIcon({
   status,

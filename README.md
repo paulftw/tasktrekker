@@ -173,6 +173,7 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 - UI way to create new label.
 - Standardize typography scale (remove fractional pixel font sizes to fix sub-pixel baseline alignment issues).
 - Deploy to Vercel.
+- Change filter by priority to multiselect - spec seems to imply that.
 
 ### Maybe Later
 - Alphabetic sorting of labels everywhere in UI lists. Ordering by colors

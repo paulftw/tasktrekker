@@ -3,8 +3,9 @@
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Dropdown } from './Dropdown';
 import { PriorityIcon, SELECTABLE_PRIORITIES, PRIORITY_CONFIG, SignalHigh } from './PriorityIcon';
-import type { IssuePriority } from '@/types/enums';
-import { Tag, X } from 'lucide-react';
+import { StatusIcon, SELECTABLE_STATUSES, STATUS_CONFIG } from './StatusIcon';
+import type { IssuePriority, IssueStatus } from '@/types/enums';
+import { Tag, X, Filter } from 'lucide-react';
 import { forwardRef } from 'react';
 
 export type Label = {
@@ -59,7 +60,10 @@ export function FilterBar({ labels }: { labels: Label[] }) {
   const searchParams = useSearchParams();
 
   const selectedPriority = searchParams.get('priority') as IssuePriority | null;
+  const selectedStatuses = new Set(searchParams.getAll('status') as IssueStatus[]);
   const selectedLabels = new Set(searchParams.getAll('label'));
+
+  const STATUS_ORDER: IssueStatus[] = ['in_progress', 'todo', 'backlog', 'done', 'cancelled'];
 
   function togglePriority(priority: IssuePriority) {
     const params = new URLSearchParams(searchParams.toString());
@@ -67,6 +71,19 @@ export function FilterBar({ labels }: { labels: Label[] }) {
       params.delete('priority');
     } else {
       params.set('priority', priority);
+    }
+    router.replace(`${pathname}?${params.toString()}`);
+  }
+
+  function toggleStatus(status: IssueStatus) {
+    const params = new URLSearchParams(searchParams.toString());
+    const statuses = params.getAll('status');
+    params.delete('status');
+    if (statuses.includes(status)) {
+      statuses.filter(s => s !== status).forEach(s => params.append('status', s));
+    } else {
+      statuses.forEach(s => params.append('status', s));
+      params.append('status', status);
     }
     router.replace(`${pathname}?${params.toString()}`);
   }
@@ -85,6 +102,10 @@ export function FilterBar({ labels }: { labels: Label[] }) {
   }
 
   const priorityLabel = selectedPriority ? PRIORITY_CONFIG[selectedPriority].label : 'Priority';
+  
+  const selectedStatusObjects = STATUS_ORDER.filter(s => selectedStatuses.has(s)).map(s => STATUS_CONFIG[s]);
+  const statusesLabel = selectedStatuses.size > 1 ? `${selectedStatuses.size} statuses` : (selectedStatusObjects[0]?.label || 'Status');
+  
   const selectedLabelObjects = Array.from(selectedLabels).map(name => labels.find(l => l.name === name)).filter(Boolean);
   const labelsLabel = selectedLabels.size > 1 ? `${selectedLabels.size} labels` : (selectedLabelObjects[0]?.name || 'Label');
 
@@ -116,6 +137,58 @@ export function FilterBar({ labels }: { labels: Label[] }) {
             >
               <PriorityIcon priority={p} size={14} />
               <span>{PRIORITY_CONFIG[p].label}</span>
+            </Dropdown.CheckboxItem>
+          ))}
+        </Dropdown.Menu>
+      </Dropdown>
+
+      <Dropdown>
+        <Dropdown.Trigger asChild>
+          <FilterChip
+            placeholder="Status"
+            label={statusesLabel}
+            icon={
+              selectedStatusObjects.length >= 2 ? (
+                (() => {
+                  const TopIcon = selectedStatusObjects[0].icon;
+                  const BottomIcon = selectedStatusObjects[1].icon;
+                  return (
+                    <div className="relative w-3.5 h-3 shrink-0">
+                      <div className="absolute left-[6px] top-0 z-0">
+                        <BottomIcon width={12} height={12} className={selectedStatusObjects[1].className} />
+                      </div>
+                      <div 
+                        className="absolute left-0 top-0 z-10 rounded-full" 
+                        style={{ backgroundColor: 'color-mix(in srgb, var(--color-bg-inset) 80%, transparent)' }}
+                      >
+                        <TopIcon width={12} height={12} className={selectedStatusObjects[0].className} />
+                      </div>
+                    </div>
+                  );
+                })()
+              ) : selectedStatusObjects.length === 1 ? (
+                <StatusIcon status={STATUS_ORDER.find(s => selectedStatuses.has(s))!} size={12} className="-translate-y-px" />
+              ) : (
+                <Filter size={12} className="text-text-muted" />
+              )
+            }
+            value={selectedStatuses.size > 0}
+            onClear={() => {
+              const params = new URLSearchParams(searchParams.toString());
+              params.delete('status');
+              router.replace(`${pathname}?${params.toString()}`);
+            }}
+          />
+        </Dropdown.Trigger>
+        <Dropdown.Menu align="start" className="w-48">
+          {SELECTABLE_STATUSES.map(s => (
+            <Dropdown.CheckboxItem
+              key={s}
+              checked={selectedStatuses.has(s)}
+              onCheckedChange={() => toggleStatus(s)}
+            >
+              <StatusIcon status={s} size={14} />
+              <span>{STATUS_CONFIG[s].label}</span>
             </Dropdown.CheckboxItem>
           ))}
         </Dropdown.Menu>

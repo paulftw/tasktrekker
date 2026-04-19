@@ -65,11 +65,16 @@ type Issue = NonNullable<NonNullable<IssueListQuery['response']['issuesCollectio
 export function IssueList() {
   const searchParams = useSearchParams();
   const selectedPriority = searchParams.get('priority') as IssuePriority | null;
+  const selectedStatuses = new Set(searchParams.getAll('status') as IssueStatus[]);
   const selectedLabels = new Set(searchParams.getAll('label'));
+
+  const filter: any = {};
+  if (selectedPriority) filter.priority = { eq: selectedPriority };
+  if (selectedStatuses.size > 0) filter.status = { in: Array.from(selectedStatuses) };
 
   const vars = {
     first: 20,
-    filter: selectedPriority ? { priority: { eq: selectedPriority } } : null,
+    filter: Object.keys(filter).length > 0 ? filter : null,
   };
 
   const data = useLazyLoadQuery<IssueListQuery>(query, vars);
@@ -105,7 +110,7 @@ export function IssueList() {
     if (bucket) bucket.push(n);
   }
 
-  if (nodes.length === 0 && !selectedPriority && selectedLabels.size === 0) {
+  if (nodes.length === 0 && !selectedPriority && selectedLabels.size === 0 && selectedStatuses.size === 0) {
     return (
       <div className="shell-pad py-20 text-center">
         <p className="text-sm text-text-secondary">No issues yet.</p>
@@ -117,7 +122,7 @@ export function IssueList() {
     <div className="flex-1 flex flex-col overflow-hidden">
       <FilterBar labels={labels} />
       <div className="flex-1 overflow-auto">
-        {GROUP_ORDER.map(s => {
+        {GROUP_ORDER.filter(s => selectedStatuses.size === 0 || selectedStatuses.has(s)).map(s => {
           const items = groups.get(s) ?? [];
         const isCollapsed = collapsed.has(s);
         const cfg = STATUS_CONFIG[s];
