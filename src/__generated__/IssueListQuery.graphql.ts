@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1b3f4fc550d23f094d2766f7a7c88a3d>>
+ * @generated SignedSource<<be52390948f61913e2f98ccc5af2fcce>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type issue_priority = "high" | "low" | "medium" | "none" | "urgent" | "%future added value";
+export type issue_priority = "high" | "low" | "medium" | "urgent" | "%future added value";
 export type issue_status = "backlog" | "cancelled" | "done" | "in_progress" | "todo" | "%future added value";
 export type IssueListQuery$variables = {
   first: number;
@@ -18,6 +18,10 @@ export type IssueListQuery$data = {
   readonly issuesCollection: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly assignee: {
+          readonly avatar_url: string | null | undefined;
+          readonly name: string;
+        } | null | undefined;
         readonly nodeId: string;
         readonly number: number;
         readonly priority: issue_priority;
@@ -42,77 +46,119 @@ var v0 = [
 ],
 v1 = [
   {
-    "alias": null,
-    "args": [
+    "kind": "Variable",
+    "name": "first",
+    "variableName": "first"
+  },
+  {
+    "kind": "Literal",
+    "name": "orderBy",
+    "value": [
       {
-        "kind": "Variable",
-        "name": "first",
-        "variableName": "first"
-      },
-      {
-        "kind": "Literal",
-        "name": "orderBy",
-        "value": [
-          {
-            "created_at": "DescNullsLast"
-          }
-        ]
+        "created_at": "DescNullsLast"
       }
-    ],
-    "concreteType": "issuesConnection",
-    "kind": "LinkedField",
-    "name": "issuesCollection",
-    "plural": false,
+    ]
+  }
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "nodeId",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "number",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "title",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "status",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "priority",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "avatar_url",
+  "storageKey": null
+};
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "IssueListQuery",
     "selections": [
       {
         "alias": null,
-        "args": null,
-        "concreteType": "issuesEdge",
+        "args": (v1/*: any*/),
+        "concreteType": "issuesConnection",
         "kind": "LinkedField",
-        "name": "edges",
-        "plural": true,
+        "name": "issuesCollection",
+        "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "issues",
+            "concreteType": "issuesEdge",
             "kind": "LinkedField",
-            "name": "node",
-            "plural": false,
+            "name": "edges",
+            "plural": true,
             "selections": [
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "nodeId",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "number",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "title",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "status",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "priority",
+                "concreteType": "issues",
+                "kind": "LinkedField",
+                "name": "node",
+                "plural": false,
+                "selections": [
+                  (v2/*: any*/),
+                  (v3/*: any*/),
+                  (v4/*: any*/),
+                  (v5/*: any*/),
+                  (v6/*: any*/),
+                  {
+                    "alias": "assignee",
+                    "args": null,
+                    "concreteType": "users",
+                    "kind": "LinkedField",
+                    "name": "users",
+                    "plural": false,
+                    "selections": [
+                      (v7/*: any*/),
+                      (v8/*: any*/)
+                    ],
+                    "storageKey": null
+                  }
+                ],
                 "storageKey": null
               }
             ],
@@ -122,16 +168,6 @@ v1 = [
         "storageKey": null
       }
     ],
-    "storageKey": null
-  }
-];
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "IssueListQuery",
-    "selections": (v1/*: any*/),
     "type": "Query",
     "abstractKey": null
   },
@@ -140,19 +176,72 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "IssueListQuery",
-    "selections": (v1/*: any*/)
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "issuesConnection",
+        "kind": "LinkedField",
+        "name": "issuesCollection",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "issuesEdge",
+            "kind": "LinkedField",
+            "name": "edges",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "issues",
+                "kind": "LinkedField",
+                "name": "node",
+                "plural": false,
+                "selections": [
+                  (v2/*: any*/),
+                  (v3/*: any*/),
+                  (v4/*: any*/),
+                  (v5/*: any*/),
+                  (v6/*: any*/),
+                  {
+                    "alias": "assignee",
+                    "args": null,
+                    "concreteType": "users",
+                    "kind": "LinkedField",
+                    "name": "users",
+                    "plural": false,
+                    "selections": [
+                      (v7/*: any*/),
+                      (v8/*: any*/),
+                      (v2/*: any*/)
+                    ],
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ]
   },
   "params": {
-    "cacheID": "ab53c9f1d79ee377f8f3f72b88ee299f",
+    "cacheID": "3b88d1b63e729461f00345a1c60ea5af",
     "id": null,
     "metadata": {},
     "name": "IssueListQuery",
     "operationKind": "query",
-    "text": "query IssueListQuery(\n  $first: Int!\n) {\n  issuesCollection(first: $first, orderBy: [{created_at: DescNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        title\n        status\n        priority\n      }\n    }\n  }\n}\n"
+    "text": "query IssueListQuery(\n  $first: Int!\n) {\n  issuesCollection(first: $first, orderBy: [{created_at: DescNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        title\n        status\n        priority\n        assignee: users {\n          name\n          avatar_url\n          nodeId\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e63f36b48638a77ce9c2f5f2fb5c42e3";
+(node as any).hash = "96363a0c0cf22f6a90869a9be8146e72";
 
 export default node;

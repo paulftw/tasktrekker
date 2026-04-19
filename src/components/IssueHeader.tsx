@@ -3,7 +3,6 @@
 import { graphql, useFragment } from "react-relay";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { StatusPicker } from "./StatusPicker";
 import { TitleEditor } from "./TitleEditor";
 import type { IssueHeader_issue$key } from "@/__generated__/IssueHeader_issue.graphql";
 
@@ -12,56 +11,32 @@ const fragment = graphql`
     nodeId
     number
     title
-    status
-    created_at
   }
 `;
-
-const DATE_FORMAT = new Intl.DateTimeFormat("en-US", {
-  month: "short",
-  day: "numeric",
-  year: "numeric",
-});
 
 export function IssueHeader({ issue }: { issue: IssueHeader_issue$key }) {
   const data = useFragment(fragment, issue);
 
   return (
     <div>
-      <div className="mb-4">
+      <div className="flex items-center gap-1.5 text-[12px] text-text-secondary mb-3">
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-sm text-text-secondary hover:text-text transition-colors"
+          className="inline-flex items-center gap-1 hover:text-text transition-colors"
         >
-          <ArrowLeft className="size-4" />
+          <ArrowLeft className="size-3.5" strokeWidth={2} />
           Issues
         </Link>
+        <span className="text-text-muted">/</span>
+        <span className="mono text-text-muted">#{data.number}</span>
       </div>
-      <div className="flex items-start gap-3">
-        <StatusPicker
+      <h1 className="text-[22px] font-semibold text-text leading-[1.25] tracking-[-0.02em]">
+        <TitleEditor
           nodeId={data.nodeId}
           number={data.number}
-          status={data.status}
-          className="mt-1"
+          title={data.title}
         />
-        <div className="flex-1 min-w-0">
-          <h1 className="text-xl font-semibold text-text flex items-start gap-2">
-            <span className="text-text-muted tabular-nums pt-0.5">
-              #{data.number}
-            </span>
-            <span className="flex-1 min-w-0">
-              <TitleEditor
-                nodeId={data.nodeId}
-                number={data.number}
-                title={data.title}
-              />
-            </span>
-          </h1>
-          <p className="text-sm text-text-muted mt-1">
-            Created {DATE_FORMAT.format(new Date(data.created_at))}
-          </p>
-        </div>
-      </div>
+      </h1>
     </div>
   );
 }

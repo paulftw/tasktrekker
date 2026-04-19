@@ -2,6 +2,7 @@
 
 import { Suspense, use } from "react";
 import { ErrorBoundary } from "@/lib/ErrorBoundary";
+import { AppShell } from "@/components/AppShell";
 import { IssueDetail, IssueNotFound } from "@/components/IssueDetail";
 
 export default function IssuePage({
@@ -15,15 +16,17 @@ export default function IssuePage({
 
   return (
     <ErrorBoundary>
-      <Suspense
-        fallback={
-          <div className="flex items-center justify-center min-h-screen text-text-muted">
-            Loading...
-          </div>
-        }
-      >
-        {valid ? <IssueDetail number={number} /> : <IssueNotFound />}
-      </Suspense>
+      <AppShell>
+        <Suspense
+          fallback={
+            <div className="flex-1 flex items-center justify-center text-text-muted">
+              Loading...
+            </div>
+          }
+        >
+          {valid ? <IssueDetail number={number} /> : <IssueNotFound />}
+        </Suspense>
+      </AppShell>
     </ErrorBoundary>
   );
 }

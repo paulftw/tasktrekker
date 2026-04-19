@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7d6e6833d4ebbc99f1d1c07e2e2d6c14>>
+ * @generated SignedSource<<bd5279de708e4bfecc0f36767f710fde>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type issue_priority = "high" | "low" | "medium" | "none" | "urgent" | "%future added value";
+export type issue_priority = "high" | "low" | "medium" | "urgent" | "%future added value";
 export type PriorityPickerUpdateMutation$variables = {
   number: number;
   priority: issue_priority;

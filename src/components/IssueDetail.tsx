@@ -26,8 +26,8 @@ const query = graphql`
 
 export function IssueNotFound() {
   return (
-    <div className="w-full max-w-4xl mx-auto p-8">
-      <p className="text-sm text-text-muted">Issue not found.</p>
+    <div className="shell-pad py-10">
+      <p className="text-[13px] text-text-muted">Issue not found.</p>
     </div>
   );
 }
@@ -48,15 +48,15 @@ export function IssueDetail({ number }: { number: number }) {
   if (!issue) return <IssueNotFound />;
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-8">
-      <IssueHeader issue={issue} />
-      <div className="mt-8 flex gap-8">
-        <div className="flex-1 min-w-0 space-y-8">
+    <div className="shell-pad py-8 flex-1 overflow-auto">
+      <div className="flex gap-12">
+        <div className="flex-1 min-w-0 space-y-6">
+          <IssueHeader issue={issue} />
           <IssueDescription issue={issue} />
-          <hr className="border-border" />
+          <hr className="border-border-muted" />
           <IssueComments issue={issue} />
         </div>
-        <div className="w-56 flex-shrink-0">
+        <div className="w-60 flex-shrink-0">
           <IssueSidebar issue={issue} />
         </div>
       </div>

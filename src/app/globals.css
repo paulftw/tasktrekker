@@ -1,96 +1,122 @@
 @import "tailwindcss";
 
-:root {
-  /* Surfaces */
+@theme {
   --color-bg: #ffffff;
   --color-bg-raised: #f9fafb;
   --color-bg-inset: #f3f4f6;
   --color-bg-overlay: #ffffff;
-
-  /* Borders */
-  --color-border: #e5e7eb;
-  --color-border-muted: #f3f4f6;
-
-  /* Text */
-  --color-text: #111827;
-  --color-text-secondary: #6b7280;
-  --color-text-muted: #9ca3af;
-  --color-text-inverse: #ffffff; /* TODO: verify usage once buttons/badges land */
-
-  /* Interactive */
   --color-bg-hover: #f3f4f6;
   --color-bg-active: #e5e7eb;
 
-  /* Status colors — circles (Lucide circle variants) */
+  --color-border: #e5e7eb;
+  --color-border-muted: #f1f2f4;
+
+  --color-text: #111827;
+  --color-text-secondary: #6b7280;
+  --color-text-muted: #9ca3af;
+
   --color-status-backlog: #9ca3af;
   --color-status-todo: #3b82f6;
   --color-status-in-progress: #f59e0b;
   --color-status-done: #10b981;
   --color-status-cancelled: #ef4444;
 
-  /* Priority colors — signal bars (Lucide signal variants).
-     Some hues overlap with status; icon shape distinguishes them. */
   --color-priority-urgent: #ef4444;
   --color-priority-high: #f97316;
   --color-priority-medium: #f59e0b;
   --color-priority-low: #3b82f6;
-  --color-priority-none: #9ca3af;
+
+  /* Accent is a single hue — see wiki/pages/decision-claude-design-migration.md. */
+  --accent-h: 160;
+  --color-accent: oklch(0.58 0.14 var(--accent-h));
+}
+
+/* next/font exposes --font-sans/--font-mono on <html>; inline passes them
+   through to utilities without emitting a self-referencing :root var. */
+@theme inline {
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --color-bg: #0a0a0a;
-    --color-bg-raised: #141414;
-    --color-bg-inset: #1a1a1a;
-    --color-bg-overlay: #1a1a1a;
+    --color-bg-raised: #121213;
+    --color-bg-inset: #17181a;
+    --color-bg-overlay: #1a1b1e;
+    --color-bg-hover: #1a1b1e;
+    --color-bg-active: #25262a;
 
-    --color-border: #262626;
-    --color-border-muted: #1a1a1a;
+    --color-border: #25262a;
+    --color-border-muted: #1a1b1e;
 
     --color-text: #ededed;
     --color-text-secondary: #a1a1aa;
     --color-text-muted: #71717a;
-    --color-text-inverse: #0a0a0a;
 
-    --color-bg-hover: #1a1a1a;
-    --color-bg-active: #262626;
+    --color-accent: oklch(0.72 0.14 var(--accent-h));
   }
 }
 
-@theme inline {
-  --color-bg: var(--color-bg);
-  --color-bg-raised: var(--color-bg-raised);
-  --color-bg-inset: var(--color-bg-inset);
-  --color-bg-overlay: var(--color-bg-overlay);
+@layer base {
+  body {
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    font-size: 13px;
+    letter-spacing: -0.005em;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
 
-  --color-border: var(--color-border);
-  --color-border-muted: var(--color-border-muted);
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 1px;
+    border-radius: 4px;
+  }
 
-  --color-text: var(--color-text);
-  --color-text-secondary: var(--color-text-secondary);
-  --color-text-muted: var(--color-text-muted);
-  --color-text-inverse: var(--color-text-inverse);
-
-  --color-bg-hover: var(--color-bg-hover);
-  --color-bg-active: var(--color-bg-active);
-
-  --color-status-backlog: var(--color-status-backlog);
-  --color-status-todo: var(--color-status-todo);
-  --color-status-in-progress: var(--color-status-in-progress);
-  --color-status-done: var(--color-status-done);
-  --color-status-cancelled: var(--color-status-cancelled);
-
-  --color-priority-urgent: var(--color-priority-urgent);
-  --color-priority-high: var(--color-priority-high);
-  --color-priority-medium: var(--color-priority-medium);
-  --color-priority-low: var(--color-priority-low);
-  --color-priority-none: var(--color-priority-none);
-
-  --font-sans: var(--font-geist-sans);
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 10px;
+    border: 2px solid var(--color-bg);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-muted);
+  }
 }
 
-body {
-  background: var(--color-bg);
-  color: var(--color-text);
-  font-family: var(--font-sans), sans-serif;
+/* Shared horizontal padding anchoring topbar, group-header, and list row to
+   the same vertical columns. Put .shell-pad on any new shell element. */
+@utility shell-pad {
+  padding-inline: 16px;
+  @media (max-width: 640px) {
+    padding-inline: 14px;
+  }
+  @media (min-width: 1200px) {
+    padding-inline: 24px;
+  }
+}
+
+@utility mono {
+  font-family: var(--font-mono), ui-monospace, "SF Mono", monospace;
+  font-feature-settings: "tnum";
+}
+
+@keyframes shell-rt-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklch, var(--color-status-done) 55%, transparent);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 7px color-mix(in oklch, var(--color-status-done) 0%, transparent);
+  }
+}
+.shell-rt-dot {
+  animation: shell-rt-pulse 2.2s ease-out infinite;
 }

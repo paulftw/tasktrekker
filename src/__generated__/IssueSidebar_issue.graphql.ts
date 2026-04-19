@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<453743f4b97ec4a5408a83a43253ca12>>
+ * @generated SignedSource<<7b2545129688796b21ecfd2283de9600>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,13 +9,15 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type issue_priority = "high" | "low" | "medium" | "none" | "urgent" | "%future added value";
+export type issue_priority = "high" | "low" | "medium" | "urgent" | "%future added value";
+export type issue_status = "backlog" | "cancelled" | "done" | "in_progress" | "todo" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type IssueSidebar_issue$data = {
   readonly assignee: {
     readonly avatar_url: string | null | undefined;
     readonly name: string;
   } | null | undefined;
+  readonly created_at: string;
   readonly issue_labelsCollection: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -30,6 +32,7 @@ export type IssueSidebar_issue$data = {
   readonly nodeId: string;
   readonly number: number;
   readonly priority: issue_priority;
+  readonly status: issue_status;
   readonly " $fragmentType": "IssueSidebar_issue";
 };
 export type IssueSidebar_issue$key = {
@@ -70,7 +73,21 @@ return {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
+      "name": "status",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
       "name": "priority",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "created_at",
       "storageKey": null
     },
     {
@@ -157,6 +174,6 @@ return {
 };
 })();
 
-(node as any).hash = "7ecafb5aebd6a773ecb9e0a5bf64d4fd";
+(node as any).hash = "846882d5b1812ec337dfde76eae9e5a4";
 
 export default node;

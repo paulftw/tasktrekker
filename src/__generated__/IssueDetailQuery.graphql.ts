@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<50491e54bd0b92158e978f743c4fe11c>>
+ * @generated SignedSource<<6048d41856eae50b2698bbbfda3bf68e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -196,15 +196,14 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "status",
+                    "name": "description",
                     "storageKey": null
                   },
-                  (v4/*: any*/),
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "description",
+                    "name": "status",
                     "storageKey": null
                   },
                   {
@@ -214,6 +213,7 @@ return {
                     "name": "priority",
                     "storageKey": null
                   },
+                  (v4/*: any*/),
                   {
                     "alias": "assignee",
                     "args": null,
@@ -377,12 +377,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "48c9388ba82a6c18b4291b4aadb4713c",
+    "cacheID": "6d5167402bbb6ebf25edcb61b351892b",
     "id": null,
     "metadata": {},
     "name": "IssueDetailQuery",
     "operationKind": "query",
-    "text": "query IssueDetailQuery(\n  $number: Int!\n) {\n  issuesCollection(filter: {number: {eq: $number}}, first: 1) {\n    edges {\n      node {\n        nodeId\n        ...IssueHeader_issue\n        ...IssueDescription_issue\n        ...IssueSidebar_issue\n        ...IssueComments_issue\n      }\n    }\n  }\n}\n\nfragment IssueComments_issue on issues {\n  commentsCollection(first: 50, orderBy: [{number: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        body\n        created_at\n        author: users {\n          name\n          nodeId\n        }\n      }\n    }\n  }\n}\n\nfragment IssueDescription_issue on issues {\n  nodeId\n  number\n  description\n}\n\nfragment IssueHeader_issue on issues {\n  nodeId\n  number\n  title\n  status\n  created_at\n}\n\nfragment IssueSidebar_issue on issues {\n  nodeId\n  number\n  priority\n  assignee: users {\n    name\n    avatar_url\n    nodeId\n  }\n  issue_labelsCollection(first: 20) {\n    edges {\n      node {\n        labels {\n          nodeId\n          name\n          color\n        }\n        nodeId\n      }\n    }\n  }\n}\n"
+    "text": "query IssueDetailQuery(\n  $number: Int!\n) {\n  issuesCollection(filter: {number: {eq: $number}}, first: 1) {\n    edges {\n      node {\n        nodeId\n        ...IssueHeader_issue\n        ...IssueDescription_issue\n        ...IssueSidebar_issue\n        ...IssueComments_issue\n      }\n    }\n  }\n}\n\nfragment IssueComments_issue on issues {\n  commentsCollection(first: 50, orderBy: [{number: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        body\n        created_at\n        author: users {\n          name\n          nodeId\n        }\n      }\n    }\n  }\n}\n\nfragment IssueDescription_issue on issues {\n  nodeId\n  number\n  description\n}\n\nfragment IssueHeader_issue on issues {\n  nodeId\n  number\n  title\n}\n\nfragment IssueSidebar_issue on issues {\n  nodeId\n  number\n  status\n  priority\n  created_at\n  assignee: users {\n    name\n    avatar_url\n    nodeId\n  }\n  issue_labelsCollection(first: 20) {\n    edges {\n      node {\n        labels {\n          nodeId\n          name\n          color\n        }\n        nodeId\n      }\n    }\n  }\n}\n"
   }
 };
 })();

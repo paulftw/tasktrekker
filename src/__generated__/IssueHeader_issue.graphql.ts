@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fb8059dcaa9d48752af1868eb1e06665>>
+ * @generated SignedSource<<e6f433ab8d5f343ce40e5b8834131498>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,13 +9,10 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type issue_status = "backlog" | "cancelled" | "done" | "in_progress" | "todo" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type IssueHeader_issue$data = {
-  readonly created_at: string;
   readonly nodeId: string;
   readonly number: number;
-  readonly status: issue_status;
   readonly title: string;
   readonly " $fragmentType": "IssueHeader_issue";
 };
@@ -50,26 +47,12 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "title",
       "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "status",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "created_at",
-      "storageKey": null
     }
   ],
   "type": "issues",
   "abstractKey": null
 };
 
-(node as any).hash = "964df0a7f4ddb3a784a9c1a37a25904b";
+(node as any).hash = "339703848c4d3bda46008077b88753f6";
 
 export default node;

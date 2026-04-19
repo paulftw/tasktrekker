@@ -1,23 +1,53 @@
-import {
-  Signal,
-  SignalHigh,
-  SignalMedium,
-  SignalLow,
-  SignalZero,
-  type LucideIcon,
-} from "lucide-react";
+import type { ComponentType, SVGProps } from "react";
 import type { IssuePriority } from "@/types/enums";
+
+type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
+
+const SignalLow: IconComponent = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <rect x="3" y="16" width="3" height="5" rx="0.75" fill="currentColor" />
+    <rect x="9" y="12" width="3" height="9" rx="0.75" fill="currentColor" opacity="0.3" />
+    <rect x="15" y="8" width="3" height="13" rx="0.75" fill="currentColor" opacity="0.3" />
+  </svg>
+);
+
+const SignalMedium: IconComponent = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <rect x="3" y="16" width="3" height="5" rx="0.75" fill="currentColor" />
+    <rect x="9" y="12" width="3" height="9" rx="0.75" fill="currentColor" />
+    <rect x="15" y="8" width="3" height="13" rx="0.75" fill="currentColor" opacity="0.3" />
+  </svg>
+);
+
+const SignalHigh: IconComponent = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <rect x="3" y="16" width="3" height="5" rx="0.75" fill="currentColor" />
+    <rect x="9" y="12" width="3" height="9" rx="0.75" fill="currentColor" />
+    <rect x="15" y="8" width="3" height="13" rx="0.75" fill="currentColor" />
+  </svg>
+);
+
+const Urgent: IconComponent = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <rect x="3" y="3" width="18" height="18" rx="4" fill="currentColor" />
+    <path d="M12 8v5" stroke="white" strokeWidth="2" strokeLinecap="round" />
+    <circle cx="12" cy="16" r="1.1" fill="white" />
+  </svg>
+);
 
 export const PRIORITY_CONFIG: Record<
   IssuePriority,
-  { icon: LucideIcon; label: string; className: string }
+  { icon: IconComponent; label: string; className: string }
 > = {
-  urgent: { icon: Signal, label: "Urgent", className: "text-priority-urgent" },
+  urgent: { icon: Urgent, label: "Urgent", className: "text-priority-urgent" },
   high: { icon: SignalHigh, label: "High", className: "text-priority-high" },
   medium: { icon: SignalMedium, label: "Medium", className: "text-priority-medium" },
   low: { icon: SignalLow, label: "Low", className: "text-priority-low" },
-  none: { icon: SignalZero, label: "No priority", className: "text-priority-none" },
-  "%future added value": { icon: SignalZero, label: "Unknown", className: "text-priority-none" },
+  "%future added value": {
+    icon: SignalLow,
+    label: "Unknown",
+    className: "text-priority-low",
+  },
 };
 
 export const SELECTABLE_PRIORITIES: IssuePriority[] = [
@@ -25,19 +55,26 @@ export const SELECTABLE_PRIORITIES: IssuePriority[] = [
   "high",
   "medium",
   "low",
-  "none",
 ];
 
 export function PriorityIcon({
   priority,
+  size = 14,
   className = "",
 }: {
   priority: IssuePriority;
+  size?: number;
   className?: string;
 }) {
   const { icon: Icon, label, className: color } = PRIORITY_CONFIG[priority];
   return (
-    <Icon className={`size-4 ${color}${className ? ` ${className}` : ""}`} aria-label={label}>
+    <Icon
+      width={size}
+      height={size}
+      className={`${color}${className ? ` ${className}` : ""}`}
+      role="img"
+      aria-label={label}
+    >
       <title>{label}</title>
     </Icon>
   );

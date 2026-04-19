@@ -60,11 +60,12 @@ export function StatusPicker({
       <Dropdown.Trigger
         disabled={isInFlight}
         aria-label={`Status: ${current.label}. Click to change.`}
-        className="inline-flex items-center justify-center rounded p-0.5 hover:bg-bg-hover transition-colors disabled:opacity-60"
+        className="inline-flex items-center gap-1.5 px-1.5 py-[3px] -ml-1.5 rounded-[5px] text-[12.5px] text-text hover:bg-bg-hover transition-colors disabled:opacity-60 cursor-pointer"
       >
-        <CurrentIcon className={`size-4 ${current.className}`} />
+        <CurrentIcon width={14} height={14} className={current.className} />
+        <span>{current.label}</span>
       </Dropdown.Trigger>
-      
+
       <Dropdown.Menu className="left-0 top-full mt-1 min-w-40">
         {SELECTABLE_STATUSES.map((value) => {
           const { icon: Icon, label, className: color } = STATUS_CONFIG[value];
@@ -75,7 +76,7 @@ export function StatusPicker({
               onClick={() => onSelect(value)}
               className={isCurrent ? "font-medium" : ""}
             >
-              <Icon className={`size-4 ${color}`} />
+              <Icon width={14} height={14} className={color} />
               {label}
             </Dropdown.Item>
           );

@@ -19,6 +19,5 @@ export type IssuePriority =
   | "high"
   | "low"
   | "medium"
-  | "none"
   | "urgent"
   | "%future added value";

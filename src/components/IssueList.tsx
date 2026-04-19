@@ -2,9 +2,13 @@
 
 import { graphql, useLazyLoadQuery } from "react-relay";
 import Link from "next/link";
+import { useState } from "react";
+import { ChevronDown } from "lucide-react";
 import { useRealtimeRefetch } from "@/lib/useRealtimeRefetch";
-import { StatusIcon } from "./StatusIcon";
+import { StatusIcon, STATUS_CONFIG } from "./StatusIcon";
 import { PriorityIcon } from "./PriorityIcon";
+import { UserAvatar } from "./UserAvatar";
+import type { IssueStatus } from "@/types/enums";
 import type { IssueListQuery } from "@/__generated__/IssueListQuery.graphql";
 
 const query = graphql`
@@ -17,6 +21,10 @@ const query = graphql`
           title
           status
           priority
+          assignee: users {
+            name
+            avatar_url
+          }
         }
       }
     }
@@ -25,37 +33,114 @@ const query = graphql`
 
 const VARS = { first: 20 } as const;
 
+const GROUP_ORDER: IssueStatus[] = [
+  "in_progress",
+  "todo",
+  "backlog",
+  "done",
+  "cancelled",
+];
+const DEFAULT_COLLAPSED: IssueStatus[] = ["done", "cancelled"];
+
+type Issue = NonNullable<
+  NonNullable<IssueListQuery["response"]["issuesCollection"]>["edges"][number]
+>["node"];
+
 export function IssueList() {
   const data = useLazyLoadQuery<IssueListQuery>(query, VARS);
   useRealtimeRefetch("issues-list", [{ table: "issues" }], query, VARS);
 
-  const edges = data.issuesCollection?.edges ?? [];
+  const nodes: Issue[] = (data.issuesCollection?.edges ?? []).map((e) => e.node);
+
+  const [collapsed, setCollapsed] = useState<Set<IssueStatus>>(
+    () => new Set(DEFAULT_COLLAPSED),
+  );
+  function toggle(s: IssueStatus) {
+    setCollapsed((prev) => {
+      const next = new Set(prev);
+      if (next.has(s)) next.delete(s);
+      else next.add(s);
+      return next;
+    });
+  }
+
+  const groups = new Map<IssueStatus, Issue[]>(GROUP_ORDER.map((s) => [s, []]));
+  for (const n of nodes) {
+    const bucket = groups.get(n.status);
+    if (bucket) bucket.push(n);
+  }
+
+  if (nodes.length === 0) {
+    return (
+      <div className="shell-pad py-20 text-center">
+        <p className="text-sm text-text-secondary">No issues yet.</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="w-full max-w-3xl mx-auto p-8">
-      <h1 className="text-2xl font-semibold mb-6">Issues</h1>
-      {edges.length === 0 ? (
-        <p className="text-sm text-text-muted">No issues yet.</p>
-      ) : (
-        <div className="border border-border rounded-lg divide-y divide-border">
-          {edges.map(({ node }) => (
-            <Link
-              key={node.nodeId}
-              href={`/issues/${node.number}`}
-              className="flex items-center gap-3 px-4 py-3 hover:bg-bg-hover transition-colors"
+    <div className="flex-1 overflow-auto">
+      {GROUP_ORDER.map((s) => {
+        const items = groups.get(s) ?? [];
+        const isCollapsed = collapsed.has(s);
+        const cfg = STATUS_CONFIG[s];
+        return (
+          <section key={s}>
+            <button
+              type="button"
+              onClick={() => toggle(s)}
+              className="shell-pad sticky top-0 z-[2] bg-bg-raised border-b border-border-muted h-8 w-full flex items-center gap-[10px] text-[12px] font-medium text-text cursor-pointer"
+              aria-expanded={!isCollapsed}
             >
-              <StatusIcon status={node.status} />
-              <span className="text-sm text-text-muted tabular-nums w-8">
-                {node.number}
+              <span
+                className="w-[18px] inline-flex items-center justify-center text-text-muted transition-transform duration-[120ms]"
+                style={{ transform: isCollapsed ? "rotate(-90deg)" : "none" }}
+                aria-hidden
+              >
+                <ChevronDown className="size-3" strokeWidth={2} />
               </span>
-              <span className="flex-1 text-sm font-medium text-text">
-                {node.title}
-              </span>
-              <PriorityIcon priority={node.priority} />
-            </Link>
-          ))}
-        </div>
-      )}
+              <StatusIcon status={s} size={14} />
+              <span>{cfg.label}</span>
+              <span className="mono text-text-muted">{items.length}</span>
+            </button>
+            {!isCollapsed && items.length === 0 && (
+              <div className="shell-pad py-2.5 text-[12px] text-text-muted">
+                No issues
+              </div>
+            )}
+            {!isCollapsed &&
+              items.map((issue) => <IssueRow key={issue.nodeId} issue={issue} />)}
+          </section>
+        );
+      })}
     </div>
+  );
+}
+
+function IssueRow({ issue }: { issue: Issue }) {
+  return (
+    <Link
+      href={`/issues/${issue.number}`}
+      className="shell-pad grid items-center gap-[10px] h-9 border-b border-border-muted hover:bg-bg-hover transition-colors"
+      style={{
+        gridTemplateColumns: "18px 14px minmax(0,1fr) auto",
+      }}
+    >
+      <span className="inline-flex items-center justify-center">
+        <PriorityIcon priority={issue.priority} size={14} />
+      </span>
+      <span className="inline-flex items-center justify-center">
+        <StatusIcon status={issue.status} size={14} />
+      </span>
+      <span
+        className="text-[13px] text-text overflow-hidden whitespace-nowrap text-ellipsis"
+        style={{ fontWeight: 450 }}
+      >
+        {issue.title}
+      </span>
+      <span className="inline-flex items-center justify-end">
+        <UserAvatar user={issue.assignee} size={18} />
+      </span>
+    </Link>
   );
 }
