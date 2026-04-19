@@ -63,7 +63,7 @@ export function PriorityPicker({
         <span>{current.label}</span>
       </Dropdown.Trigger>
 
-      <Dropdown.Menu className="min-w-40 top-full left-0 mt-1">
+      <Dropdown.Menu className="min-w-40">
         {SELECTABLE_PRIORITIES.map((value) => {
           const { icon: Icon, label, className: color } = PRIORITY_CONFIG[value];
           const isCurrent = value === priority;

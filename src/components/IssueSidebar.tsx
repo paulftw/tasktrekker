@@ -4,28 +4,61 @@ import type { ReactNode } from "react";
 import { graphql, useFragment } from "react-relay";
 import { StatusPicker } from "./StatusPicker";
 import { PriorityPicker } from "./PriorityPicker";
-import { UserAvatar } from "./UserAvatar";
+import { AssigneePicker } from "./AssigneePicker";
+import { LabelsPicker } from "./LabelsPicker";
 import type { IssueSidebar_issue$key } from "@/__generated__/IssueSidebar_issue.graphql";
+import type { IssueSidebar_query$key } from "@/__generated__/IssueSidebar_query.graphql";
 
-const fragment = graphql`
+const issueFragment = graphql`
   fragment IssueSidebar_issue on issues {
     nodeId
     number
     status
     priority
     created_at
+    assignee_id
     assignee: users {
+      nodeId
+      id
       name
       avatar_url
     }
-    issue_labelsCollection(first: 20) {
+    issue_labelsCollection(first: 100)
+      @connection(key: "IssueSidebar_issue__issue_labelsCollection") {
       edges {
         node {
+          nodeId
           labels {
             nodeId
+            number
             name
             color
           }
+        }
+      }
+    }
+  }
+`;
+
+const queryFragment = graphql`
+  fragment IssueSidebar_query on Query {
+    usersCollection(first: 100, orderBy: [{ name: AscNullsLast }]) {
+      edges {
+        node {
+          nodeId
+          id
+          name
+          avatar_url
+        }
+      }
+    }
+    labelsCollection(first: 100, orderBy: [{ name: AscNullsLast }]) {
+      edges {
+        node {
+          nodeId
+          number
+          name
+          color
         }
       }
     }
@@ -58,13 +91,25 @@ function PropertyRow({ label, children }: { label: string; children: ReactNode }
   );
 }
 
-export function IssueSidebar({ issue }: { issue: IssueSidebar_issue$key }) {
-  const data = useFragment(fragment, issue);
-  const { assignee } = data;
+export function IssueSidebar({
+  issue,
+  query,
+}: {
+  issue: IssueSidebar_issue$key;
+  query: IssueSidebar_query$key;
+}) {
+  const data = useFragment(issueFragment, issue);
+  const queryData = useFragment(queryFragment, query);
+
   const labels =
     data.issue_labelsCollection?.edges
       .map((e) => e.node.labels)
       .filter((l): l is NonNullable<typeof l> => l !== null) ?? [];
+
+  const users =
+    queryData.usersCollection?.edges.map((e) => e.node) ?? [];
+  const allLabels =
+    queryData.labelsCollection?.edges.map((e) => e.node) ?? [];
 
   return (
     <div>
@@ -84,35 +129,22 @@ export function IssueSidebar({ issue }: { issue: IssueSidebar_issue$key }) {
         />
       </PropertyRow>
       <PropertyRow label="Assignee">
-        <div
-          className={`inline-flex items-center gap-1.5 px-1.5 py-[3px] -ml-1.5 text-[12.5px] ${
-            assignee ? "text-text" : "text-text-muted"
-          }`}
-        >
-          <UserAvatar user={assignee ?? null} size={18} />
-          <span>{assignee ? assignee.name : "Unassigned"}</span>
-        </div>
+        <AssigneePicker
+          nodeId={data.nodeId}
+          number={data.number}
+          assigneeId={data.assignee_id ?? null}
+          assignee={data.assignee}
+          users={users}
+        />
       </PropertyRow>
 
       <SectionHead>Labels</SectionHead>
-      {labels.length > 0 ? (
-        <div className="flex flex-wrap gap-1">
-          {labels.map((label) => (
-            <span
-              key={label.nodeId}
-              className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10.5px] bg-bg-inset text-text-secondary"
-            >
-              <span
-                className="size-1.5 rounded-full"
-                style={{ backgroundColor: `#${label.color}` }}
-              />
-              {label.name}
-            </span>
-          ))}
-        </div>
-      ) : (
-        <p className="text-[12px] text-text-muted">No labels</p>
-      )}
+      <LabelsPicker
+        issueNodeId={data.nodeId}
+        issueNumber={data.number}
+        labels={allLabels}
+        selected={labels}
+      />
 
       <SectionHead>Dates</SectionHead>
       <div className="flex justify-between text-[12px]">

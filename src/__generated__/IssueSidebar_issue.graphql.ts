@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7b2545129688796b21ecfd2283de9600>>
+ * @generated SignedSource<<57332b6a3d5123c570e6fd96f23285c3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,8 +15,11 @@ import { FragmentRefs } from "relay-runtime";
 export type IssueSidebar_issue$data = {
   readonly assignee: {
     readonly avatar_url: string | null | undefined;
+    readonly id: string;
     readonly name: string;
+    readonly nodeId: string;
   } | null | undefined;
+  readonly assignee_id: string | null | undefined;
   readonly created_at: string;
   readonly issue_labelsCollection: {
     readonly edges: ReadonlyArray<{
@@ -25,7 +28,9 @@ export type IssueSidebar_issue$data = {
           readonly color: string;
           readonly name: string;
           readonly nodeId: string;
+          readonly number: number;
         };
+        readonly nodeId: string;
       };
     }>;
   } | null | undefined;
@@ -52,23 +57,35 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "number",
+  "storageKey": null
+},
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 };
 return {
   "argumentDefinitions": [],
   "kind": "Fragment",
-  "metadata": null,
+  "metadata": {
+    "connection": [
+      {
+        "count": null,
+        "cursor": null,
+        "direction": "forward",
+        "path": [
+          "issue_labelsCollection"
+        ]
+      }
+    ]
+  },
   "name": "IssueSidebar_issue",
   "selections": [
     (v0/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "number",
-      "storageKey": null
-    },
+    (v1/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -91,6 +108,13 @@ return {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "assignee_id",
+      "storageKey": null
+    },
+    {
       "alias": "assignee",
       "args": null,
       "concreteType": "users",
@@ -98,7 +122,15 @@ return {
       "name": "users",
       "plural": false,
       "selections": [
-        (v1/*: any*/),
+        (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
+        },
+        (v2/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -110,17 +142,11 @@ return {
       "storageKey": null
     },
     {
-      "alias": null,
-      "args": [
-        {
-          "kind": "Literal",
-          "name": "first",
-          "value": 20
-        }
-      ],
+      "alias": "issue_labelsCollection",
+      "args": null,
       "concreteType": "issue_labelsConnection",
       "kind": "LinkedField",
-      "name": "issue_labelsCollection",
+      "name": "__IssueSidebar_issue__issue_labelsCollection_connection",
       "plural": false,
       "selections": [
         {
@@ -139,6 +165,7 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
+                (v0/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -149,6 +176,7 @@ return {
                   "selections": [
                     (v0/*: any*/),
                     (v1/*: any*/),
+                    (v2/*: any*/),
                     {
                       "alias": null,
                       "args": null,
@@ -158,15 +186,54 @@ return {
                     }
                   ],
                   "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
+                  "storageKey": null
                 }
               ],
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cursor",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "PageInfo",
+          "kind": "LinkedField",
+          "name": "pageInfo",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "endCursor",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "hasNextPage",
               "storageKey": null
             }
           ],
           "storageKey": null
         }
       ],
-      "storageKey": "issue_labelsCollection(first:20)"
+      "storageKey": null
     }
   ],
   "type": "issues",
@@ -174,6 +241,6 @@ return {
 };
 })();
 
-(node as any).hash = "846882d5b1812ec337dfde76eae9e5a4";
+(node as any).hash = "fcd75dcbab92e28111e52e32a33a2b60";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6048d41856eae50b2698bbbfda3bf68e>>
+ * @generated SignedSource<<850b82e97ac92eafe9b2fb0f4dbe68ba>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,6 +22,7 @@ export type IssueDetailQuery$data = {
       };
     }>;
   } | null | undefined;
+  readonly " $fragmentSpreads": FragmentRefs<"IssueSidebar_query">;
 };
 export type IssueDetailQuery = {
   response: IssueDetailQuery$data;
@@ -87,7 +88,57 @@ v5 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
-};
+},
+v6 = [
+  (v2/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "id",
+    "storageKey": null
+  },
+  (v5/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "avatar_url",
+    "storageKey": null
+  }
+],
+v7 = {
+  "kind": "Literal",
+  "name": "first",
+  "value": 100
+},
+v8 = [
+  (v7/*: any*/)
+],
+v9 = [
+  (v2/*: any*/),
+  (v3/*: any*/),
+  (v5/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "color",
+    "storageKey": null
+  }
+],
+v10 = [
+  (v7/*: any*/),
+  {
+    "kind": "Literal",
+    "name": "orderBy",
+    "value": [
+      {
+        "name": "AscNullsLast"
+      }
+    ]
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -148,6 +199,11 @@ return {
           }
         ],
         "storageKey": null
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "IssueSidebar_query"
       }
     ],
     "type": "Query",
@@ -215,34 +271,25 @@ return {
                   },
                   (v4/*: any*/),
                   {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "assignee_id",
+                    "storageKey": null
+                  },
+                  {
                     "alias": "assignee",
                     "args": null,
                     "concreteType": "users",
                     "kind": "LinkedField",
                     "name": "users",
                     "plural": false,
-                    "selections": [
-                      (v5/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "avatar_url",
-                        "storageKey": null
-                      },
-                      (v2/*: any*/)
-                    ],
+                    "selections": (v6/*: any*/),
                     "storageKey": null
                   },
                   {
                     "alias": null,
-                    "args": [
-                      {
-                        "kind": "Literal",
-                        "name": "first",
-                        "value": 20
-                      }
-                    ],
+                    "args": (v8/*: any*/),
                     "concreteType": "issue_labelsConnection",
                     "kind": "LinkedField",
                     "name": "issue_labelsCollection",
@@ -264,6 +311,7 @@ return {
                             "name": "node",
                             "plural": false,
                             "selections": [
+                              (v2/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -271,28 +319,65 @@ return {
                                 "kind": "LinkedField",
                                 "name": "labels",
                                 "plural": false,
-                                "selections": [
-                                  (v2/*: any*/),
-                                  (v5/*: any*/),
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "color",
-                                    "storageKey": null
-                                  }
-                                ],
+                                "selections": (v9/*: any*/),
                                 "storageKey": null
                               },
-                              (v2/*: any*/)
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "__typename",
+                                "storageKey": null
+                              }
                             ],
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "cursor",
+                            "storageKey": null
+                          }
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "PageInfo",
+                        "kind": "LinkedField",
+                        "name": "pageInfo",
+                        "plural": false,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "endCursor",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "hasNextPage",
                             "storageKey": null
                           }
                         ],
                         "storageKey": null
                       }
                     ],
-                    "storageKey": "issue_labelsCollection(first:20)"
+                    "storageKey": "issue_labelsCollection(first:100)"
+                  },
+                  {
+                    "alias": null,
+                    "args": (v8/*: any*/),
+                    "filters": null,
+                    "handle": "connection",
+                    "key": "IssueSidebar_issue__issue_labelsCollection",
+                    "kind": "LinkedHandle",
+                    "name": "issue_labelsCollection"
                   },
                   {
                     "alias": null,
@@ -373,20 +458,84 @@ return {
           }
         ],
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": (v10/*: any*/),
+        "concreteType": "usersConnection",
+        "kind": "LinkedField",
+        "name": "usersCollection",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "usersEdge",
+            "kind": "LinkedField",
+            "name": "edges",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "users",
+                "kind": "LinkedField",
+                "name": "node",
+                "plural": false,
+                "selections": (v6/*: any*/),
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": "usersCollection(first:100,orderBy:[{\"name\":\"AscNullsLast\"}])"
+      },
+      {
+        "alias": null,
+        "args": (v10/*: any*/),
+        "concreteType": "labelsConnection",
+        "kind": "LinkedField",
+        "name": "labelsCollection",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "labelsEdge",
+            "kind": "LinkedField",
+            "name": "edges",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "labels",
+                "kind": "LinkedField",
+                "name": "node",
+                "plural": false,
+                "selections": (v9/*: any*/),
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": "labelsCollection(first:100,orderBy:[{\"name\":\"AscNullsLast\"}])"
       }
     ]
   },
   "params": {
-    "cacheID": "6d5167402bbb6ebf25edcb61b351892b",
+    "cacheID": "d5a86b00116ac266a2124be0d1b67adb",
     "id": null,
     "metadata": {},
     "name": "IssueDetailQuery",
     "operationKind": "query",
-    "text": "query IssueDetailQuery(\n  $number: Int!\n) {\n  issuesCollection(filter: {number: {eq: $number}}, first: 1) {\n    edges {\n      node {\n        nodeId\n        ...IssueHeader_issue\n        ...IssueDescription_issue\n        ...IssueSidebar_issue\n        ...IssueComments_issue\n      }\n    }\n  }\n}\n\nfragment IssueComments_issue on issues {\n  commentsCollection(first: 50, orderBy: [{number: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        body\n        created_at\n        author: users {\n          name\n          nodeId\n        }\n      }\n    }\n  }\n}\n\nfragment IssueDescription_issue on issues {\n  nodeId\n  number\n  description\n}\n\nfragment IssueHeader_issue on issues {\n  nodeId\n  number\n  title\n}\n\nfragment IssueSidebar_issue on issues {\n  nodeId\n  number\n  status\n  priority\n  created_at\n  assignee: users {\n    name\n    avatar_url\n    nodeId\n  }\n  issue_labelsCollection(first: 20) {\n    edges {\n      node {\n        labels {\n          nodeId\n          name\n          color\n        }\n        nodeId\n      }\n    }\n  }\n}\n"
+    "text": "query IssueDetailQuery(\n  $number: Int!\n) {\n  issuesCollection(filter: {number: {eq: $number}}, first: 1) {\n    edges {\n      node {\n        nodeId\n        ...IssueHeader_issue\n        ...IssueDescription_issue\n        ...IssueSidebar_issue\n        ...IssueComments_issue\n      }\n    }\n  }\n  ...IssueSidebar_query\n}\n\nfragment IssueComments_issue on issues {\n  commentsCollection(first: 50, orderBy: [{number: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        body\n        created_at\n        author: users {\n          name\n          nodeId\n        }\n      }\n    }\n  }\n}\n\nfragment IssueDescription_issue on issues {\n  nodeId\n  number\n  description\n}\n\nfragment IssueHeader_issue on issues {\n  nodeId\n  number\n  title\n}\n\nfragment IssueSidebar_issue on issues {\n  nodeId\n  number\n  status\n  priority\n  created_at\n  assignee_id\n  assignee: users {\n    nodeId\n    id\n    name\n    avatar_url\n  }\n  issue_labelsCollection(first: 100) {\n    edges {\n      node {\n        nodeId\n        labels {\n          nodeId\n          number\n          name\n          color\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment IssueSidebar_query on Query {\n  usersCollection(first: 100, orderBy: [{name: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        id\n        name\n        avatar_url\n      }\n    }\n  }\n  labelsCollection(first: 100, orderBy: [{name: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "fe51205b6855762f34399f2d3e15c9aa";
+(node as any).hash = "c4fd63d12843325090229adbf2c455a0";
 
 export default node;

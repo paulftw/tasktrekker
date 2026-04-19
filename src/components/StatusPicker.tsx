@@ -26,12 +26,10 @@ export function StatusPicker({
   nodeId,
   number,
   status,
-  className = "",
 }: {
   nodeId: string;
   number: number;
   status: IssueStatus;
-  className?: string;
 }) {
   const [commit, isInFlight] = useMutation<StatusPickerUpdateMutation>(mutation);
 
@@ -56,7 +54,7 @@ export function StatusPicker({
   }
 
   return (
-    <Dropdown className={className}>
+    <Dropdown>
       <Dropdown.Trigger
         disabled={isInFlight}
         aria-label={`Status: ${current.label}. Click to change.`}
@@ -66,7 +64,7 @@ export function StatusPicker({
         <span>{current.label}</span>
       </Dropdown.Trigger>
 
-      <Dropdown.Menu className="left-0 top-full mt-1 min-w-40">
+      <Dropdown.Menu className="min-w-40">
         {SELECTABLE_STATUSES.map((value) => {
           const { icon: Icon, label, className: color } = STATUS_CONFIG[value];
           const isCurrent = value === status;
