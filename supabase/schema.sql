@@ -2,7 +2,7 @@
 -- Paste into Supabase SQL Editor
 
 create type issue_status as enum ('backlog', 'todo', 'in_progress', 'done', 'cancelled');
-create type issue_priority as enum ('none', 'low', 'medium', 'high', 'urgent');
+create type issue_priority as enum ('low', 'medium', 'high', 'urgent');
 
 create table users (
   id uuid primary key default gen_random_uuid(),
@@ -19,7 +19,7 @@ create table issues (
   description text not null default ''
     check (length(description) <= 10000),
   status issue_status not null default 'backlog',
-  priority issue_priority not null default 'none',
+  priority issue_priority not null default 'low',
   assignee_id uuid references users(id),
   created_at timestamptz not null default now()
 );
