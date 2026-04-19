@@ -1,12 +1,21 @@
 'use client';
 
-import { graphql, useFragment } from 'react-relay';
+import { useState, useRef } from 'react';
+import { graphql, useFragment, useMutation, ConnectionHandler } from 'react-relay';
 import { UserAvatar } from './UserAvatar';
+import { ShortcutTextarea } from './ShortcutTextarea';
+import { toast } from 'sonner';
 import type { IssueComments_issue$key } from '@/__generated__/IssueComments_issue.graphql';
+import type { IssueComments_query$key } from '@/__generated__/IssueComments_query.graphql';
+import { usePlatform } from '@/lib/usePlatform';
+import type { IssueCommentsAddMutation } from '@/__generated__/IssueCommentsAddMutation.graphql';
 
-const fragment = graphql`
+const issueFragment = graphql`
   fragment IssueComments_issue on issues {
-    commentsCollection(first: 50, orderBy: [{ number: AscNullsLast }]) {
+    nodeId
+    number
+    commentsCollection(first: 50, orderBy: [{ number: AscNullsLast }])
+      @connection(key: "IssueComments_issue__commentsCollection", filters: []) {
       edges {
         node {
           nodeId
@@ -15,7 +24,46 @@ const fragment = graphql`
           created_at
           author: users {
             name
+            avatar_url
           }
+        }
+      }
+    }
+  }
+`;
+
+const queryFragment = graphql`
+  fragment IssueComments_query on Query {
+    # TODO: Remove this when authentication is implemented
+    # We use the first user as a fallback author for new comments
+    firstUser: usersCollection(first: 1) {
+      edges {
+        node {
+          id
+        }
+      }
+    }
+  }
+`;
+
+const addCommentMutation = graphql`
+  mutation IssueCommentsAddMutation(
+    $connections: [ID!]!
+    $issue_id: Int!
+    $body: String!
+    $author_id: UUID!
+  ) {
+    insertIntocommentsCollection(
+      objects: [{ issue_id: $issue_id, body: $body, author_id: $author_id }]
+    ) {
+      records @appendNode(connections: $connections, edgeTypeName: "commentsEdge") {
+        nodeId
+        number
+        body
+        created_at
+        author: users {
+          name
+          avatar_url
         }
       }
     }
@@ -27,20 +75,73 @@ const DATE_FORMAT = new Intl.DateTimeFormat('en-US', {
   day: 'numeric',
 });
 
-export function IssueComments({ issue }: { issue: IssueComments_issue$key }) {
-  const data = useFragment(fragment, issue);
+export function IssueComments({
+  issue,
+  query,
+}: {
+  issue: IssueComments_issue$key;
+  query: IssueComments_query$key;
+}) {
+  const data = useFragment(issueFragment, issue);
+  const queryData = useFragment(queryFragment, query);
+  const [commit, isInFlight] = useMutation<IssueCommentsAddMutation>(addCommentMutation);
+  const [body, setBody] = useState('');
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const platform = usePlatform();
+
+  function handleCancel() {
+    setBody('');
+    textareaRef.current?.blur();
+  }
+
   const comments = data.commentsCollection?.edges ?? [];
+  // TODO: Remove this when authentication is implemented and use the real current user's ID
+  const authorId = queryData.firstUser?.edges[0]?.node?.id;
+
+  function submitComment() {
+    if (!body.trim() || !authorId || isInFlight) return;
+
+    const connectionId = ConnectionHandler.getConnectionID(
+      data.nodeId,
+      'IssueComments_issue__commentsCollection',
+    );
+
+    commit({
+      variables: {
+        connections: [connectionId],
+        issue_id: data.number,
+        body: body.trim(),
+        author_id: authorId,
+      },
+      onCompleted: () => {
+        setBody('');
+      },
+      onError: err => {
+        const msg = err instanceof Error ? err.message : 'Unknown error';
+        toast.error('Failed to add comment', { description: msg });
+        console.error('Add comment failed:', err);
+      },
+    });
+  }
+
+  function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    submitComment();
+  }
 
   return (
     <div>
       <h2 className="text-[11px] font-medium text-text-muted uppercase tracking-[0.04em] mb-3">
         Activity
-        {comments.length > 0 && <span className="ml-1.5 mono text-text-muted normal-case">{comments.length}</span>}
+        {comments.length > 0 && (
+          <span className="ml-1.5 mono text-text-muted normal-case">{comments.length}</span>
+        )}
       </h2>
+      
       {comments.length === 0 ? (
-        <p className="text-[13px] text-text-muted italic">No comments yet.</p>
+        <p className="text-[13px] text-text-muted italic mb-6">No comments yet.</p>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-4 mb-6">
           {comments.map(({ node }) => (
             <div key={node.nodeId} id={`comment-${node.number}`} className="flex gap-3 scroll-mt-8">
               <UserAvatar user={node.author} size={24} />
@@ -54,12 +155,44 @@ export function IssueComments({ issue }: { issue: IssueComments_issue$key }) {
                     {DATE_FORMAT.format(new Date(node.created_at))}
                   </a>
                 </div>
-                <p className="text-[13px] text-text mt-1 whitespace-pre-wrap leading-relaxed">{node.body}</p>
+                <p className="text-[13px] text-text mt-1 whitespace-pre-wrap leading-relaxed">
+                  {node.body}
+                </p>
               </div>
             </div>
           ))}
         </div>
       )}
+
+      <form onSubmit={onSubmit} className="mt-5 border border-border rounded-lg bg-bg-raised transition-all focus-within:border-[var(--color-accent)] focus-within:ring-[3px] focus-within:ring-[color-mix(in_oklch,var(--color-accent)_15%,transparent)] focus-within:bg-bg">
+        <ShortcutTextarea
+          ref={textareaRef}
+          value={body}
+          onChange={e => setBody(e.target.value)}
+          onSubmitShortcut={submitComment}
+          onCancelShortcut={handleCancel}
+          placeholder="Leave a comment..."
+          className="w-full min-h-[56px] px-3 py-2.5 border-0 bg-transparent outline-none focus:outline-none resize-none text-[13px] leading-relaxed"
+          disabled={isInFlight}
+        />
+        <div className="flex items-center px-2 py-1.5 pl-3 border-t border-border-muted">
+          <span className="text-[11px] text-text-muted mr-auto">
+            {platform === 'mac'
+              ? '⌘↵ to send, Esc to cancel'
+              : platform === 'windows'
+                ? 'Ctrl+Enter to send, Esc to cancel'
+                : null}
+          </span>
+          <button
+            type="submit"
+            disabled={!body.trim() || isInFlight}
+            className="px-3 py-1.5 bg-[var(--color-accent)] text-white border-transparent text-[12px] font-medium rounded-md hover:brightness-110 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all"
+            style={{ opacity: !body.trim() || isInFlight ? 0.5 : 1 }}
+          >
+            Comment
+          </button>
+        </div>
+      </form>
     </div>
   );
 }

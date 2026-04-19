@@ -22,6 +22,7 @@ const query = graphql`
       }
     }
     ...IssueSidebar_query
+    ...IssueComments_query
   }
 `;
 
@@ -55,7 +56,7 @@ export function IssueDetail({ number }: { number: number }) {
           <IssueHeader issue={issue} />
           <IssueDescription issue={issue} />
           <hr className="border-border-muted" />
-          <IssueComments issue={issue} />
+          <IssueComments issue={issue} query={data} />
         </div>
         <div className="w-60 flex-shrink-0">
           <IssueSidebar issue={issue} query={data} />

@@ -46,3 +46,39 @@ test('realtime: status change in window A propagates to window B', async ({ brow
   await ctxA.close();
   await ctxB.close();
 });
+
+test('realtime: add comment in window A propagates to window B', async ({ browser }) => {
+  const ctxA = await browser.newContext();
+  const ctxB = await browser.newContext();
+  const pageA = await ctxA.newPage();
+  const pageB = await ctxB.newPage();
+
+  await pageA.goto('/');
+  const firstLink = pageA.locator("a[href^='/issues/']").first();
+  await expect(firstLink).toBeVisible();
+  const href = await firstLink.getAttribute('href');
+  if (!href) throw new Error('no issue link on list');
+
+  await Promise.all([pageA.goto(href), pageB.goto(href)]);
+
+  const inputA = pageA.locator('textarea[placeholder="Leave a comment..."]');
+  await expect(inputA).toBeVisible();
+
+  // Give both clients' realtime channels a moment to subscribe
+  await pageB.waitForTimeout(1500);
+
+  const stamp = `Realtime Comment ${Date.now()}`;
+  await inputA.fill(stamp);
+  await pageA.getByRole('button', { name: 'Comment' }).click();
+
+  // Wait for it to appear in A
+  const newCommentA = pageA.getByText(stamp);
+  await expect(newCommentA).toBeVisible();
+
+  // Assert it propagates to B
+  const newCommentB = pageB.getByText(stamp);
+  await expect(newCommentB).toBeVisible({ timeout: 10_000 });
+
+  await ctxA.close();
+  await ctxB.close();
+});

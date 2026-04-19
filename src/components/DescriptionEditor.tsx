@@ -3,7 +3,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { graphql, useMutation } from 'react-relay';
 import { toast } from 'sonner';
+import { ShortcutTextarea } from './ShortcutTextarea';
 import { issueDescriptionSchema } from '@/lib/validation';
+import { usePlatform } from '@/lib/usePlatform';
 import type { DescriptionEditorUpdateMutation } from '@/__generated__/DescriptionEditorUpdateMutation.graphql';
 
 const mutation = graphql`
@@ -31,6 +33,7 @@ export function DescriptionEditor({
   const [error, setError] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [commit, isInFlight] = useMutation<DescriptionEditorUpdateMutation>(mutation);
+  const platform = usePlatform();
 
   useEffect(() => {
     if (!editing) setValue(description);
@@ -94,22 +97,15 @@ export function DescriptionEditor({
 
   return (
     <div className="-mx-2">
-      <textarea
+      <ShortcutTextarea
         ref={textareaRef}
         value={value}
         onChange={e => {
           setValue(e.target.value);
           if (error) setError(null);
         }}
-        onKeyDown={e => {
-          if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-            e.preventDefault();
-            save();
-          } else if (e.key === 'Escape') {
-            e.preventDefault();
-            cancel();
-          }
-        }}
+        onSubmitShortcut={save}
+        onCancelShortcut={cancel}
         onBlur={save}
         disabled={isInFlight}
         aria-label="Description"
@@ -122,11 +118,19 @@ export function DescriptionEditor({
           <p role="alert" className="text-xs text-status-cancelled">
             {error}
           </p>
-        ) : (
+        ) : platform !== 'mobile' && platform !== null ? (
           <p className="text-xs text-text-muted">
-            <kbd>⌘</kbd>+<kbd>Enter</kbd> to save, <kbd>Esc</kbd> to cancel
+            {platform === 'mac' ? (
+              <>
+                <kbd>⌘↵</kbd> to save, <kbd>Esc</kbd> to cancel
+              </>
+            ) : (
+              <>
+                <kbd>Ctrl</kbd>+<kbd>Enter</kbd> to save, <kbd>Esc</kbd> to cancel
+              </>
+            )}
           </p>
-        )}
+        ) : null}
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<71f55c31fd10184bfd092799d2eafc5f>>
+ * @generated SignedSource<<8401669c6714ed72ccb6e59440d6e4cf>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type IssueComments_issue$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly author: {
+          readonly avatar_url: string | null | undefined;
           readonly name: string;
         };
         readonly body: string;
@@ -24,6 +25,8 @@ export type IssueComments_issue$data = {
       };
     }>;
   } | null | undefined;
+  readonly nodeId: string;
+  readonly number: number;
   readonly " $fragmentType": "IssueComments_issue";
 };
 export type IssueComments_issue$key = {
@@ -31,33 +34,46 @@ export type IssueComments_issue$key = {
   readonly " $fragmentSpreads": FragmentRefs<"IssueComments_issue">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "nodeId",
+  "storageKey": null
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "number",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [],
   "kind": "Fragment",
-  "metadata": null,
+  "metadata": {
+    "connection": [
+      {
+        "count": null,
+        "cursor": null,
+        "direction": "forward",
+        "path": [
+          "commentsCollection"
+        ]
+      }
+    ]
+  },
   "name": "IssueComments_issue",
   "selections": [
+    (v0/*: any*/),
+    (v1/*: any*/),
     {
-      "alias": null,
-      "args": [
-        {
-          "kind": "Literal",
-          "name": "first",
-          "value": 50
-        },
-        {
-          "kind": "Literal",
-          "name": "orderBy",
-          "value": [
-            {
-              "number": "AscNullsLast"
-            }
-          ]
-        }
-      ],
+      "alias": "commentsCollection",
+      "args": null,
       "concreteType": "commentsConnection",
       "kind": "LinkedField",
-      "name": "commentsCollection",
+      "name": "__IssueComments_issue__commentsCollection_connection",
       "plural": false,
       "selections": [
         {
@@ -76,20 +92,8 @@ const node: ReaderFragment = {
               "name": "node",
               "plural": false,
               "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "nodeId",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "number",
-                  "storageKey": null
-                },
+                (v0/*: any*/),
+                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -118,24 +122,71 @@ const node: ReaderFragment = {
                       "kind": "ScalarField",
                       "name": "name",
                       "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "avatar_url",
+                      "storageKey": null
                     }
                   ],
                   "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
+                  "storageKey": null
                 }
               ],
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cursor",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "PageInfo",
+          "kind": "LinkedField",
+          "name": "pageInfo",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "endCursor",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "hasNextPage",
               "storageKey": null
             }
           ],
           "storageKey": null
         }
       ],
-      "storageKey": "commentsCollection(first:50,orderBy:[{\"number\":\"AscNullsLast\"}])"
+      "storageKey": null
     }
   ],
   "type": "issues",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "3e4761947ab126e6c5c773c4dd04bad6";
+(node as any).hash = "ac3e39ecea073a24eca1e657ab254a4d";
 
 export default node;
