@@ -8,6 +8,7 @@ import { useRealtimeRefetch } from '@/lib/useRealtimeRefetch';
 import { StatusIcon, STATUS_CONFIG } from './StatusIcon';
 import { PriorityIcon } from './PriorityIcon';
 import { UserAvatar } from './UserAvatar';
+import { LabelPill } from './LabelPill';
 import type { IssueStatus } from '@/types/enums';
 import type { IssueListQuery } from '@/__generated__/IssueListQuery.graphql';
 
@@ -25,6 +26,19 @@ const query = graphql`
             name
             avatar_url
           }
+          issue_labelsCollection(first: 10) {
+            edges {
+              node {
+                nodeId
+                labels {
+                  nodeId
+                  number
+                  name
+                  color
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -40,7 +54,7 @@ type Issue = NonNullable<NonNullable<IssueListQuery['response']['issuesCollectio
 
 export function IssueList() {
   const data = useLazyLoadQuery<IssueListQuery>(query, VARS);
-  useRealtimeRefetch('issues-list', [{ table: 'issues' }], query, VARS);
+  useRealtimeRefetch('issues-list', [{ table: 'issues' }, { table: 'issue_labels' }], query, VARS);
 
   const nodes: Issue[] = (data.issuesCollection?.edges ?? []).map(e => e.node);
 
@@ -105,12 +119,18 @@ export function IssueList() {
 }
 
 function IssueRow({ issue }: { issue: Issue }) {
+  const labels =
+    issue.issue_labelsCollection?.edges.map(e => e.node.labels).filter((l): l is NonNullable<typeof l> => l !== null) ??
+    [];
+  const visible = labels.slice(0, 3);
+  const overflow = labels.length - visible.length;
+
   return (
     <Link
       href={`/issues/${issue.number}`}
       className="shell-pad grid items-center gap-[10px] h-9 border-b border-border-muted hover:bg-bg-hover transition-colors"
       style={{
-        gridTemplateColumns: '18px 14px minmax(0,1fr) auto',
+        gridTemplateColumns: '18px 14px minmax(0,1fr) auto auto',
       }}
     >
       <span className="inline-flex items-center justify-center">
@@ -124,6 +144,16 @@ function IssueRow({ issue }: { issue: Issue }) {
         style={{ fontWeight: 450 }}
       >
         {issue.title}
+      </span>
+      <span className="hidden sm:flex items-center gap-1 max-w-[240px] overflow-hidden">
+        {visible.map(l => (
+          <LabelPill key={l.number} label={l} size="xs" />
+        ))}
+        {overflow > 0 && (
+          <span className="inline-flex items-center rounded-full bg-bg-inset text-text-secondary px-1.5 py-px text-[10px]">
+            +{overflow}
+          </span>
+        )}
       </span>
       <span className="inline-flex items-center justify-end">
         <UserAvatar user={issue.assignee} size={18} />

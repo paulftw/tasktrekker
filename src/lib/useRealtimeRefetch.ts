@@ -14,7 +14,7 @@ import { clearChannelStatus, setChannelStatus } from './realtimeStatus';
 // speaks pg_graphql shapes (`number`, encoded `nodeId`, scalar coercions).
 
 export type RealtimeFilter = {
-  table: 'issues' | 'comments';
+  table: 'issues' | 'comments' | 'issue_labels';
   filter?: string;
 };
 

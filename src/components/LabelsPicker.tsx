@@ -3,8 +3,9 @@
 import { graphql, useMutation } from 'react-relay';
 import { ConnectionHandler, type RecordSourceSelectorProxy } from 'relay-runtime';
 import { toast } from 'sonner';
-import { Check, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { Dropdown } from './Dropdown';
+import { LabelPill } from './LabelPill';
 import type { LabelsPickerAddMutation } from '@/__generated__/LabelsPickerAddMutation.graphql';
 import type { LabelsPickerRemoveMutation } from '@/__generated__/LabelsPickerRemoveMutation.graphql';
 
@@ -159,14 +160,14 @@ function RemovableLabel({ label, onRemove, disabled }: { label: Label; onRemove:
       <Dropdown.Trigger
         disabled={disabled}
         aria-label={`Label: ${label.name}. Click to remove.`}
-        className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10.5px] bg-bg-inset text-text-secondary hover:bg-bg-hover transition-colors disabled:opacity-60 cursor-pointer max-w-full min-w-0"
+        className="max-w-full min-w-0 cursor-pointer disabled:opacity-60"
       >
-        <span className="size-1.5 rounded-full shrink-0" style={{ backgroundColor: `#${label.color}` }} />
-        <span className="truncate">{label.name}</span>
+        <LabelPill label={label} className="hover:bg-bg-hover transition-colors" />
       </Dropdown.Trigger>
       <Dropdown.Menu className="min-w-44 w-56 max-w-[calc(100vw-2rem)]">
         <Dropdown.Item onClick={onRemove}>
-          <span className="flex-1 truncate text-left">Remove {label.name}</span>
+          <LabelPill label={label} />
+          <span className="text-text-muted">Remove</span>
         </Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>

@@ -160,6 +160,8 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 - Test suite, component layer: Vitest + Testing Library + `relay-test-utils`, SWC transform (same as production, no babel fork). StatusPicker commit contract + `getDataID` normalization regression pin (README Problem 5).
 - Test suite, integration layer: hits demo Supabase directly. Comment-numbering trigger assigns 1..N per issue; StatusPickerUpdateMutation round-trips through pg_graphql; `labels.color` check rejects non-hex. Leaves rows behind — demo DB, no cleanup. Not property-based: we're demonstrating it works, not stress-testing concurrency. Runs via `npm test`.
 - Test suite, E2E layer: two Playwright tests. (1) Golden path: list → click issue → change status via picker → assert the button's `aria-label` reflects the new status. Proves the full wiring (Relay fetch, route params, mutation commit, optimistic update, store re-read via `getDataID`). (2) Realtime: two browser contexts on the same issue, change status in A, assert it propagates to B. Proves the Supabase Realtime → Relay refetch bridge. Runs via `npx playwright test`; dev server auto-spawns. Unit layer skipped — no pure business logic to pin.
+- Claude Design applied - layout, icons, grouped view.
+- Labels on list rows: up to 3 `LabelPill` + `+N` overflow. Shared `LabelPill` component drives the sidebar, list rows, and the remove-label dropdown item — one source of truth for the dot+name pill. Realtime extended to subscribe to `issue_labels` so cross-window add/remove propagates.
 
 ### Pending
 
@@ -167,7 +169,6 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 - Issue list cursor-based pagination.
 - Comment thread cursor-based pagination and add-comment.
 - Deploy to Vercel.
-- Bring in claude design.
 
 ### Punted (would do with more time)
 

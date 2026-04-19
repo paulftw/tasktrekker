@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<be52390948f61913e2f98ccc5af2fcce>>
+ * @generated SignedSource<<70adca859be2ebd0650bdd4f0062265c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,6 +21,19 @@ export type IssueListQuery$data = {
         readonly assignee: {
           readonly avatar_url: string | null | undefined;
           readonly name: string;
+        } | null | undefined;
+        readonly issue_labelsCollection: {
+          readonly edges: ReadonlyArray<{
+            readonly node: {
+              readonly labels: {
+                readonly color: string;
+                readonly name: string;
+                readonly nodeId: string;
+                readonly number: number;
+              };
+              readonly nodeId: string;
+            };
+          }>;
         } | null | undefined;
         readonly nodeId: string;
         readonly number: number;
@@ -108,6 +121,67 @@ v8 = {
   "kind": "ScalarField",
   "name": "avatar_url",
   "storageKey": null
+},
+v9 = {
+  "alias": null,
+  "args": [
+    {
+      "kind": "Literal",
+      "name": "first",
+      "value": 10
+    }
+  ],
+  "concreteType": "issue_labelsConnection",
+  "kind": "LinkedField",
+  "name": "issue_labelsCollection",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "issue_labelsEdge",
+      "kind": "LinkedField",
+      "name": "edges",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "issue_labels",
+          "kind": "LinkedField",
+          "name": "node",
+          "plural": false,
+          "selections": [
+            (v2/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "labels",
+              "kind": "LinkedField",
+              "name": "labels",
+              "plural": false,
+              "selections": [
+                (v2/*: any*/),
+                (v3/*: any*/),
+                (v7/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "color",
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    }
+  ],
+  "storageKey": "issue_labelsCollection(first:10)"
 };
 return {
   "fragment": {
@@ -157,7 +231,8 @@ return {
                       (v8/*: any*/)
                     ],
                     "storageKey": null
-                  }
+                  },
+                  (v9/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -219,7 +294,8 @@ return {
                       (v2/*: any*/)
                     ],
                     "storageKey": null
-                  }
+                  },
+                  (v9/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -232,16 +308,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "3b88d1b63e729461f00345a1c60ea5af",
+    "cacheID": "cd8c1ff3dbef612fc1b8498495bb5bb3",
     "id": null,
     "metadata": {},
     "name": "IssueListQuery",
     "operationKind": "query",
-    "text": "query IssueListQuery(\n  $first: Int!\n) {\n  issuesCollection(first: $first, orderBy: [{created_at: DescNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        title\n        status\n        priority\n        assignee: users {\n          name\n          avatar_url\n          nodeId\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query IssueListQuery(\n  $first: Int!\n) {\n  issuesCollection(first: $first, orderBy: [{created_at: DescNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        title\n        status\n        priority\n        assignee: users {\n          name\n          avatar_url\n          nodeId\n        }\n        issue_labelsCollection(first: 10) {\n          edges {\n            node {\n              nodeId\n              labels {\n                nodeId\n                number\n                name\n                color\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "96363a0c0cf22f6a90869a9be8146e72";
+(node as any).hash = "db9b52350b1933ba6be8eeef605801d1";
 
 export default node;
