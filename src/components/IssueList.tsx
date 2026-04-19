@@ -4,17 +4,19 @@ import { graphql, useLazyLoadQuery } from 'react-relay';
 import Link from 'next/link';
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 import { useRealtimeRefetch } from '@/lib/useRealtimeRefetch';
 import { StatusIcon, STATUS_CONFIG } from './StatusIcon';
 import { PriorityIcon } from './PriorityIcon';
 import { UserAvatar } from './UserAvatar';
 import { LabelPill } from './LabelPill';
-import type { IssueStatus } from '@/types/enums';
+import { FilterBar } from './FilterBar';
+import type { IssueStatus, IssuePriority } from '@/types/enums';
 import type { IssueListQuery } from '@/__generated__/IssueListQuery.graphql';
 
 const query = graphql`
-  query IssueListQuery($first: Int!) {
-    issuesCollection(first: $first, orderBy: [{ created_at: DescNullsLast }]) {
+  query IssueListQuery($first: Int!, $filter: issuesFilter) {
+    issuesCollection(first: $first, filter: $filter, orderBy: [{ created_at: DescNullsLast }]) {
       edges {
         node {
           nodeId
@@ -42,10 +44,18 @@ const query = graphql`
         }
       }
     }
+    labelsCollection(orderBy: [{ name: AscNullsLast }]) {
+      edges {
+        node {
+          nodeId
+          number
+          name
+          color
+        }
+      }
+    }
   }
 `;
-
-const VARS = { first: 20 } as const;
 
 const GROUP_ORDER: IssueStatus[] = ['in_progress', 'todo', 'backlog', 'done', 'cancelled'];
 const DEFAULT_COLLAPSED: IssueStatus[] = ['done', 'cancelled'];
@@ -53,10 +63,31 @@ const DEFAULT_COLLAPSED: IssueStatus[] = ['done', 'cancelled'];
 type Issue = NonNullable<NonNullable<IssueListQuery['response']['issuesCollection']>['edges'][number]>['node'];
 
 export function IssueList() {
-  const data = useLazyLoadQuery<IssueListQuery>(query, VARS);
-  useRealtimeRefetch('issues-list', [{ table: 'issues' }, { table: 'issue_labels' }], query, VARS);
+  const searchParams = useSearchParams();
+  const selectedPriority = searchParams.get('priority') as IssuePriority | null;
+  const selectedLabels = new Set(searchParams.getAll('label'));
 
-  const nodes: Issue[] = (data.issuesCollection?.edges ?? []).map(e => e.node);
+  const vars = {
+    first: 20,
+    filter: selectedPriority ? { priority: { eq: selectedPriority } } : null,
+  };
+
+  const data = useLazyLoadQuery<IssueListQuery>(query, vars);
+  useRealtimeRefetch('issues-list', [{ table: 'issues' }, { table: 'issue_labels' }], query, vars);
+
+  let nodes: Issue[] = (data.issuesCollection?.edges ?? []).map(e => e.node);
+  const labels = (data.labelsCollection?.edges ?? []).map(e => e.node);
+
+  if (selectedLabels.size > 0) {
+    nodes = nodes.filter(issue => {
+      const issueLabelNames = new Set(
+        issue.issue_labelsCollection?.edges
+          .map(e => e.node.labels?.name)
+          .filter(Boolean)
+      );
+      return Array.from(selectedLabels).every(label => issueLabelNames.has(label));
+    });
+  }
 
   const [collapsed, setCollapsed] = useState<Set<IssueStatus>>(() => new Set(DEFAULT_COLLAPSED));
   function toggle(s: IssueStatus) {
@@ -74,7 +105,7 @@ export function IssueList() {
     if (bucket) bucket.push(n);
   }
 
-  if (nodes.length === 0) {
+  if (nodes.length === 0 && !selectedPriority && selectedLabels.size === 0) {
     return (
       <div className="shell-pad py-20 text-center">
         <p className="text-sm text-text-secondary">No issues yet.</p>
@@ -83,9 +114,11 @@ export function IssueList() {
   }
 
   return (
-    <div className="flex-1 overflow-auto">
-      {GROUP_ORDER.map(s => {
-        const items = groups.get(s) ?? [];
+    <div className="flex-1 flex flex-col overflow-hidden">
+      <FilterBar labels={labels} />
+      <div className="flex-1 overflow-auto">
+        {GROUP_ORDER.map(s => {
+          const items = groups.get(s) ?? [];
         const isCollapsed = collapsed.has(s);
         const cfg = STATUS_CONFIG[s];
         return (
@@ -114,6 +147,7 @@ export function IssueList() {
           </section>
         );
       })}
+      </div>
     </div>
   );
 }

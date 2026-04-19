@@ -19,7 +19,7 @@ const SignalMedium: IconComponent = props => (
   </svg>
 );
 
-const SignalHigh: IconComponent = props => (
+export const SignalHigh: IconComponent = props => (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <rect x="3" y="16" width="3" height="5" rx="0.75" fill="currentColor" />
     <rect x="9" y="12" width="3" height="9" rx="0.75" fill="currentColor" />

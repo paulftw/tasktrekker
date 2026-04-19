@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<70adca859be2ebd0650bdd4f0062265c>>
+ * @generated SignedSource<<68316b6bb57d184f16f7299de9c4344f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,9 +9,80 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type FilterIs = "NOT_NULL" | "NULL" | "%future added value";
 export type issue_priority = "high" | "low" | "medium" | "urgent" | "%future added value";
 export type issue_status = "backlog" | "cancelled" | "done" | "in_progress" | "todo" | "%future added value";
+export type issuesFilter = {
+  and?: ReadonlyArray<issuesFilter> | null | undefined;
+  assignee_id?: UUIDFilter | null | undefined;
+  created_at?: DatetimeFilter | null | undefined;
+  description?: StringFilter | null | undefined;
+  nodeId?: IDFilter | null | undefined;
+  not?: issuesFilter | null | undefined;
+  number?: IntFilter | null | undefined;
+  or?: ReadonlyArray<issuesFilter> | null | undefined;
+  priority?: issue_priorityFilter | null | undefined;
+  status?: issue_statusFilter | null | undefined;
+  title?: StringFilter | null | undefined;
+};
+export type IntFilter = {
+  eq?: number | null | undefined;
+  gt?: number | null | undefined;
+  gte?: number | null | undefined;
+  in?: ReadonlyArray<number> | null | undefined;
+  is?: FilterIs | null | undefined;
+  lt?: number | null | undefined;
+  lte?: number | null | undefined;
+  neq?: number | null | undefined;
+};
+export type StringFilter = {
+  eq?: string | null | undefined;
+  gt?: string | null | undefined;
+  gte?: string | null | undefined;
+  ilike?: string | null | undefined;
+  in?: ReadonlyArray<string> | null | undefined;
+  iregex?: string | null | undefined;
+  is?: FilterIs | null | undefined;
+  like?: string | null | undefined;
+  lt?: string | null | undefined;
+  lte?: string | null | undefined;
+  neq?: string | null | undefined;
+  regex?: string | null | undefined;
+  startsWith?: string | null | undefined;
+};
+export type issue_statusFilter = {
+  eq?: issue_status | null | undefined;
+  in?: ReadonlyArray<issue_status> | null | undefined;
+  is?: FilterIs | null | undefined;
+  neq?: issue_status | null | undefined;
+};
+export type issue_priorityFilter = {
+  eq?: issue_priority | null | undefined;
+  in?: ReadonlyArray<issue_priority> | null | undefined;
+  is?: FilterIs | null | undefined;
+  neq?: issue_priority | null | undefined;
+};
+export type UUIDFilter = {
+  eq?: string | null | undefined;
+  in?: ReadonlyArray<string> | null | undefined;
+  is?: FilterIs | null | undefined;
+  neq?: string | null | undefined;
+};
+export type DatetimeFilter = {
+  eq?: string | null | undefined;
+  gt?: string | null | undefined;
+  gte?: string | null | undefined;
+  in?: ReadonlyArray<string> | null | undefined;
+  is?: FilterIs | null | undefined;
+  lt?: string | null | undefined;
+  lte?: string | null | undefined;
+  neq?: string | null | undefined;
+};
+export type IDFilter = {
+  eq?: string | null | undefined;
+};
 export type IssueListQuery$variables = {
+  filter?: issuesFilter | null | undefined;
   first: number;
 };
 export type IssueListQuery$data = {
@@ -43,6 +114,16 @@ export type IssueListQuery$data = {
       };
     }>;
   } | null | undefined;
+  readonly labelsCollection: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly color: string;
+        readonly name: string;
+        readonly nodeId: string;
+        readonly number: number;
+      };
+    }>;
+  } | null | undefined;
 };
 export type IssueListQuery = {
   response: IssueListQuery$data;
@@ -50,14 +131,22 @@ export type IssueListQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = [
+var v0 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "filter"
+},
+v1 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "first"
+},
+v2 = [
   {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "first"
-  }
-],
-v1 = [
+    "kind": "Variable",
+    "name": "filter",
+    "variableName": "filter"
+  },
   {
     "kind": "Variable",
     "name": "first",
@@ -73,56 +162,68 @@ v1 = [
     ]
   }
 ],
-v2 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "nodeId",
   "storageKey": null
 },
-v3 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "number",
   "storageKey": null
 },
-v4 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "title",
   "storageKey": null
 },
-v5 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "status",
   "storageKey": null
 },
-v6 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "priority",
   "storageKey": null
 },
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v8 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "avatar_url",
   "storageKey": null
 },
-v9 = {
+v10 = [
+  (v3/*: any*/),
+  (v4/*: any*/),
+  (v8/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "color",
+    "storageKey": null
+  }
+],
+v11 = {
   "alias": null,
   "args": [
     {
@@ -152,7 +253,7 @@ v9 = {
           "name": "node",
           "plural": false,
           "selections": [
-            (v2/*: any*/),
+            (v3/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -160,18 +261,7 @@ v9 = {
               "kind": "LinkedField",
               "name": "labels",
               "plural": false,
-              "selections": [
-                (v2/*: any*/),
-                (v3/*: any*/),
-                (v7/*: any*/),
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "color",
-                  "storageKey": null
-                }
-              ],
+              "selections": (v10/*: any*/),
               "storageKey": null
             }
           ],
@@ -182,17 +272,62 @@ v9 = {
     }
   ],
   "storageKey": "issue_labelsCollection(first:10)"
+},
+v12 = {
+  "alias": null,
+  "args": [
+    {
+      "kind": "Literal",
+      "name": "orderBy",
+      "value": [
+        {
+          "name": "AscNullsLast"
+        }
+      ]
+    }
+  ],
+  "concreteType": "labelsConnection",
+  "kind": "LinkedField",
+  "name": "labelsCollection",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "labelsEdge",
+      "kind": "LinkedField",
+      "name": "edges",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "labels",
+          "kind": "LinkedField",
+          "name": "node",
+          "plural": false,
+          "selections": (v10/*: any*/),
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    }
+  ],
+  "storageKey": "labelsCollection(orderBy:[{\"name\":\"AscNullsLast\"}])"
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v0/*: any*/),
+      (v1/*: any*/)
+    ],
     "kind": "Fragment",
     "metadata": null,
     "name": "IssueListQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v2/*: any*/),
         "concreteType": "issuesConnection",
         "kind": "LinkedField",
         "name": "issuesCollection",
@@ -214,11 +349,11 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v2/*: any*/),
                   (v3/*: any*/),
                   (v4/*: any*/),
                   (v5/*: any*/),
                   (v6/*: any*/),
+                  (v7/*: any*/),
                   {
                     "alias": "assignee",
                     "args": null,
@@ -227,12 +362,12 @@ return {
                     "name": "users",
                     "plural": false,
                     "selections": [
-                      (v7/*: any*/),
-                      (v8/*: any*/)
+                      (v8/*: any*/),
+                      (v9/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v9/*: any*/)
+                  (v11/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -241,20 +376,24 @@ return {
           }
         ],
         "storageKey": null
-      }
+      },
+      (v12/*: any*/)
     ],
     "type": "Query",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v1/*: any*/),
+      (v0/*: any*/)
+    ],
     "kind": "Operation",
     "name": "IssueListQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v2/*: any*/),
         "concreteType": "issuesConnection",
         "kind": "LinkedField",
         "name": "issuesCollection",
@@ -276,11 +415,11 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v2/*: any*/),
                   (v3/*: any*/),
                   (v4/*: any*/),
                   (v5/*: any*/),
                   (v6/*: any*/),
+                  (v7/*: any*/),
                   {
                     "alias": "assignee",
                     "args": null,
@@ -289,13 +428,13 @@ return {
                     "name": "users",
                     "plural": false,
                     "selections": [
-                      (v7/*: any*/),
                       (v8/*: any*/),
-                      (v2/*: any*/)
+                      (v9/*: any*/),
+                      (v3/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v9/*: any*/)
+                  (v11/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -304,20 +443,21 @@ return {
           }
         ],
         "storageKey": null
-      }
+      },
+      (v12/*: any*/)
     ]
   },
   "params": {
-    "cacheID": "cd8c1ff3dbef612fc1b8498495bb5bb3",
+    "cacheID": "3bd14be7744a3a68bc39c78fd1112337",
     "id": null,
     "metadata": {},
     "name": "IssueListQuery",
     "operationKind": "query",
-    "text": "query IssueListQuery(\n  $first: Int!\n) {\n  issuesCollection(first: $first, orderBy: [{created_at: DescNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        title\n        status\n        priority\n        assignee: users {\n          name\n          avatar_url\n          nodeId\n        }\n        issue_labelsCollection(first: 10) {\n          edges {\n            node {\n              nodeId\n              labels {\n                nodeId\n                number\n                name\n                color\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query IssueListQuery(\n  $first: Int!\n  $filter: issuesFilter\n) {\n  issuesCollection(first: $first, filter: $filter, orderBy: [{created_at: DescNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        title\n        status\n        priority\n        assignee: users {\n          name\n          avatar_url\n          nodeId\n        }\n        issue_labelsCollection(first: 10) {\n          edges {\n            node {\n              nodeId\n              labels {\n                nodeId\n                number\n                name\n                color\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n  labelsCollection(orderBy: [{name: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "db9b52350b1933ba6be8eeef605801d1";
+(node as any).hash = "5367613fc2d33c3a970b514891f94f8d";
 
 export default node;
