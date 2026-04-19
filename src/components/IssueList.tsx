@@ -54,6 +54,16 @@ const query = graphql`
         }
       }
     }
+    usersCollection(first: 100, orderBy: [{ name: AscNullsLast }]) {
+      edges {
+        node {
+          nodeId
+          id
+          name
+          avatar_url
+        }
+      }
+    }
   }
 `;
 
@@ -67,10 +77,22 @@ export function IssueList() {
   const selectedPriority = searchParams.get('priority') as IssuePriority | null;
   const selectedStatuses = new Set(searchParams.getAll('status') as IssueStatus[]);
   const selectedLabels = new Set(searchParams.getAll('label'));
+  const selectedAssignees = new Set(searchParams.getAll('assignee'));
 
   const filter: any = {};
   if (selectedPriority) filter.priority = { eq: selectedPriority };
   if (selectedStatuses.size > 0) filter.status = { in: Array.from(selectedStatuses) };
+  if (selectedAssignees.size > 0) {
+    const includesUnassigned = selectedAssignees.has('unassigned');
+    const userIds = Array.from(selectedAssignees).filter(id => id !== 'unassigned');
+    if (includesUnassigned && userIds.length > 0) {
+      filter.or = [{ assignee_id: { is: 'NULL' } }, { assignee_id: { in: userIds } }];
+    } else if (includesUnassigned) {
+      filter.assignee_id = { is: 'NULL' };
+    } else {
+      filter.assignee_id = { in: userIds };
+    }
+  }
 
   const vars = {
     first: 20,
@@ -82,6 +104,7 @@ export function IssueList() {
 
   let nodes: Issue[] = (data.issuesCollection?.edges ?? []).map(e => e.node);
   const labels = (data.labelsCollection?.edges ?? []).map(e => e.node);
+  const users = (data.usersCollection?.edges ?? []).map(e => e.node);
 
   if (selectedLabels.size > 0) {
     nodes = nodes.filter(issue => {
@@ -95,6 +118,22 @@ export function IssueList() {
   }
 
   const [collapsed, setCollapsed] = useState<Set<IssueStatus>>(() => new Set(DEFAULT_COLLAPSED));
+  const [prevStatusesKey, setPrevStatusesKey] = useState(() => Array.from(selectedStatuses).sort().join(','));
+
+  const currentStatusesKey = Array.from(selectedStatuses).sort().join(',');
+  if (currentStatusesKey !== prevStatusesKey) {
+    setPrevStatusesKey(currentStatusesKey);
+    const prevSet = new Set(prevStatusesKey ? prevStatusesKey.split(',') : []);
+    const added = Array.from(selectedStatuses).filter(s => !prevSet.has(s as IssueStatus));
+    if (added.length > 0) {
+      setCollapsed(c => {
+        const next = new Set(c);
+        added.forEach(s => next.delete(s as IssueStatus));
+        return next;
+      });
+    }
+  }
+
   function toggle(s: IssueStatus) {
     setCollapsed(prev => {
       const next = new Set(prev);
@@ -110,7 +149,13 @@ export function IssueList() {
     if (bucket) bucket.push(n);
   }
 
-  if (nodes.length === 0 && !selectedPriority && selectedLabels.size === 0 && selectedStatuses.size === 0) {
+  if (
+    nodes.length === 0 &&
+    !selectedPriority &&
+    selectedLabels.size === 0 &&
+    selectedStatuses.size === 0 &&
+    selectedAssignees.size === 0
+  ) {
     return (
       <div className="shell-pad py-20 text-center">
         <p className="text-sm text-text-secondary">No issues yet.</p>
@@ -120,7 +165,7 @@ export function IssueList() {
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      <FilterBar labels={labels} />
+      <FilterBar labels={labels} users={users} />
       <div className="flex-1 overflow-auto">
         {GROUP_ORDER.filter(s => selectedStatuses.size === 0 || selectedStatuses.has(s)).map(s => {
           const items = groups.get(s) ?? [];

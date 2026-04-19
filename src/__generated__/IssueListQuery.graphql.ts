@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<68316b6bb57d184f16f7299de9c4344f>>
+ * @generated SignedSource<<249ab7fc4a24628d38283cfd30313225>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -121,6 +121,16 @@ export type IssueListQuery$data = {
         readonly name: string;
         readonly nodeId: string;
         readonly number: number;
+      };
+    }>;
+  } | null | undefined;
+  readonly usersCollection: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly avatar_url: string | null | undefined;
+        readonly id: string;
+        readonly name: string;
+        readonly nodeId: string;
       };
     }>;
   } | null | undefined;
@@ -274,17 +284,18 @@ v11 = {
   "storageKey": "issue_labelsCollection(first:10)"
 },
 v12 = {
+  "kind": "Literal",
+  "name": "orderBy",
+  "value": [
+    {
+      "name": "AscNullsLast"
+    }
+  ]
+},
+v13 = {
   "alias": null,
   "args": [
-    {
-      "kind": "Literal",
-      "name": "orderBy",
-      "value": [
-        {
-          "name": "AscNullsLast"
-        }
-      ]
-    }
+    (v12/*: any*/)
   ],
   "concreteType": "labelsConnection",
   "kind": "LinkedField",
@@ -314,6 +325,56 @@ v12 = {
     }
   ],
   "storageKey": "labelsCollection(orderBy:[{\"name\":\"AscNullsLast\"}])"
+},
+v14 = {
+  "alias": null,
+  "args": [
+    {
+      "kind": "Literal",
+      "name": "first",
+      "value": 100
+    },
+    (v12/*: any*/)
+  ],
+  "concreteType": "usersConnection",
+  "kind": "LinkedField",
+  "name": "usersCollection",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "usersEdge",
+      "kind": "LinkedField",
+      "name": "edges",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "users",
+          "kind": "LinkedField",
+          "name": "node",
+          "plural": false,
+          "selections": [
+            (v3/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "id",
+              "storageKey": null
+            },
+            (v8/*: any*/),
+            (v9/*: any*/)
+          ],
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    }
+  ],
+  "storageKey": "usersCollection(first:100,orderBy:[{\"name\":\"AscNullsLast\"}])"
 };
 return {
   "fragment": {
@@ -377,7 +438,8 @@ return {
         ],
         "storageKey": null
       },
-      (v12/*: any*/)
+      (v13/*: any*/),
+      (v14/*: any*/)
     ],
     "type": "Query",
     "abstractKey": null
@@ -444,20 +506,21 @@ return {
         ],
         "storageKey": null
       },
-      (v12/*: any*/)
+      (v13/*: any*/),
+      (v14/*: any*/)
     ]
   },
   "params": {
-    "cacheID": "3bd14be7744a3a68bc39c78fd1112337",
+    "cacheID": "b988172f3339be1b84f39c44c630873d",
     "id": null,
     "metadata": {},
     "name": "IssueListQuery",
     "operationKind": "query",
-    "text": "query IssueListQuery(\n  $first: Int!\n  $filter: issuesFilter\n) {\n  issuesCollection(first: $first, filter: $filter, orderBy: [{created_at: DescNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        title\n        status\n        priority\n        assignee: users {\n          name\n          avatar_url\n          nodeId\n        }\n        issue_labelsCollection(first: 10) {\n          edges {\n            node {\n              nodeId\n              labels {\n                nodeId\n                number\n                name\n                color\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n  labelsCollection(orderBy: [{name: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "query IssueListQuery(\n  $first: Int!\n  $filter: issuesFilter\n) {\n  issuesCollection(first: $first, filter: $filter, orderBy: [{created_at: DescNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        title\n        status\n        priority\n        assignee: users {\n          name\n          avatar_url\n          nodeId\n        }\n        issue_labelsCollection(first: 10) {\n          edges {\n            node {\n              nodeId\n              labels {\n                nodeId\n                number\n                name\n                color\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n  labelsCollection(orderBy: [{name: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        name\n        color\n      }\n    }\n  }\n  usersCollection(first: 100, orderBy: [{name: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        id\n        name\n        avatar_url\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "5367613fc2d33c3a970b514891f94f8d";
+(node as any).hash = "4f22fe637b5aa06c09022d1c62626974";
 
 export default node;

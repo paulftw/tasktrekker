@@ -99,10 +99,13 @@
     border: 1px dashed var(--color-border);
     background: transparent;
     font-size: 12px; color: var(--color-text-secondary);
+    line-height: 1;
     cursor: pointer;
   }
   .chip:hover { background: var(--color-bg-hover); color: var(--color-text); border-style: solid; }
   .chip.solid { border-style: solid; background: var(--color-bg-inset); color: var(--color-text); }
+  .chip .chip-icon { display: inline-flex; align-items: center; justify-content: center; line-height: 0; flex-shrink: 0; }
+  .chip .chip-icon > svg { display: block; }
   .chip .plus { color: var(--color-text-muted); font-size: 13px; line-height: 1; }
   .chip .remove { margin-left: 2px; color: var(--color-text-muted); }
   .chip .remove:hover { color: var(--color-text); }

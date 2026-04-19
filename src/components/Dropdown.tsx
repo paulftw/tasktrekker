@@ -1,9 +1,6 @@
 'use client';
 
-// Thin wrapper over @radix-ui/react-dropdown-menu. Keeps a compound
-// Dropdown.Trigger / Dropdown.Menu / Dropdown.Item API so pickers stay
-// readable, while Radix handles portaling, collision flipping, focus
-// management, and keyboard nav.
+// Thin wrapper over @radix-ui/react-dropdown-menu with some default styling and simplified API.
 
 import * as RDM from '@radix-ui/react-dropdown-menu';
 import type { ReactNode } from 'react';
@@ -61,13 +58,18 @@ Dropdown.Menu = function DropdownMenu({
   align = 'start',
   side = 'bottom',
   sideOffset = 4,
+  onOpenAutoFocus,
 }: {
   children: ReactNode;
   className?: string;
   align?: 'start' | 'center' | 'end';
   side?: 'top' | 'right' | 'bottom' | 'left';
   sideOffset?: number;
+  onOpenAutoFocus?: (e: Event) => void;
 }) {
+  // onOpenAutoFocus is omitted from Radix's public root Content type in 2.1.x,
+  // but runtime forwards it to the FocusScope. Cast through to expose it.
+  const extraProps = { onOpenAutoFocus } as unknown as RDM.DropdownMenuContentProps;
   return (
     <RDM.Portal>
       <RDM.Content
@@ -76,6 +78,7 @@ Dropdown.Menu = function DropdownMenu({
         sideOffset={sideOffset}
         collisionPadding={8}
         className={`z-[100] rounded-md border border-border bg-bg-overlay shadow-lg py-1 overflow-hidden ${className}`}
+        {...extraProps}
       >
         {children}
       </RDM.Content>
@@ -119,7 +122,7 @@ Dropdown.CheckboxItem = function DropdownCheckboxItem({
     <RDM.CheckboxItem
       checked={checked}
       onCheckedChange={onCheckedChange}
-      onSelect={(e) => {
+      onSelect={e => {
         if (!closeOnSelect) {
           // Prevent closing the menu when clicking a checkbox item
           e.preventDefault();
@@ -135,4 +138,8 @@ Dropdown.CheckboxItem = function DropdownCheckboxItem({
       {children}
     </RDM.CheckboxItem>
   );
+};
+
+Dropdown.Separator = function DropdownSeparator({ className = '' }: { className?: string }) {
+  return <RDM.Separator className={`my-1 h-px bg-border-muted ${className}`} />;
 };

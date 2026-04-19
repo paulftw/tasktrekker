@@ -163,26 +163,28 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 - Claude Design applied - layout, icons, grouped view.
 - Shared `LabelPill` component drives the sidebar, list rows, and the remove-label dropdown item — one source of truth for the dot+name pill. Realtime extended to subscribe to `issue_labels` so cross-window add/remove propagates.
 - Add comment widget with optimistic updates, cross-window realtime propagation, and platform-aware keyboard shortcut handling.
-- Issue list filters: priority and labels (multi-select), properly synced with URL state.
+- Issue list filters: status, labels, assignee, and single-select priority, synced with URL state. Labels and assignees have inline search, and the assignee menu exposes temporary "Assigned to me" / "Unassigned" shortcuts above the user list.
 
 ### Pending
 
-- Issue list filters: status.
+- TODO: Replace the temporary authless current-user fallback (first seeded user) used by the assignee filter's "Assigned to me" shortcut and the comment composer once Supabase Auth lands.
+- Create Issue UI.
 - Issue list cursor-based pagination.
 - Comment thread cursor-based pagination.
 - UI way to create new label.
-- Standardize typography scale (remove fractional pixel font sizes to fix sub-pixel baseline alignment issues).
 - Deploy to Vercel.
+- Standardize typography scale (remove fractional pixel font sizes to fix sub-pixel baseline alignment issues).
 - Change filter by priority to multiselect - spec seems to imply that.
 
 ### Maybe Later
-- Alphabetic sorting of labels everywhere in UI lists. Ordering by colors
+
+- Alphabetic sorting of labels everywhere in UI lists.
 - text-text-muted - wtf?
 - rename SELECTABLE_PRIORITIES, check if status icons are just as bad
 
 ### Punted (would do with more time)
 
-- Auth: Supabase Auth with OAuth, RLS policies.
+- Auth: Supabase Auth with OAuth, RLS policies. Current TODO on top: remove the first-seeded-user fallback that stands in for "me" until auth exists.
 - Read/unread comment count on issue list.
 - Keyboard shortcuts.
 

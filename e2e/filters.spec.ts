@@ -67,3 +67,92 @@ test('filters update URL and issue list', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Todo' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'In Progress' })).toBeVisible();
 });
+
+test('label filter options are searchable', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForLoadState('networkidle');
+
+  const labelTrigger = page.getByRole('button', { name: /^Label/i });
+  await expect(labelTrigger).toBeVisible();
+  await labelTrigger.click();
+
+  const labelMenu = page.locator('[role="menu"]');
+  await expect(labelMenu).toBeVisible();
+
+  const searchInput = page.getByRole('textbox', { name: 'Search labels' });
+  await expect(searchInput).toBeFocused();
+  await searchInput.fill('doc');
+
+  await expect(labelMenu.getByRole('menuitemcheckbox', { name: 'docs' })).toBeVisible();
+  await expect(labelMenu.getByRole('menuitemcheckbox', { name: 'bug' })).toHaveCount(0);
+
+  await labelMenu.getByRole('menuitemcheckbox', { name: 'docs' }).click();
+  await expect(page).toHaveURL(/\?.*label=docs/);
+  await expect(page.getByRole('button', { name: /^docs/i })).toBeVisible();
+});
+
+test('assignee filter supports unassigned and selected users together', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForLoadState('networkidle');
+
+  const assigneeTrigger = page.getByRole('button', { name: /^Assignee/i });
+  await expect(assigneeTrigger).toBeVisible();
+  await assigneeTrigger.click();
+
+  const assigneeMenu = page.locator('[role="menu"]');
+  await expect(assigneeMenu).toBeVisible();
+
+  await assigneeMenu.getByRole('menuitemcheckbox', { name: 'Unassigned' }).click();
+  await expect(page).toHaveURL(/\?.*assignee=unassigned/);
+
+  const issueLinks = page.locator('a[href^="/issues/"]');
+  const totalAfterUnassigned = await issueLinks.count();
+  expect(totalAfterUnassigned).toBeGreaterThan(0);
+  for (let i = 0; i < totalAfterUnassigned; i++) {
+    await expect(issueLinks.nth(i)).toHaveAccessibleName(/Unassigned/);
+  }
+
+  const searchInput = page.getByRole('textbox', { name: 'Search assignees' });
+  await searchInput.fill('alice');
+  await assigneeMenu.getByRole('menuitemcheckbox', { name: 'Alice Johnson' }).click();
+
+  const totalAfterBoth = await issueLinks.count();
+  expect(totalAfterBoth).toBeGreaterThanOrEqual(totalAfterUnassigned);
+  await expect(page.getByRole('link', { name: /Alice Johnson/ }).first()).toBeVisible();
+  await expect(page.getByRole('link', { name: /Unassigned/ }).first()).toBeVisible();
+  for (let i = 0; i < totalAfterBoth; i++) {
+    await expect(issueLinks.nth(i)).toHaveAccessibleName(/Alice Johnson|Unassigned/);
+  }
+});
+
+test('assignee filter shows assigned to me shortcut only before searching', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForLoadState('networkidle');
+
+  const assigneeTrigger = page.getByRole('button', { name: /^Assignee/i });
+  await expect(assigneeTrigger).toBeVisible();
+  await assigneeTrigger.click();
+
+  const assigneeMenu = page.locator('[role="menu"]');
+  await expect(assigneeMenu).toBeVisible();
+
+  const searchInput = page.getByRole('textbox', { name: 'Search assignees' });
+  const assignedToMe = assigneeMenu.getByRole('menuitemcheckbox', { name: 'Assigned to me' });
+  const assigneeItems = assigneeMenu.getByRole('menuitemcheckbox');
+  const specialSeparator = assigneeMenu.getByRole('separator');
+
+  await expect(assignedToMe).toBeVisible();
+  await expect(assigneeItems.first()).toContainText('Assigned to me');
+  await expect(assigneeItems.nth(1)).toContainText('Unassigned');
+  await expect(specialSeparator).toBeVisible();
+
+  await searchInput.fill('ali');
+  await expect(assignedToMe).toHaveCount(0);
+  await expect(specialSeparator).toHaveCount(0);
+  await expect(assigneeMenu.getByRole('menuitemcheckbox', { name: 'Alice Johnson' })).toBeVisible();
+
+  await searchInput.clear();
+  await assignedToMe.click();
+  await expect(page).toHaveURL(/\?.*assignee=/);
+  await expect(page.getByRole('link', { name: /Alice Johnson/ }).first()).toBeVisible();
+});
