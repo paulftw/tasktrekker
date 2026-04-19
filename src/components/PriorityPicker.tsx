@@ -1,18 +1,15 @@
-"use client";
+'use client';
 
-import { graphql, useMutation } from "react-relay";
-import { toast } from "sonner";
-import { Dropdown } from "./Dropdown";
-import type { IssuePriority } from "@/types/enums";
-import type { PriorityPickerUpdateMutation } from "@/__generated__/PriorityPickerUpdateMutation.graphql";
-import { SELECTABLE_PRIORITIES, PRIORITY_CONFIG } from "./PriorityIcon";
+import { graphql, useMutation } from 'react-relay';
+import { toast } from 'sonner';
+import { Dropdown } from './Dropdown';
+import type { IssuePriority } from '@/types/enums';
+import type { PriorityPickerUpdateMutation } from '@/__generated__/PriorityPickerUpdateMutation.graphql';
+import { SELECTABLE_PRIORITIES, PRIORITY_CONFIG } from './PriorityIcon';
 
 const mutation = graphql`
   mutation PriorityPickerUpdateMutation($number: Int!, $priority: issue_priority!) {
-    updateissuesCollection(
-      set: { priority: $priority }
-      filter: { number: { eq: $number } }
-    ) {
+    updateissuesCollection(set: { priority: $priority }, filter: { number: { eq: $number } }) {
       records {
         nodeId
         priority
@@ -44,10 +41,10 @@ export function PriorityPicker({
           records: [{ nodeId, priority: next }],
         },
       },
-      onError: (err) => {
-        const msg = err instanceof Error ? err.message : "Unknown error";
-        toast.error("Failed to update priority", { description: msg });
-        console.error("Priority update failed:", err);
+      onError: err => {
+        const msg = err instanceof Error ? err.message : 'Unknown error';
+        toast.error('Failed to update priority', { description: msg });
+        console.error('Priority update failed:', err);
       },
     });
   }
@@ -64,15 +61,11 @@ export function PriorityPicker({
       </Dropdown.Trigger>
 
       <Dropdown.Menu className="min-w-40">
-        {SELECTABLE_PRIORITIES.map((value) => {
+        {SELECTABLE_PRIORITIES.map(value => {
           const { icon: Icon, label, className: color } = PRIORITY_CONFIG[value];
           const isCurrent = value === priority;
           return (
-            <Dropdown.Item
-              key={value}
-              onClick={() => onSelect(value)}
-              className={isCurrent ? "font-medium" : ""}
-            >
+            <Dropdown.Item key={value} onClick={() => onSelect(value)} className={isCurrent ? 'font-medium' : ''}>
               <Icon width={14} height={14} className={color} />
               <span className="flex-1 text-left">{label}</span>
             </Dropdown.Item>

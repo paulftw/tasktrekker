@@ -1,24 +1,21 @@
-"use client";
+'use client';
 
-import { useRealtimeStatus, type RealtimeStatus } from "@/lib/realtimeStatus";
+import { useRealtimeStatus, type RealtimeStatus } from '@/lib/realtimeStatus';
 
-const CONFIG: Record<
-  RealtimeStatus,
-  { label: string; color: string; pulse: boolean }
-> = {
+const CONFIG: Record<RealtimeStatus, { label: string; color: string; pulse: boolean }> = {
   connected: {
-    label: "Live",
-    color: "var(--color-status-done)",
+    label: 'Live',
+    color: 'var(--color-status-done)',
     pulse: true,
   },
   connecting: {
-    label: "Connecting",
-    color: "var(--color-status-in-progress)",
+    label: 'Connecting',
+    color: 'var(--color-status-in-progress)',
     pulse: false,
   },
   error: {
-    label: "Offline",
-    color: "var(--color-status-cancelled)",
+    label: 'Offline',
+    color: 'var(--color-status-cancelled)',
     pulse: false,
   },
 };
@@ -32,7 +29,7 @@ export function RealtimeIndicator() {
       title={`Realtime: ${cfg.label}`}
     >
       <span
-        className={`block size-[7px] rounded-full ${cfg.pulse ? "shell-rt-dot" : ""}`}
+        className={`block size-[7px] rounded-full ${cfg.pulse ? 'shell-rt-dot' : ''}`}
         style={{ background: cfg.color }}
       />
       {cfg.label}

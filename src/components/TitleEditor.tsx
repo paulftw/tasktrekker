@@ -1,18 +1,14 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import { graphql, useMutation } from "react-relay";
-import { toast } from "sonner";
-import { issueTitleSchema } from "@/lib/validation";
-import type { TitleEditorUpdateMutation } from "@/__generated__/TitleEditorUpdateMutation.graphql";
+import { useEffect, useRef, useState } from 'react';
+import { graphql, useMutation } from 'react-relay';
+import { toast } from 'sonner';
+import { issueTitleSchema } from '@/lib/validation';
+import type { TitleEditorUpdateMutation } from '@/__generated__/TitleEditorUpdateMutation.graphql';
 
 const mutation = graphql`
   mutation TitleEditorUpdateMutation($number: Int!, $title: String!) {
-    updateissuesCollection(
-      set: { title: $title }
-      filter: { number: { eq: $number } }
-      atMost: 1
-    ) {
+    updateissuesCollection(set: { title: $title }, filter: { number: { eq: $number } }, atMost: 1) {
       records {
         nodeId
         title
@@ -21,15 +17,7 @@ const mutation = graphql`
   }
 `;
 
-export function TitleEditor({
-  nodeId,
-  number,
-  title,
-}: {
-  nodeId: string;
-  number: number;
-  title: string;
-}) {
+export function TitleEditor({ nodeId, number, title }: { nodeId: string; number: number; title: string }) {
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState(title);
   const [error, setError] = useState<string | null>(null);
@@ -48,7 +36,7 @@ export function TitleEditor({
   useEffect(() => {
     if (editing && inputRef.current) {
       // "auto" will force recalculation; otherwise, it won't shrink when text is deleted.
-      inputRef.current.style.height = "auto";
+      inputRef.current.style.height = 'auto';
       inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
     }
   }, [value, editing]);
@@ -62,7 +50,7 @@ export function TitleEditor({
   function save() {
     const parsed = issueTitleSchema.safeParse(value);
     if (!parsed.success) {
-      setError(parsed.error.issues[0]?.message ?? "Invalid title");
+      setError(parsed.error.issues[0]?.message ?? 'Invalid title');
       return;
     }
     setEditing(false);
@@ -75,10 +63,10 @@ export function TitleEditor({
           records: [{ nodeId, title: parsed.data }],
         },
       },
-      onError: (err) => {
-        const msg = err instanceof Error ? err.message : "Unknown error";
-        toast.error("Failed to update title", { description: msg });
-        console.error("Title update failed:", err);
+      onError: err => {
+        const msg = err instanceof Error ? err.message : 'Unknown error';
+        toast.error('Failed to update title', { description: msg });
+        console.error('Title update failed:', err);
       },
     });
   }
@@ -102,15 +90,15 @@ export function TitleEditor({
         ref={inputRef}
         rows={1}
         value={value}
-        onChange={(e) => {
-          setValue(e.target.value.replace(/\r?\n/g, " "));
+        onChange={e => {
+          setValue(e.target.value.replace(/\r?\n/g, ' '));
           if (error) setError(null);
         }}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
+        onKeyDown={e => {
+          if (e.key === 'Enter') {
             e.preventDefault();
             save();
-          } else if (e.key === "Escape") {
+          } else if (e.key === 'Escape') {
             e.preventDefault();
             cancel();
           }

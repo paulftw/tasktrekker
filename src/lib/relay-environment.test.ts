@@ -1,7 +1,7 @@
-import { createOperationDescriptor, getRequest } from "relay-runtime";
-import { describe, expect, it } from "vitest";
-import StatusPickerUpdateMutationNode from "@/__generated__/StatusPickerUpdateMutation.graphql";
-import { createRelayEnvironment } from "./relay-environment";
+import { createOperationDescriptor, getRequest } from 'relay-runtime';
+import { describe, expect, it } from 'vitest';
+import StatusPickerUpdateMutationNode from '@/__generated__/StatusPickerUpdateMutation.graphql';
+import { createRelayEnvironment } from './relay-environment';
 
 // Regression pin for README "Problem 5": the Relay runtime normalizer must key
 // records by their `nodeId` field (pg_graphql's global ID), not by their path
@@ -13,40 +13,40 @@ import { createRelayEnvironment } from "./relay-environment";
 // normalizer against the real Environment factory, so any regression in the
 // `getDataID` wiring fails this test.
 
-describe("createRelayEnvironment / getDataID", () => {
-  it("keys normalized records by their nodeId", () => {
+describe('createRelayEnvironment / getDataID', () => {
+  it('keys normalized records by their nodeId', () => {
     const env = createRelayEnvironment();
     const request = getRequest(StatusPickerUpdateMutationNode);
     const operation = createOperationDescriptor(request, {
       number: 1,
-      status: "done",
+      status: 'done',
     });
 
     env.commitPayload(operation, {
       updateissuesCollection: {
-        records: [{ nodeId: "issues:1", status: "done" }],
+        records: [{ nodeId: 'issues:1', status: 'done' }],
       },
     });
 
-    const stored = env.getStore().getSource().get("issues:1");
+    const stored = env.getStore().getSource().get('issues:1');
     expect(stored).toBeDefined();
-    expect(stored?.status).toBe("done");
+    expect(stored?.status).toBe('done');
   });
 
-  it("does not collide records from different payload paths that share a nodeId", () => {
+  it('does not collide records from different payload paths that share a nodeId', () => {
     const env = createRelayEnvironment();
     const request = getRequest(StatusPickerUpdateMutationNode);
-    const first = createOperationDescriptor(request, { number: 1, status: "todo" });
-    const second = createOperationDescriptor(request, { number: 1, status: "done" });
+    const first = createOperationDescriptor(request, { number: 1, status: 'todo' });
+    const second = createOperationDescriptor(request, { number: 1, status: 'done' });
 
     env.commitPayload(first, {
-      updateissuesCollection: { records: [{ nodeId: "issues:1", status: "todo" }] },
+      updateissuesCollection: { records: [{ nodeId: 'issues:1', status: 'todo' }] },
     });
     env.commitPayload(second, {
-      updateissuesCollection: { records: [{ nodeId: "issues:1", status: "done" }] },
+      updateissuesCollection: { records: [{ nodeId: 'issues:1', status: 'done' }] },
     });
 
-    const stored = env.getStore().getSource().get("issues:1");
-    expect(stored?.status).toBe("done");
+    const stored = env.getStore().getSource().get('issues:1');
+    expect(stored?.status).toBe('done');
   });
 });

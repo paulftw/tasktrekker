@@ -1,9 +1,9 @@
-import type { ComponentType, SVGProps } from "react";
-import type { IssuePriority } from "@/types/enums";
+import type { ComponentType, SVGProps } from 'react';
+import type { IssuePriority } from '@/types/enums';
 
 type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
-const SignalLow: IconComponent = (props) => (
+const SignalLow: IconComponent = props => (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <rect x="3" y="16" width="3" height="5" rx="0.75" fill="currentColor" />
     <rect x="9" y="12" width="3" height="9" rx="0.75" fill="currentColor" opacity="0.3" />
@@ -11,7 +11,7 @@ const SignalLow: IconComponent = (props) => (
   </svg>
 );
 
-const SignalMedium: IconComponent = (props) => (
+const SignalMedium: IconComponent = props => (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <rect x="3" y="16" width="3" height="5" rx="0.75" fill="currentColor" />
     <rect x="9" y="12" width="3" height="9" rx="0.75" fill="currentColor" />
@@ -19,7 +19,7 @@ const SignalMedium: IconComponent = (props) => (
   </svg>
 );
 
-const SignalHigh: IconComponent = (props) => (
+const SignalHigh: IconComponent = props => (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <rect x="3" y="16" width="3" height="5" rx="0.75" fill="currentColor" />
     <rect x="9" y="12" width="3" height="9" rx="0.75" fill="currentColor" />
@@ -27,7 +27,7 @@ const SignalHigh: IconComponent = (props) => (
   </svg>
 );
 
-const Urgent: IconComponent = (props) => (
+const Urgent: IconComponent = props => (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <rect x="3" y="3" width="18" height="18" rx="4" fill="currentColor" />
     <path d="M12 8v5" stroke="white" strokeWidth="2" strokeLinecap="round" />
@@ -35,32 +35,24 @@ const Urgent: IconComponent = (props) => (
   </svg>
 );
 
-export const PRIORITY_CONFIG: Record<
-  IssuePriority,
-  { icon: IconComponent; label: string; className: string }
-> = {
-  urgent: { icon: Urgent, label: "Urgent", className: "text-priority-urgent" },
-  high: { icon: SignalHigh, label: "High", className: "text-priority-high" },
-  medium: { icon: SignalMedium, label: "Medium", className: "text-priority-medium" },
-  low: { icon: SignalLow, label: "Low", className: "text-priority-low" },
-  "%future added value": {
+export const PRIORITY_CONFIG: Record<IssuePriority, { icon: IconComponent; label: string; className: string }> = {
+  urgent: { icon: Urgent, label: 'Urgent', className: 'text-priority-urgent' },
+  high: { icon: SignalHigh, label: 'High', className: 'text-priority-high' },
+  medium: { icon: SignalMedium, label: 'Medium', className: 'text-priority-medium' },
+  low: { icon: SignalLow, label: 'Low', className: 'text-priority-low' },
+  '%future added value': {
     icon: SignalLow,
-    label: "Unknown",
-    className: "text-priority-low",
+    label: 'Unknown',
+    className: 'text-priority-low',
   },
 };
 
-export const SELECTABLE_PRIORITIES: IssuePriority[] = [
-  "urgent",
-  "high",
-  "medium",
-  "low",
-];
+export const SELECTABLE_PRIORITIES: IssuePriority[] = ['urgent', 'high', 'medium', 'low'];
 
 export function PriorityIcon({
   priority,
   size = 14,
-  className = "",
+  className = '',
 }: {
   priority: IssuePriority;
   size?: number;
@@ -71,7 +63,7 @@ export function PriorityIcon({
     <Icon
       width={size}
       height={size}
-      className={`${color}${className ? ` ${className}` : ""}`}
+      className={`${color}${className ? ` ${className}` : ''}`}
       role="img"
       aria-label={label}
     >

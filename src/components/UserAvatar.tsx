@@ -11,18 +11,12 @@ function initialsFromName(name: string): string {
     .split(/\s+/)
     .filter(Boolean)
     .slice(0, 2)
-    .map((s) => s[0])
-    .join("")
+    .map(s => s[0])
+    .join('')
     .toUpperCase();
 }
 
-export function UserAvatar({
-  user,
-  size = 22,
-}: {
-  user: { name: string } | null | undefined;
-  size?: number;
-}) {
+export function UserAvatar({ user, size = 22 }: { user: { name: string } | null | undefined; size?: number }) {
   if (!user) {
     return (
       <div

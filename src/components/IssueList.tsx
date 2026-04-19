@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { graphql, useLazyLoadQuery } from "react-relay";
-import Link from "next/link";
-import { useState } from "react";
-import { ChevronDown } from "lucide-react";
-import { useRealtimeRefetch } from "@/lib/useRealtimeRefetch";
-import { StatusIcon, STATUS_CONFIG } from "./StatusIcon";
-import { PriorityIcon } from "./PriorityIcon";
-import { UserAvatar } from "./UserAvatar";
-import type { IssueStatus } from "@/types/enums";
-import type { IssueListQuery } from "@/__generated__/IssueListQuery.graphql";
+import { graphql, useLazyLoadQuery } from 'react-relay';
+import Link from 'next/link';
+import { useState } from 'react';
+import { ChevronDown } from 'lucide-react';
+import { useRealtimeRefetch } from '@/lib/useRealtimeRefetch';
+import { StatusIcon, STATUS_CONFIG } from './StatusIcon';
+import { PriorityIcon } from './PriorityIcon';
+import { UserAvatar } from './UserAvatar';
+import type { IssueStatus } from '@/types/enums';
+import type { IssueListQuery } from '@/__generated__/IssueListQuery.graphql';
 
 const query = graphql`
   query IssueListQuery($first: Int!) {
@@ -33,30 +33,20 @@ const query = graphql`
 
 const VARS = { first: 20 } as const;
 
-const GROUP_ORDER: IssueStatus[] = [
-  "in_progress",
-  "todo",
-  "backlog",
-  "done",
-  "cancelled",
-];
-const DEFAULT_COLLAPSED: IssueStatus[] = ["done", "cancelled"];
+const GROUP_ORDER: IssueStatus[] = ['in_progress', 'todo', 'backlog', 'done', 'cancelled'];
+const DEFAULT_COLLAPSED: IssueStatus[] = ['done', 'cancelled'];
 
-type Issue = NonNullable<
-  NonNullable<IssueListQuery["response"]["issuesCollection"]>["edges"][number]
->["node"];
+type Issue = NonNullable<NonNullable<IssueListQuery['response']['issuesCollection']>['edges'][number]>['node'];
 
 export function IssueList() {
   const data = useLazyLoadQuery<IssueListQuery>(query, VARS);
-  useRealtimeRefetch("issues-list", [{ table: "issues" }], query, VARS);
+  useRealtimeRefetch('issues-list', [{ table: 'issues' }], query, VARS);
 
-  const nodes: Issue[] = (data.issuesCollection?.edges ?? []).map((e) => e.node);
+  const nodes: Issue[] = (data.issuesCollection?.edges ?? []).map(e => e.node);
 
-  const [collapsed, setCollapsed] = useState<Set<IssueStatus>>(
-    () => new Set(DEFAULT_COLLAPSED),
-  );
+  const [collapsed, setCollapsed] = useState<Set<IssueStatus>>(() => new Set(DEFAULT_COLLAPSED));
   function toggle(s: IssueStatus) {
-    setCollapsed((prev) => {
+    setCollapsed(prev => {
       const next = new Set(prev);
       if (next.has(s)) next.delete(s);
       else next.add(s);
@@ -64,7 +54,7 @@ export function IssueList() {
     });
   }
 
-  const groups = new Map<IssueStatus, Issue[]>(GROUP_ORDER.map((s) => [s, []]));
+  const groups = new Map<IssueStatus, Issue[]>(GROUP_ORDER.map(s => [s, []]));
   for (const n of nodes) {
     const bucket = groups.get(n.status);
     if (bucket) bucket.push(n);
@@ -80,7 +70,7 @@ export function IssueList() {
 
   return (
     <div className="flex-1 overflow-auto">
-      {GROUP_ORDER.map((s) => {
+      {GROUP_ORDER.map(s => {
         const items = groups.get(s) ?? [];
         const isCollapsed = collapsed.has(s);
         const cfg = STATUS_CONFIG[s];
@@ -94,7 +84,7 @@ export function IssueList() {
             >
               <span
                 className="w-[18px] inline-flex items-center justify-center text-text-muted transition-transform duration-[120ms]"
-                style={{ transform: isCollapsed ? "rotate(-90deg)" : "none" }}
+                style={{ transform: isCollapsed ? 'rotate(-90deg)' : 'none' }}
                 aria-hidden
               >
                 <ChevronDown className="size-3" strokeWidth={2} />
@@ -104,12 +94,9 @@ export function IssueList() {
               <span className="mono text-text-muted">{items.length}</span>
             </button>
             {!isCollapsed && items.length === 0 && (
-              <div className="shell-pad py-2.5 text-[12px] text-text-muted">
-                No issues
-              </div>
+              <div className="shell-pad py-2.5 text-[12px] text-text-muted">No issues</div>
             )}
-            {!isCollapsed &&
-              items.map((issue) => <IssueRow key={issue.nodeId} issue={issue} />)}
+            {!isCollapsed && items.map(issue => <IssueRow key={issue.nodeId} issue={issue} />)}
           </section>
         );
       })}
@@ -123,7 +110,7 @@ function IssueRow({ issue }: { issue: Issue }) {
       href={`/issues/${issue.number}`}
       className="shell-pad grid items-center gap-[10px] h-9 border-b border-border-muted hover:bg-bg-hover transition-colors"
       style={{
-        gridTemplateColumns: "18px 14px minmax(0,1fr) auto",
+        gridTemplateColumns: '18px 14px minmax(0,1fr) auto',
       }}
     >
       <span className="inline-flex items-center justify-center">

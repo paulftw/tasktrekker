@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { Component, ReactNode } from "react";
+import { Component, ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;
@@ -24,10 +24,7 @@ export class ErrorBoundary extends Component<Props, State> {
         this.props.fallback ?? (
           <div className="flex flex-col items-center justify-center min-h-screen gap-4 text-text-muted">
             <p className="text-sm">Something went wrong.</p>
-            <button
-              onClick={() => this.setState({ error: null })}
-              className="text-sm underline hover:text-text"
-            >
+            <button onClick={() => this.setState({ error: null })} className="text-sm underline hover:text-text">
               Try again
             </button>
           </div>

@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
   --color-bg: #ffffff;
@@ -66,7 +66,7 @@
     font-size: 13px;
     letter-spacing: -0.005em;
     -webkit-font-smoothing: antialiased;
-    font-feature-settings: "cv11", "ss01";
+    font-feature-settings: 'cv11', 'ss01';
   }
 
   button:focus-visible,
@@ -104,8 +104,8 @@
 }
 
 @utility mono {
-  font-family: var(--font-mono), ui-monospace, "SF Mono", monospace;
-  font-feature-settings: "tnum";
+  font-family: var(--font-mono), ui-monospace, 'SF Mono', monospace;
+  font-feature-settings: 'tnum';
 }
 
 @keyframes shell-rt-pulse {

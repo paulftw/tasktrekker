@@ -1,9 +1,9 @@
-import type { ComponentType, SVGProps } from "react";
-import type { IssueStatus } from "@/types/enums";
+import type { ComponentType, SVGProps } from 'react';
+import type { IssueStatus } from '@/types/enums';
 
 type IconComponent = ComponentType<SVGProps<SVGSVGElement>>;
 
-const CircleDashed: IconComponent = (props) => (
+const CircleDashed: IconComponent = props => (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <circle
       cx="12"
@@ -17,13 +17,13 @@ const CircleDashed: IconComponent = (props) => (
   </svg>
 );
 
-const CircleRing: IconComponent = (props) => (
+const CircleRing: IconComponent = props => (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <circle cx="12" cy="12" r="9.25" stroke="currentColor" strokeWidth="1.75" />
   </svg>
 );
 
-const CircleDot: IconComponent = (props) => (
+const CircleDot: IconComponent = props => (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <circle
       cx="12"
@@ -38,7 +38,7 @@ const CircleDot: IconComponent = (props) => (
   </svg>
 );
 
-const CircleCheck: IconComponent = (props) => (
+const CircleCheck: IconComponent = props => (
   <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" {...props}>
     <circle cx="12" cy="12" r="10" />
     <path
@@ -52,44 +52,30 @@ const CircleCheck: IconComponent = (props) => (
   </svg>
 );
 
-const CircleX: IconComponent = (props) => (
+const CircleX: IconComponent = props => (
   <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" {...props}>
     <circle cx="12" cy="12" r="10" />
-    <path
-      d="M8.5 8.5l7 7M15.5 8.5l-7 7"
-      stroke="white"
-      strokeWidth="2"
-      strokeLinecap="round"
-    />
+    <path d="M8.5 8.5l7 7M15.5 8.5l-7 7" stroke="white" strokeWidth="2" strokeLinecap="round" />
   </svg>
 );
 
 // This could go in a "business logic" layer. But it's small enough and used in two places.
 // Most common problem with this shortcut - test or module needing config only also brings in React and icons.
-export const STATUS_CONFIG: Record<
-  IssueStatus,
-  { icon: IconComponent; label: string; className: string }
-> = {
-  backlog: { icon: CircleDashed, label: "Backlog", className: "text-status-backlog" },
-  todo: { icon: CircleRing, label: "Todo", className: "text-status-todo" },
-  in_progress: { icon: CircleDot, label: "In Progress", className: "text-status-in-progress" },
-  done: { icon: CircleCheck, label: "Done", className: "text-status-done" },
-  cancelled: { icon: CircleX, label: "Cancelled", className: "text-status-cancelled" },
-  "%future added value": { icon: CircleDashed, label: "Unknown", className: "text-status-backlog" },
+export const STATUS_CONFIG: Record<IssueStatus, { icon: IconComponent; label: string; className: string }> = {
+  backlog: { icon: CircleDashed, label: 'Backlog', className: 'text-status-backlog' },
+  todo: { icon: CircleRing, label: 'Todo', className: 'text-status-todo' },
+  in_progress: { icon: CircleDot, label: 'In Progress', className: 'text-status-in-progress' },
+  done: { icon: CircleCheck, label: 'Done', className: 'text-status-done' },
+  cancelled: { icon: CircleX, label: 'Cancelled', className: 'text-status-cancelled' },
+  '%future added value': { icon: CircleDashed, label: 'Unknown', className: 'text-status-backlog' },
 };
 
-export const SELECTABLE_STATUSES: IssueStatus[] = [
-  "backlog",
-  "todo",
-  "in_progress",
-  "done",
-  "cancelled",
-];
+export const SELECTABLE_STATUSES: IssueStatus[] = ['backlog', 'todo', 'in_progress', 'done', 'cancelled'];
 
 export function StatusIcon({
   status,
   size = 14,
-  className = "",
+  className = '',
 }: {
   status: IssueStatus;
   size?: number;
@@ -100,7 +86,7 @@ export function StatusIcon({
     <Icon
       width={size}
       height={size}
-      className={`${color}${className ? ` ${className}` : ""}`}
+      className={`${color}${className ? ` ${className}` : ''}`}
       role="img"
       aria-label={label}
     >

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 // Zod schemas for mutable issue fields. Mirror the server check constraints in
 // supabase/schema.sql so the client rejects the same inputs the DB would.
@@ -11,13 +11,11 @@ import { z } from "zod";
 export const issueTitleSchema = z
   .string()
   .trim()
-  .min(1, "Title is required")
-  .max(200, "Title must be 200 characters or fewer");
+  .min(1, 'Title is required')
+  .max(200, 'Title must be 200 characters or fewer');
 
 // schema.sql: check (length(description) <= 10000). Empty is allowed.
-export const issueDescriptionSchema = z
-  .string()
-  .max(10000, "Description must be 10000 characters or fewer");
+export const issueDescriptionSchema = z.string().max(10000, 'Description must be 10000 characters or fewer');
 
 export type IssueTitle = z.infer<typeof issueTitleSchema>;
 export type IssueDescription = z.infer<typeof issueDescriptionSchema>;

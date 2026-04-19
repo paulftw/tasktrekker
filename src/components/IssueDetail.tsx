@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { graphql, useLazyLoadQuery } from "react-relay";
-import { useRealtimeRefetch } from "@/lib/useRealtimeRefetch";
-import { IssueHeader } from "./IssueHeader";
-import { IssueDescription } from "./IssueDescription";
-import { IssueSidebar } from "./IssueSidebar";
-import { IssueComments } from "./IssueComments";
-import type { IssueDetailQuery } from "@/__generated__/IssueDetailQuery.graphql";
+import { graphql, useLazyLoadQuery } from 'react-relay';
+import { useRealtimeRefetch } from '@/lib/useRealtimeRefetch';
+import { IssueHeader } from './IssueHeader';
+import { IssueDescription } from './IssueDescription';
+import { IssueSidebar } from './IssueSidebar';
+import { IssueComments } from './IssueComments';
+import type { IssueDetailQuery } from '@/__generated__/IssueDetailQuery.graphql';
 
 const query = graphql`
   query IssueDetailQuery($number: Int!) {
@@ -38,8 +38,8 @@ export function IssueDetail({ number }: { number: number }) {
   useRealtimeRefetch(
     `issue-${number}`,
     [
-      { table: "issues", filter: `id=eq.${number}` },
-      { table: "comments", filter: `issue_id=eq.${number}` },
+      { table: 'issues', filter: `id=eq.${number}` },
+      { table: 'comments', filter: `issue_id=eq.${number}` },
     ],
     query,
     { number },

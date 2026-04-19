@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
 // Thin wrapper over @radix-ui/react-dropdown-menu. Keeps a compound
 // Dropdown.Trigger / Dropdown.Menu / Dropdown.Item API so pickers stay
 // readable, while Radix handles portaling, collision flipping, focus
 // management, and keyboard nav.
 
-import * as RDM from "@radix-ui/react-dropdown-menu";
-import type { ReactNode } from "react";
+import * as RDM from '@radix-ui/react-dropdown-menu';
+import type { ReactNode } from 'react';
 
 export function Dropdown({
   children,
@@ -26,23 +26,18 @@ export function Dropdown({
 
 Dropdown.Trigger = function DropdownTrigger({
   children,
-  className = "",
+  className = '',
   disabled,
-  "aria-label": ariaLabel,
+  'aria-label': ariaLabel,
 }: {
   children: ReactNode;
   className?: string;
   disabled?: boolean;
-  "aria-label"?: string;
+  'aria-label'?: string;
 }) {
   return (
     <RDM.Trigger asChild disabled={disabled}>
-      <button
-        type="button"
-        disabled={disabled}
-        aria-label={ariaLabel}
-        className={className}
-      >
+      <button type="button" disabled={disabled} aria-label={ariaLabel} className={className}>
         {children}
       </button>
     </RDM.Trigger>
@@ -51,15 +46,15 @@ Dropdown.Trigger = function DropdownTrigger({
 
 Dropdown.Menu = function DropdownMenu({
   children,
-  className = "",
-  align = "start",
-  side = "bottom",
+  className = '',
+  align = 'start',
+  side = 'bottom',
   sideOffset = 4,
 }: {
   children: ReactNode;
   className?: string;
-  align?: "start" | "center" | "end";
-  side?: "top" | "right" | "bottom" | "left";
+  align?: 'start' | 'center' | 'end';
+  side?: 'top' | 'right' | 'bottom' | 'left';
   sideOffset?: number;
 }) {
   return (
@@ -80,7 +75,7 @@ Dropdown.Menu = function DropdownMenu({
 Dropdown.Item = function DropdownItem({
   children,
   onClick,
-  className = "",
+  className = '',
 }: {
   children: ReactNode;
   onClick: () => void;

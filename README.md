@@ -146,6 +146,7 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 ## Status
 
 ### Done
+
 - Supabase + pg_graphql, 5-table schema (`users`, `issues`, `comments`, `labels`, `issue_labels`) with enums and FKs, idempotent seed script.
 - Relay compiler working with pg_graphql (the hard part).
 - Next.js 16 scaffold: TypeScript strict, Tailwind, SWC Relay transform, Relay environment on Supabase GraphQL.
@@ -161,6 +162,7 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 - Test suite, E2E layer: two Playwright tests. (1) Golden path: list → click issue → change status via picker → assert the button's `aria-label` reflects the new status. Proves the full wiring (Relay fetch, route params, mutation commit, optimistic update, store re-read via `getDataID`). (2) Realtime: two browser contexts on the same issue, change status in A, assert it propagates to B. Proves the Supabase Realtime → Relay refetch bridge. Runs via `npx playwright test`; dev server auto-spawns. Unit layer skipped — no pure business logic to pin.
 
 ### Pending
+
 - Issue list filters: status, priority, labels (multi-select).
 - Issue list cursor-based pagination.
 - Comment thread cursor-based pagination and add-comment.
@@ -168,6 +170,7 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 - Bring in claude design.
 
 ### Punted (would do with more time)
+
 - Auth: Supabase Auth with OAuth, RLS policies.
 - Read/unread comment count on issue list.
 - Keyboard shortcuts.

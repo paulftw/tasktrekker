@@ -7,17 +7,6 @@
  * identical, so TypeScript compatibility is automatic.
  */
 
-export type IssueStatus =
-  | "backlog"
-  | "todo"
-  | "in_progress"
-  | "done"
-  | "cancelled"
-  | "%future added value";
+export type IssueStatus = 'backlog' | 'todo' | 'in_progress' | 'done' | 'cancelled' | '%future added value';
 
-export type IssuePriority =
-  | "high"
-  | "low"
-  | "medium"
-  | "urgent"
-  | "%future added value";
+export type IssuePriority = 'high' | 'low' | 'medium' | 'urgent' | '%future added value';

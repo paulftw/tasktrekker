@@ -1,21 +1,14 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import { graphql, useMutation } from "react-relay";
-import { toast } from "sonner";
-import { issueDescriptionSchema } from "@/lib/validation";
-import type { DescriptionEditorUpdateMutation } from "@/__generated__/DescriptionEditorUpdateMutation.graphql";
+import { useEffect, useRef, useState } from 'react';
+import { graphql, useMutation } from 'react-relay';
+import { toast } from 'sonner';
+import { issueDescriptionSchema } from '@/lib/validation';
+import type { DescriptionEditorUpdateMutation } from '@/__generated__/DescriptionEditorUpdateMutation.graphql';
 
 const mutation = graphql`
-  mutation DescriptionEditorUpdateMutation(
-    $number: Int!
-    $description: String!
-  ) {
-    updateissuesCollection(
-      set: { description: $description }
-      filter: { number: { eq: $number } }
-      atMost: 1
-    ) {
+  mutation DescriptionEditorUpdateMutation($number: Int!, $description: String!) {
+    updateissuesCollection(set: { description: $description }, filter: { number: { eq: $number } }, atMost: 1) {
       records {
         nodeId
         description
@@ -37,8 +30,7 @@ export function DescriptionEditor({
   const [value, setValue] = useState(description);
   const [error, setError] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [commit, isInFlight] =
-    useMutation<DescriptionEditorUpdateMutation>(mutation);
+  const [commit, isInFlight] = useMutation<DescriptionEditorUpdateMutation>(mutation);
 
   useEffect(() => {
     if (!editing) setValue(description);
@@ -62,7 +54,7 @@ export function DescriptionEditor({
   function save() {
     const parsed = issueDescriptionSchema.safeParse(value);
     if (!parsed.success) {
-      setError(parsed.error.issues[0]?.message ?? "Invalid description");
+      setError(parsed.error.issues[0]?.message ?? 'Invalid description');
       return;
     }
     setEditing(false);
@@ -75,10 +67,10 @@ export function DescriptionEditor({
           records: [{ nodeId, description: parsed.data }],
         },
       },
-      onError: (err) => {
-        const msg = err instanceof Error ? err.message : "Unknown error";
-        toast.error("Failed to update description", { description: msg });
-        console.error("Description update failed:", err);
+      onError: err => {
+        const msg = err instanceof Error ? err.message : 'Unknown error';
+        toast.error('Failed to update description', { description: msg });
+        console.error('Description update failed:', err);
       },
     });
   }
@@ -92,13 +84,9 @@ export function DescriptionEditor({
         className="block text-left w-full rounded -mx-2 px-2 py-1.5 hover:bg-bg-hover transition-colors cursor-text"
       >
         {description ? (
-          <span className="text-sm text-text whitespace-pre-wrap">
-            {description}
-          </span>
+          <span className="text-sm text-text whitespace-pre-wrap">{description}</span>
         ) : (
-          <span className="text-sm text-text-muted italic">
-            No description provided.
-          </span>
+          <span className="text-sm text-text-muted italic">No description provided.</span>
         )}
       </button>
     );
@@ -109,15 +97,15 @@ export function DescriptionEditor({
       <textarea
         ref={textareaRef}
         value={value}
-        onChange={(e) => {
+        onChange={e => {
           setValue(e.target.value);
           if (error) setError(null);
         }}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+        onKeyDown={e => {
+          if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
             e.preventDefault();
             save();
-          } else if (e.key === "Escape") {
+          } else if (e.key === 'Escape') {
             e.preventDefault();
             cancel();
           }

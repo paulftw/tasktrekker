@@ -11,6 +11,8 @@
     "relay": "relay-compiler",
     "relay:watch": "relay-compiler --watch",
     "fetch-schema": "node scripts/fetch-schema.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest"
   },
@@ -44,6 +46,7 @@
     "eslint-config-next": "16.2.4",
     "graphql": "^16.13.2",
     "jsdom": "^29.0.2",
+    "prettier": "^3.8.3",
     "relay-compiler": "^20.1.1",
     "relay-test-utils": "^20.1.1",
     "tailwindcss": "^4",

@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import { useSyncExternalStore } from "react";
+import { useSyncExternalStore } from 'react';
 
-export type RealtimeStatus = "connecting" | "connected" | "error";
+export type RealtimeStatus = 'connecting' | 'connected' | 'error';
 
 const channelStatuses = new Map<string, RealtimeStatus>();
 const listeners = new Set<() => void>();
-let snapshot: RealtimeStatus = "connecting";
+let snapshot: RealtimeStatus = 'connecting';
 
 function aggregate(): RealtimeStatus {
   const values = Array.from(channelStatuses.values());
-  if (values.length === 0) return "connecting";
-  if (values.some((s) => s === "connected")) return "connected";
-  if (values.some((s) => s === "error")) return "error";
-  return "connecting";
+  if (values.length === 0) return 'connecting';
+  if (values.some(s => s === 'connected')) return 'connected';
+  if (values.some(s => s === 'error')) return 'error';
+  return 'connecting';
 }
 
 function recompute() {
@@ -46,7 +46,7 @@ function getSnapshot() {
 }
 
 function getServerSnapshot(): RealtimeStatus {
-  return "connecting";
+  return 'connecting';
 }
 
 export function useRealtimeStatus(): RealtimeStatus {

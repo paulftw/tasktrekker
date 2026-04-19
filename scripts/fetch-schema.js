@@ -11,23 +11,23 @@
  * Run: node scripts/fetch-schema.js
  */
 
-import fs from "fs";
-import { buildClientSchema, getIntrospectionQuery, printSchema } from "graphql";
-import * as dotenv from "dotenv";
+import fs from 'fs';
+import { buildClientSchema, getIntrospectionQuery, printSchema } from 'graphql';
+import * as dotenv from 'dotenv';
 
-dotenv.config({ path: ".env.local" });
+dotenv.config({ path: '.env.local' });
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseKey) {
-  throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY in .env.local");
+  throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY in .env.local');
 }
 
 const response = await fetch(`${supabaseUrl}/graphql/v1`, {
-  method: "POST",
+  method: 'POST',
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
     apikey: supabaseKey,
   },
   body: JSON.stringify({ query: getIntrospectionQuery() }),
@@ -36,12 +36,12 @@ const response = await fetch(`${supabaseUrl}/graphql/v1`, {
 const { data, errors } = await response.json();
 
 if (errors) {
-  console.error("Introspection errors:", errors);
+  console.error('Introspection errors:', errors);
   process.exit(1);
 }
 
 const schema = buildClientSchema(data);
 const sdl = printSchema(schema);
 
-fs.writeFileSync("schema.graphql", sdl);
-console.log("✓ schema.graphql written");
+fs.writeFileSync('schema.graphql', sdl);
+console.log('✓ schema.graphql written');

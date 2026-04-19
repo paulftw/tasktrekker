@@ -1,11 +1,11 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   compiler: {
     relay: {
-      src: "./src",
-      language: "typescript",
-      artifactDirectory: "./src/__generated__",
+      src: './src',
+      language: 'typescript',
+      artifactDirectory: './src/__generated__',
     },
   },
 };

@@ -1,19 +1,15 @@
-"use client";
+'use client';
 
-import { graphql, useMutation } from "react-relay";
-import { toast } from "sonner";
-import { Dropdown } from "./Dropdown";
-import type { IssueStatus } from "@/types/enums";
-import type { StatusPickerUpdateMutation } from "@/__generated__/StatusPickerUpdateMutation.graphql";
-import { SELECTABLE_STATUSES, STATUS_CONFIG } from "./StatusIcon";
+import { graphql, useMutation } from 'react-relay';
+import { toast } from 'sonner';
+import { Dropdown } from './Dropdown';
+import type { IssueStatus } from '@/types/enums';
+import type { StatusPickerUpdateMutation } from '@/__generated__/StatusPickerUpdateMutation.graphql';
+import { SELECTABLE_STATUSES, STATUS_CONFIG } from './StatusIcon';
 
 const mutation = graphql`
   mutation StatusPickerUpdateMutation($number: Int!, $status: issue_status!) {
-    updateissuesCollection(
-      set: { status: $status }
-      filter: { number: { eq: $number } }
-      atMost: 1
-    ) {
+    updateissuesCollection(set: { status: $status }, filter: { number: { eq: $number } }, atMost: 1) {
       records {
         nodeId
         status
@@ -22,15 +18,7 @@ const mutation = graphql`
   }
 `;
 
-export function StatusPicker({
-  nodeId,
-  number,
-  status,
-}: {
-  nodeId: string;
-  number: number;
-  status: IssueStatus;
-}) {
+export function StatusPicker({ nodeId, number, status }: { nodeId: string; number: number; status: IssueStatus }) {
   const [commit, isInFlight] = useMutation<StatusPickerUpdateMutation>(mutation);
 
   const current = STATUS_CONFIG[status];
@@ -45,10 +33,10 @@ export function StatusPicker({
           records: [{ nodeId, status: next }],
         },
       },
-      onError: (err) => {
-        const msg = err instanceof Error ? err.message : "Unknown error";
-        toast.error("Failed to update status", { description: msg });
-        console.error("Status update failed:", err);
+      onError: err => {
+        const msg = err instanceof Error ? err.message : 'Unknown error';
+        toast.error('Failed to update status', { description: msg });
+        console.error('Status update failed:', err);
       },
     });
   }
@@ -65,15 +53,11 @@ export function StatusPicker({
       </Dropdown.Trigger>
 
       <Dropdown.Menu className="min-w-40">
-        {SELECTABLE_STATUSES.map((value) => {
+        {SELECTABLE_STATUSES.map(value => {
           const { icon: Icon, label, className: color } = STATUS_CONFIG[value];
           const isCurrent = value === status;
           return (
-            <Dropdown.Item
-              key={value}
-              onClick={() => onSelect(value)}
-              className={isCurrent ? "font-medium" : ""}
-            >
+            <Dropdown.Item key={value} onClick={() => onSelect(value)} className={isCurrent ? 'font-medium' : ''}>
               <Icon width={14} height={14} className={color} />
               {label}
             </Dropdown.Item>
