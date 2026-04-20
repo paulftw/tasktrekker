@@ -2,10 +2,10 @@
 
 import type { ReactNode } from 'react';
 import { graphql, useFragment } from 'react-relay';
-import { StatusPicker } from './StatusPicker';
-import { PriorityPicker } from './PriorityPicker';
-import { AssigneePicker } from './AssigneePicker';
-import { LabelsPicker } from './LabelsPicker';
+import { StatusPicker } from '@/components/pickers/StatusPicker';
+import { PriorityPicker } from '@/components/pickers/PriorityPicker';
+import { AssigneePicker } from '@/components/pickers/AssigneePicker';
+import { LabelsPicker } from '@/components/pickers/LabelsPicker';
 import type { IssueSidebar_issue$key } from '@/__generated__/IssueSidebar_issue.graphql';
 import type { IssueSidebar_query$key } from '@/__generated__/IssueSidebar_query.graphql';
 

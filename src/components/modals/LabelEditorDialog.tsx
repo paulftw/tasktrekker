@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Check, Trash2, X } from 'lucide-react';
 import { graphql, useMutation, useRelayEnvironment } from 'react-relay';
 import { toast } from 'sonner';
-import { LabelPill } from './LabelPill';
+import { LabelPill } from '@/components/shared/LabelPill';
 import { removeIssueLabelConnectionEdge, removeRootLabel, upsertRootLabel } from '@/lib/labelStore';
 import { labelColorSchema, labelNameSchema } from '@/lib/validation';
 import type { LabelEditorDialogCreateMutation } from '@/__generated__/LabelEditorDialogCreateMutation.graphql';

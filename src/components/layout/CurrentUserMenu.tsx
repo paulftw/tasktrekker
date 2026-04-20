@@ -1,8 +1,8 @@
 'use client';
 
 import { graphql, useLazyLoadQuery } from 'react-relay';
-import { Dropdown } from './Dropdown';
-import { UserAvatar } from './UserAvatar';
+import { Dropdown } from '@/components/shared/Dropdown';
+import { UserAvatar } from '@/components/shared/UserAvatar';
 import type { CurrentUserMenuQuery } from '@/__generated__/CurrentUserMenuQuery.graphql';
 
 // TODO: Replace with auth.uid() lookup once Supabase Auth lands.

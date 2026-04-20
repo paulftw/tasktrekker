@@ -1,11 +1,11 @@
 'use client';
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { Dropdown } from './Dropdown';
+import { Dropdown } from '@/components/shared/Dropdown';
 import { parsePriority, parseStatuses } from '@/lib/urlFilters';
-import { PriorityIcon, ISSUE_PRIORITIES, PRIORITY_CONFIG, SignalHigh } from './PriorityIcon';
-import { StatusIcon, ISSUE_STATUSES, STATUS_CONFIG } from './StatusIcon';
-import { UserAvatar } from './UserAvatar';
+import { PriorityIcon, ISSUE_PRIORITIES, PRIORITY_CONFIG, SignalHigh } from '@/components/shared/PriorityIcon';
+import { StatusIcon, ISSUE_STATUSES, STATUS_CONFIG } from '@/components/shared/StatusIcon';
+import { UserAvatar } from '@/components/shared/UserAvatar';
 import type { IssuePriority, IssueStatus } from '@/types/enums';
 import { Tag, X, UserCircle2 } from 'lucide-react';
 import { forwardRef, useRef, useState } from 'react';

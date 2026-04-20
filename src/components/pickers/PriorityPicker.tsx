@@ -2,10 +2,10 @@
 
 import { graphql, useMutation } from 'react-relay';
 import { toast } from 'sonner';
-import { Dropdown } from './Dropdown';
+import { Dropdown } from '@/components/shared/Dropdown';
 import type { IssuePriority } from '@/types/enums';
 import type { PriorityPickerUpdateMutation } from '@/__generated__/PriorityPickerUpdateMutation.graphql';
-import { ISSUE_PRIORITIES, PRIORITY_CONFIG } from './PriorityIcon';
+import { ISSUE_PRIORITIES, PRIORITY_CONFIG } from '@/components/shared/PriorityIcon';
 
 const mutation = graphql`
   mutation PriorityPickerUpdateMutation($number: Int!, $priority: issue_priority!) {

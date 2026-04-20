@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { graphql, useMutation } from 'react-relay';
 import { toast } from 'sonner';
-import { ShortcutTextarea } from './ShortcutTextarea';
+import { ShortcutTextarea } from '@/components/shared/ShortcutTextarea';
 import { issueDescriptionSchema } from '@/lib/validation';
 import { usePlatformEditorHint } from '@/lib/usePlatformEditorHint';
 import type { DescriptionEditorUpdateMutation } from '@/__generated__/DescriptionEditorUpdateMutation.graphql';

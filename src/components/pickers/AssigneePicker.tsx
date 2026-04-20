@@ -2,8 +2,8 @@
 
 import { graphql, useMutation } from 'react-relay';
 import { toast } from 'sonner';
-import { Dropdown } from './Dropdown';
-import { UserAvatar } from './UserAvatar';
+import { Dropdown } from '@/components/shared/Dropdown';
+import { UserAvatar } from '@/components/shared/UserAvatar';
 import type { AssigneePickerUpdateMutation } from '@/__generated__/AssigneePickerUpdateMutation.graphql';
 
 const mutation = graphql`

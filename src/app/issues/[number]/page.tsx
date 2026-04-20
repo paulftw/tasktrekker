@@ -2,8 +2,8 @@
 
 import { Suspense, use } from 'react';
 import { ErrorBoundary } from '@/lib/ErrorBoundary';
-import { AppShell } from '@/components/AppShell';
-import { IssueDetail, IssueNotFound } from '@/components/IssueDetail';
+import { AppShell } from '@/components/layout/AppShell';
+import { IssueDetail, IssueNotFound } from '@/components/issue-detail/IssueDetail';
 
 export default function IssuePage({ params }: { params: Promise<{ number: string }> }) {
   const { number: raw } = use(params);

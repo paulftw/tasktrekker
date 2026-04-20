@@ -2,8 +2,8 @@
 
 import { useState, useRef } from 'react';
 import { graphql, useFragment, usePaginationFragment, useMutation, ConnectionHandler } from 'react-relay';
-import { UserAvatar } from './UserAvatar';
-import { ShortcutTextarea } from './ShortcutTextarea';
+import { UserAvatar } from '@/components/shared/UserAvatar';
+import { ShortcutTextarea } from '@/components/shared/ShortcutTextarea';
 import { toast } from 'sonner';
 import type { IssueComments_issue$key } from '@/__generated__/IssueComments_issue.graphql';
 import type { IssueCommentsPaginationQuery } from '@/__generated__/IssueCommentsPaginationQuery.graphql';

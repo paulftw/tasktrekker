@@ -2,10 +2,10 @@
 
 import { graphql, useMutation } from 'react-relay';
 import { toast } from 'sonner';
-import { Dropdown } from './Dropdown';
+import { Dropdown } from '@/components/shared/Dropdown';
 import type { IssueStatus } from '@/types/enums';
 import type { StatusPickerUpdateMutation } from '@/__generated__/StatusPickerUpdateMutation.graphql';
-import { ISSUE_STATUSES, STATUS_CONFIG } from './StatusIcon';
+import { ISSUE_STATUSES, STATUS_CONFIG } from '@/components/shared/StatusIcon';
 
 const mutation = graphql`
   mutation StatusPickerUpdateMutation($number: Int!, $status: issue_status!) {

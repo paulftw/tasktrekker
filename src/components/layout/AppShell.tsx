@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { Suspense, type ReactNode } from 'react';
-import { CreateIssueLauncher } from './CreateIssueLauncher';
+import { CreateIssueLauncher } from '@/components/modals/CreateIssueLauncher';
 import { CurrentUserMenu } from './CurrentUserMenu';
-import { RealtimeIndicator } from './RealtimeIndicator';
-import { UserAvatar } from './UserAvatar';
+import { RealtimeIndicator } from '@/components/shared/RealtimeIndicator';
+import { UserAvatar } from '@/components/shared/UserAvatar';
 
 export function AppShell({ children }: { children: ReactNode }) {
   return (
