@@ -57,7 +57,7 @@ test('list → issue detail → add comment', async ({ page }) => {
   const stamp = `E2E Comment ${Date.now()}`;
   await commentInput.fill(stamp);
 
-  const commentButton = page.getByRole('button', { name: 'Comment' });
+  const commentButton = page.getByRole('button', { name: /^Comment$/ });
   await commentButton.click();
 
   // Wait for it to appear in the comments list
