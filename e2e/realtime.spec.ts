@@ -1,4 +1,13 @@
 import { expect, test } from '@playwright/test';
+import * as dotenv from 'dotenv';
+import { createClient } from '@supabase/supabase-js';
+
+dotenv.config({ path: '.env.local' });
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 // Two-session realtime: window A changes status, window B reflects it without
 // reload. Two browser contexts = two independent Supabase Realtime clients on
@@ -48,17 +57,29 @@ test('realtime: status change in window A propagates to window B', async ({ brow
 });
 
 test('realtime: add comment in window A propagates to window B', async ({ browser }) => {
+  // Create a fresh issue so the comment list has fewer than the 10-comment
+  // page size. IssueDetailQuery's refetch replays commentsCollection(first:10,
+  // orderBy: number ASC), and new comments have the highest number — on a
+  // polluted issue with 10+ existing comments they land off the first page,
+  // so window B never renders them even though realtime fires correctly.
+  const { data: issue, error: issueError } = await supabase
+    .from('issues')
+    .insert({
+      title: `RealtimeCommentTest_${Date.now()}`,
+      description: 'Fresh issue for realtime comment propagation test',
+      status: 'todo',
+      priority: 'low',
+    })
+    .select()
+    .single();
+  expect(issueError).toBeNull();
+
   const ctxA = await browser.newContext();
   const ctxB = await browser.newContext();
   const pageA = await ctxA.newPage();
   const pageB = await ctxB.newPage();
 
-  await pageA.goto('/');
-  const firstLink = pageA.locator("a[href^='/issues/']").first();
-  await expect(firstLink).toBeVisible();
-  const href = await firstLink.getAttribute('href');
-  if (!href) throw new Error('no issue link on list');
-
+  const href = `/issues/${issue.id}`;
   await Promise.all([pageA.goto(href), pageB.goto(href)]);
 
   const inputA = pageA.locator('textarea[placeholder="Leave a comment..."]');
@@ -69,7 +90,7 @@ test('realtime: add comment in window A propagates to window B', async ({ browse
 
   const stamp = `Realtime Comment ${Date.now()}`;
   await inputA.fill(stamp);
-  await pageA.getByRole('button', { name: 'Comment' }).click();
+  await pageA.getByRole('button', { name: 'Comment', exact: true }).click();
 
   // Wait for it to appear in A
   const newCommentA = pageA.getByText(stamp);
