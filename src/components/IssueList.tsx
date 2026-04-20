@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { useRealtimeRefetch } from '@/lib/useRealtimeRefetch';
+import { parsePriority, parseStatuses } from '@/lib/urlFilters';
 import { StatusIcon, STATUS_CONFIG, ISSUE_STATUSES } from './StatusIcon';
 import { PriorityIcon } from './PriorityIcon';
 import { UserAvatar } from './UserAvatar';
@@ -95,8 +96,8 @@ type Issue = NonNullable<IssueEdges[number]>['node'];
 
 export function IssueList() {
   const searchParams = useSearchParams();
-  const selectedPriority = searchParams.get('priority') as IssuePriority | null;
-  const selectedStatuses = new Set(searchParams.getAll('status') as IssueStatus[]);
+  const selectedPriority = parsePriority(searchParams);
+  const selectedStatuses = new Set(parseStatuses(searchParams));
   const selectedLabels = new Set(searchParams.getAll('label'));
   const selectedAssignees = new Set(searchParams.getAll('assignee'));
 

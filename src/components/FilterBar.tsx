@@ -2,6 +2,7 @@
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Dropdown } from './Dropdown';
+import { parsePriority, parseStatuses } from '@/lib/urlFilters';
 import { PriorityIcon, ISSUE_PRIORITIES, PRIORITY_CONFIG, SignalHigh } from './PriorityIcon';
 import { StatusIcon, ISSUE_STATUSES, STATUS_CONFIG } from './StatusIcon';
 import { UserAvatar } from './UserAvatar';
@@ -69,8 +70,8 @@ export function FilterBar({ labels, users }: { labels: Label[]; users: User[] })
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const selectedPriority = searchParams.get('priority') as IssuePriority | null;
-  const selectedStatuses = new Set(searchParams.getAll('status') as IssueStatus[]);
+  const selectedPriority = parsePriority(searchParams);
+  const selectedStatuses = new Set(parseStatuses(searchParams));
   const selectedLabels = new Set(searchParams.getAll('label'));
   const selectedAssignees = new Set(searchParams.getAll('assignee'));
   const [labelQuery, setLabelQuery] = useState('');
