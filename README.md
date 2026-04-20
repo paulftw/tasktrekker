@@ -156,7 +156,7 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 - Inline title and description editors with Zod validation mirroring DB constraints.
 - Error toasts on mutation failure using Sonner.
 - Status mutation with optimistic update. Relay auto-rolls back on server error.
-- Real-time across browser windows: Supabase Realtime subscriptions on `issues` (list + detail) and `comments` (detail) bridged into the Relay store via `fetchQuery` refetch on event. Status, priority, title, description, and new comments propagate without reload. Refetch over hand-patching the store from raw row payloads: payloads carry SQL column values but not the encoded `nodeId`, joined fields (e.g. `comment.author.name`), or connection-edge plumbing — patching means re-implementing pieces of pg_graphql client-side. Refetch is one path that handles all cases. Cost is real at scale: one DB write fans out to N refetches across N open tabs, each a full query. Fine for an MVP serving small teams; at Linear scale I'd patch scalar UPDATEs from the payload and reserve refetch for joins and inserts.
+- Real-time across browser windows: Supabase Realtime subscriptions on `issues`, `comments`, and `issue_labels` (list + detail) bridged into the Relay store via `fetchQuery` refetch on event. Status, priority, title, description, new comments, and label add/remove all propagate without reload. Refetch over hand-patching the store from raw row payloads: payloads carry SQL column values but not the encoded `nodeId`, joined fields (e.g. `comment.author.name`), or connection-edge plumbing — patching means re-implementing pieces of pg_graphql client-side. Refetch is one path that handles all cases. Cost is real at scale: one DB write fans out to N refetches across N open tabs, each a full query. Fine for an MVP serving small teams; at Linear scale I'd patch scalar UPDATEs from the payload and reserve refetch for joins and inserts.
 - Test suite, component layer: Vitest + Testing Library + `relay-test-utils`, SWC transform (same as production, no babel fork). StatusPicker commit contract + `getDataID` normalization regression pin (README Problem 5).
 - Test suite, integration layer: hits demo Supabase directly. Comment-numbering trigger assigns 1..N per issue; StatusPickerUpdateMutation round-trips through pg_graphql; `labels.color` check rejects non-hex. Leaves rows behind — demo DB, no cleanup. Not property-based: we're demonstrating it works, not stress-testing concurrency. Runs via `npm test`.
 - Test suite, E2E layer: nine Playwright tests across four specs. Golden path: list → issue detail → change status, plus add comment. Filters: URL syncing, label search, assignee combinations, and the temporary "Assigned to me" shortcut behavior. Create issue: topbar modal creates an issue, adds labels, and lands on detail. Realtime: two browser contexts prove status and comment propagation. Runs via `npx playwright test`; dev server auto-spawns. Unit layer skipped — no pure business logic to pin.
@@ -166,12 +166,12 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 - Create issue flow: topbar `+ New issue` launches a modal wired to Relay mutations, `C` opens it, `Cmd/Ctrl+Enter` submits it, and successful create navigates straight to the new detail page. Status / priority / assignee / labels all live in the modal; add-label menus are searchable.
 - Issue list filters: status, labels, assignee, and single-select priority, synced with URL state. Labels and assignees have inline search, and the assignee menu exposes temporary "Assigned to me" / "Unassigned" shortcuts above the user list.
 - UI way to create new label via the label picker dropdown, integrated with Relay mutations and caching.
+- Issue list cursor-based pagination via `usePaginationFragment` with an `IntersectionObserver`-based infinite scroll trigger.
+- Comment thread cursor-based pagination via `usePaginationFragment` with a "Load more" button.
 
 ### Pending
 
 - TODO: Replace the temporary authless current-user fallback (first seeded user) used by the assignee filter's "Assigned to me" shortcut and the comment composer once Supabase Auth lands.
-- Issue list cursor-based pagination.
-- Comment thread cursor-based pagination.
 - Deploy to Vercel.
 - Standardize typography scale (remove fractional pixel font sizes to fix sub-pixel baseline alignment issues).
 - Change filter by priority to multiselect - spec seems to imply that.
