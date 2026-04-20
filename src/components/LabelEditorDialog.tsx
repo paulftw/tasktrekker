@@ -385,7 +385,7 @@ function LabelEditorDialogInner({
               void submit();
             }}
             disabled={!name.trim() || busy}
-            className="inline-flex h-8 items-center rounded-md border border-transparent px-3 text-[12px] font-medium text-white transition-all disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex h-8 items-center rounded-md border border-transparent px-3 text-[12px] font-medium text-white transition-all disabled:opacity-50"
             style={{ background: 'var(--color-accent)' }}
           >
             {busy ? (mode === 'create' ? 'Creating…' : 'Saving…') : mode === 'create' ? 'Create label' : 'Save'}

@@ -412,7 +412,7 @@ export function CreateIssueModal({
               void submit();
             }}
             disabled={!title.trim() || isSubmitting}
-            className="inline-flex h-8 items-center rounded-md border border-transparent px-3 text-[12px] font-medium text-white transition-all disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex h-8 items-center rounded-md border border-transparent px-3 text-[12px] font-medium text-white transition-all disabled:opacity-50"
             style={{ background: 'var(--color-accent)' }}
           >
             {isSubmitting ? 'Creating…' : 'Create issue'}

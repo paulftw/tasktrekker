@@ -176,6 +176,13 @@
     background: var(--color-surface-raised);
   }
 
+  .modal button {
+    cursor: pointer;
+  }
+  .modal button:disabled {
+    cursor: not-allowed;
+  }
+
   .modal-foot .hint {
     margin-right: auto;
     font-size: 11px;
