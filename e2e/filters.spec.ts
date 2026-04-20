@@ -91,6 +91,10 @@ test('label filter options are searchable', async ({ page }) => {
   await expect(page.getByRole('button', { name: /^docs/i })).toBeVisible();
 });
 
+// Known flake in full-suite runs: pagination.spec.ts seeds 21+ unassigned
+// issues newer than the seed, pushing Alice's 2 seeded issues off the first
+// page (page size 20). Filter logic is correct — passes in isolation and when
+// pagination.spec.ts is excluded. Real fix is pagination-spec cleanup.
 test('assignee filter supports unassigned and selected users together', async ({ page }) => {
   await page.goto('/');
   await page.waitForLoadState('networkidle');
