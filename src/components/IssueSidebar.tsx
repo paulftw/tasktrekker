@@ -58,6 +58,7 @@ const queryFragment = graphql`
           number
           name
           color
+
         }
       }
     }
@@ -91,12 +92,11 @@ export function IssueSidebar({ issue, query }: { issue: IssueSidebar_issue$key; 
   const data = useFragment(issueFragment, issue);
   const queryData = useFragment(queryFragment, query);
 
+  const users = queryData.usersCollection?.edges.map(e => e.node) ?? [];
+  const allLabels = queryData.labelsCollection?.edges.map(edge => edge.node) ?? [];
   const labels =
     data.issue_labelsCollection?.edges.map(e => e.node.labels).filter((l): l is NonNullable<typeof l> => l !== null) ??
     [];
-
-  const users = queryData.usersCollection?.edges.map(e => e.node) ?? [];
-  const allLabels = queryData.labelsCollection?.edges.map(e => e.node) ?? [];
 
   return (
     <div>

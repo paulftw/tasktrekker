@@ -1,9 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import { graphql, useMutation } from 'react-relay';
-import { ConnectionHandler, type RecordSourceSelectorProxy } from 'relay-runtime';
+import { ConnectionHandler } from 'relay-runtime';
 import { toast } from 'sonner';
+import { LabelEditorDialog, type EditableLabel } from './LabelEditorDialog';
 import { LabelsField } from './LabelsField';
+import { removeIssueLabelConnectionEdge } from '@/lib/labelStore';
 import type { LabelsPickerAddMutation } from '@/__generated__/LabelsPickerAddMutation.graphql';
 import type { LabelsPickerRemoveMutation } from '@/__generated__/LabelsPickerRemoveMutation.graphql';
 
@@ -47,22 +50,6 @@ type Label = {
   readonly color: string;
 };
 
-function removeEdgeByLabelNumber(store: RecordSourceSelectorProxy, issueNodeId: string, labelNumber: number) {
-  const issue = store.get(issueNodeId);
-  if (!issue) return;
-  const conn = ConnectionHandler.getConnection(issue, CONNECTION_KEY);
-  if (!conn) return;
-  const edges = conn.getLinkedRecords('edges') ?? [];
-  for (const edge of edges) {
-    const node = edge.getLinkedRecord('node');
-    const lbl = node?.getLinkedRecord('labels');
-    if (lbl?.getValue('number') === labelNumber && node) {
-      ConnectionHandler.deleteNode(conn, node.getDataID());
-      return;
-    }
-  }
-}
-
 export function LabelsPicker({
   issueNodeId,
   issueNumber,
@@ -76,28 +63,30 @@ export function LabelsPicker({
 }) {
   const [add, adding] = useMutation<LabelsPickerAddMutation>(addMutation);
   const [remove, removing] = useMutation<LabelsPickerRemoveMutation>(removeMutation);
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [editingLabel, setEditingLabel] = useState<EditableLabel | null>(null);
   const busy = adding || removing;
 
-  function addLabel(label: Label) {
+  function addLabel(label: { readonly number: number }) {
     if (busy) return;
     add({
       variables: { issue_id: issueNumber, label_id: label.number },
       updater: store => {
         const issue = store.get(issueNodeId);
         if (!issue) return;
-        const conn = ConnectionHandler.getConnection(issue, CONNECTION_KEY);
-        if (!conn) return;
+        const connection = ConnectionHandler.getConnection(issue, CONNECTION_KEY);
+        if (!connection) return;
         const payload = store.getRootField('insertIntoissue_labelsCollection');
         const records = payload?.getLinkedRecords('records') ?? [];
-        for (const rec of records) {
-          const edge = ConnectionHandler.createEdge(store, conn, rec, 'issue_labelsEdge');
-          ConnectionHandler.insertEdgeAfter(conn, edge);
+        for (const record of records) {
+          const edge = ConnectionHandler.createEdge(store, connection, record, 'issue_labelsEdge');
+          ConnectionHandler.insertEdgeAfter(connection, edge);
         }
       },
-      onError: err => {
-        const msg = err instanceof Error ? err.message : 'Unknown error';
-        toast.error('Failed to add label', { description: msg });
-        console.error('Label add failed:', err);
+      onError: error => {
+        const description = error instanceof Error ? error.message : 'Unknown error';
+        toast.error('Failed to add label', { description });
+        console.error('Label add failed:', error);
       },
     });
   }
@@ -106,25 +95,45 @@ export function LabelsPicker({
     if (busy) return;
     remove({
       variables: { issue_id: issueNumber, label_id: label.number },
-      optimisticUpdater: store => removeEdgeByLabelNumber(store, issueNodeId, label.number),
-      updater: store => removeEdgeByLabelNumber(store, issueNodeId, label.number),
-      onError: err => {
-        const msg = err instanceof Error ? err.message : 'Unknown error';
-        toast.error('Failed to remove label', { description: msg });
-        console.error('Label remove failed:', err);
+      optimisticUpdater: store => removeIssueLabelConnectionEdge(store, issueNodeId, CONNECTION_KEY, label.number),
+      updater: store => removeIssueLabelConnectionEdge(store, issueNodeId, CONNECTION_KEY, label.number),
+      onError: error => {
+        const description = error instanceof Error ? error.message : 'Unknown error';
+        toast.error('Failed to remove label', { description });
+        console.error('Label remove failed:', error);
       },
     });
   }
 
   return (
-    <LabelsField
-      labels={labels}
-      selected={selected}
-      onAddLabel={addLabel}
-      onRemoveLabel={removeLabel}
-      removeMode="confirm"
-      disabled={busy}
-      menuAlign="end"
-    />
+    <>
+      <LabelsField
+        labels={labels}
+        selected={selected}
+        onAddLabel={addLabel}
+        onRemoveLabel={removeLabel}
+        onCreateLabel={() => setCreateDialogOpen(true)}
+        onEditLabel={label => setEditingLabel(label)}
+        removeMode="confirm"
+        disabled={busy}
+        menuAlign="end"
+      />
+
+      <LabelEditorDialog
+        open={createDialogOpen}
+        mode="create"
+        onClose={() => setCreateDialogOpen(false)}
+        onCreated={created => addLabel(created)}
+      />
+
+      <LabelEditorDialog
+        open={editingLabel !== null}
+        mode="edit"
+        label={editingLabel}
+        issueNodeId={issueNodeId}
+        onClose={() => setEditingLabel(null)}
+        onDeleted={() => setEditingLabel(null)}
+      />
+    </>
   );
 }

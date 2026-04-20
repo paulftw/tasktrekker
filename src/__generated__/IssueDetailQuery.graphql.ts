@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e9238cbd418eaacdf3011a315b2725c5>>
+ * @generated SignedSource<<54f9b672d5b640dd2570de79365f9c15>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -147,33 +147,22 @@ v14 = {
 v15 = {
   "alias": null,
   "args": null,
-  "concreteType": "PageInfo",
-  "kind": "LinkedField",
-  "name": "pageInfo",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "endCursor",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "hasNextPage",
-      "storageKey": null
-    }
-  ],
+  "kind": "ScalarField",
+  "name": "endCursor",
   "storageKey": null
 },
-v16 = [
+v16 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "hasNextPage",
+  "storageKey": null
+},
+v17 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 50
+    "value": 10
   },
   {
     "kind": "Literal",
@@ -185,7 +174,7 @@ v16 = [
     ]
   }
 ],
-v17 = [
+v18 = [
   (v10/*: any*/),
   {
     "kind": "Literal",
@@ -393,7 +382,19 @@ return {
                         ],
                         "storageKey": null
                       },
-                      (v15/*: any*/)
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "PageInfo",
+                        "kind": "LinkedField",
+                        "name": "pageInfo",
+                        "plural": false,
+                        "selections": [
+                          (v15/*: any*/),
+                          (v16/*: any*/)
+                        ],
+                        "storageKey": null
+                      }
                     ],
                     "storageKey": "issue_labelsCollection(first:100)"
                   },
@@ -408,7 +409,7 @@ return {
                   },
                   {
                     "alias": null,
-                    "args": (v16/*: any*/),
+                    "args": (v17/*: any*/),
                     "concreteType": "commentsConnection",
                     "kind": "LinkedField",
                     "name": "commentsCollection",
@@ -462,13 +463,25 @@ return {
                         ],
                         "storageKey": null
                       },
-                      (v15/*: any*/)
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "PageInfo",
+                        "kind": "LinkedField",
+                        "name": "pageInfo",
+                        "plural": false,
+                        "selections": [
+                          (v16/*: any*/),
+                          (v15/*: any*/)
+                        ],
+                        "storageKey": null
+                      }
                     ],
-                    "storageKey": "commentsCollection(first:50,orderBy:[{\"number\":\"AscNullsLast\"}])"
+                    "storageKey": "commentsCollection(first:10,orderBy:[{\"number\":\"AscNullsLast\"}])"
                   },
                   {
                     "alias": null,
-                    "args": (v16/*: any*/),
+                    "args": (v17/*: any*/),
                     "filters": [],
                     "handle": "connection",
                     "key": "IssueComments_issue__commentsCollection",
@@ -486,7 +499,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v17/*: any*/),
+        "args": (v18/*: any*/),
         "concreteType": "usersConnection",
         "kind": "LinkedField",
         "name": "usersCollection",
@@ -518,7 +531,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v17/*: any*/),
+        "args": (v18/*: any*/),
         "concreteType": "labelsConnection",
         "kind": "LinkedField",
         "name": "labelsCollection",
@@ -588,12 +601,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "816d17e23ac73d4a8e5f5ae8dfc0819e",
+    "cacheID": "d34fe97bb6fd0423e8ad2c9d8d49f9e1",
     "id": null,
     "metadata": {},
     "name": "IssueDetailQuery",
     "operationKind": "query",
-    "text": "query IssueDetailQuery(\n  $number: Int!\n) {\n  issuesCollection(filter: {number: {eq: $number}}, first: 1) {\n    edges {\n      node {\n        nodeId\n        ...IssueHeader_issue\n        ...IssueDescription_issue\n        ...IssueSidebar_issue\n        ...IssueComments_issue\n      }\n    }\n  }\n  ...IssueSidebar_query\n  ...IssueComments_query\n}\n\nfragment IssueComments_issue on issues {\n  nodeId\n  number\n  commentsCollection(first: 50, orderBy: [{number: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        body\n        created_at\n        author: users {\n          name\n          avatar_url\n          nodeId\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment IssueComments_query on Query {\n  firstUser: usersCollection(first: 1) {\n    edges {\n      node {\n        id\n        nodeId\n      }\n    }\n  }\n}\n\nfragment IssueDescription_issue on issues {\n  nodeId\n  number\n  description\n}\n\nfragment IssueHeader_issue on issues {\n  nodeId\n  number\n  title\n}\n\nfragment IssueSidebar_issue on issues {\n  nodeId\n  number\n  status\n  priority\n  created_at\n  assignee_id\n  assignee: users {\n    nodeId\n    id\n    name\n    avatar_url\n  }\n  issue_labelsCollection(first: 100) {\n    edges {\n      node {\n        nodeId\n        labels {\n          nodeId\n          number\n          name\n          color\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment IssueSidebar_query on Query {\n  usersCollection(first: 100, orderBy: [{name: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        id\n        name\n        avatar_url\n      }\n    }\n  }\n  labelsCollection(first: 100, orderBy: [{name: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "query IssueDetailQuery(\n  $number: Int!\n) {\n  issuesCollection(filter: {number: {eq: $number}}, first: 1) {\n    edges {\n      node {\n        nodeId\n        ...IssueHeader_issue\n        ...IssueDescription_issue\n        ...IssueSidebar_issue\n        ...IssueComments_issue\n      }\n    }\n  }\n  ...IssueSidebar_query\n  ...IssueComments_query\n}\n\nfragment IssueComments_issue on issues {\n  nodeId\n  number\n  commentsCollection(first: 10, orderBy: [{number: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        body\n        created_at\n        author: users {\n          name\n          avatar_url\n          nodeId\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n\nfragment IssueComments_query on Query {\n  firstUser: usersCollection(first: 1) {\n    edges {\n      node {\n        id\n        nodeId\n      }\n    }\n  }\n}\n\nfragment IssueDescription_issue on issues {\n  nodeId\n  number\n  description\n}\n\nfragment IssueHeader_issue on issues {\n  nodeId\n  number\n  title\n}\n\nfragment IssueSidebar_issue on issues {\n  nodeId\n  number\n  status\n  priority\n  created_at\n  assignee_id\n  assignee: users {\n    nodeId\n    id\n    name\n    avatar_url\n  }\n  issue_labelsCollection(first: 100) {\n    edges {\n      node {\n        nodeId\n        labels {\n          nodeId\n          number\n          name\n          color\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment IssueSidebar_query on Query {\n  usersCollection(first: 100, orderBy: [{name: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        id\n        name\n        avatar_url\n      }\n    }\n  }\n  labelsCollection(first: 100, orderBy: [{name: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();

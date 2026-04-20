@@ -6,6 +6,7 @@ import { graphql, useMutation, useRelayEnvironment } from 'react-relay';
 import { Search, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { Dropdown } from './Dropdown';
+import { LabelEditorDialog } from './LabelEditorDialog';
 import { LabelsField } from './LabelsField';
 import { PriorityIcon, PRIORITY_CONFIG, SELECTABLE_PRIORITIES } from './PriorityIcon';
 import { ShortcutTextarea } from './ShortcutTextarea';
@@ -123,6 +124,7 @@ export function CreateIssueModal({
   const [priority, setPriority] = useState<IssuePriority>('medium');
   const [assigneeId, setAssigneeId] = useState<string | null>(null);
   const [selectedLabelNumbers, setSelectedLabelNumbers] = useState<number[]>([]);
+  const [labelDialogOpen, setLabelDialogOpen] = useState(false);
   const [assigneeQuery, setAssigneeQuery] = useState('');
   const [titleError, setTitleError] = useState<string | null>(null);
   const [descriptionError, setDescriptionError] = useState<string | null>(null);
@@ -136,6 +138,7 @@ export function CreateIssueModal({
     setPriority('medium');
     setAssigneeId(null);
     setSelectedLabelNumbers([]);
+    setLabelDialogOpen(false);
     setAssigneeQuery('');
     setTitleError(null);
     setDescriptionError(null);
@@ -433,6 +436,7 @@ export function CreateIssueModal({
             selected={selectedLabels}
             onAddLabel={label => addLabel(label.number)}
             onRemoveLabel={label => removeLabel(label.number)}
+            onCreateLabel={() => setLabelDialogOpen(true)}
             removeMode="instant"
             disabled={isSubmitting}
           />
@@ -461,6 +465,13 @@ export function CreateIssueModal({
           </button>
         </div>
       </div>
+
+      <LabelEditorDialog
+        open={labelDialogOpen}
+        mode="create"
+        onClose={() => setLabelDialogOpen(false)}
+        onCreated={label => addLabel(label.number)}
+      />
     </div>
   );
 }

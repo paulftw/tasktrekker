@@ -17,5 +17,16 @@ export const issueTitleSchema = z
 // schema.sql: check (length(description) <= 10000). Empty is allowed.
 export const issueDescriptionSchema = z.string().max(10000, 'Description must be 10000 characters or fewer');
 
+// schema.sql: check (length(trim(name)) > 0 and length(name) <= 50).
+export const labelNameSchema = z
+  .string()
+  .trim()
+  .min(1, 'Label name is required')
+  .max(50, 'Label name must be 50 characters or fewer');
+
+// schema.sql: check (color ~ '^[0-9a-f]{6}$').
+export const labelColorSchema = z.string().regex(/^[0-9a-f]{6}$/, 'Choose a label color');
+
 export type IssueTitle = z.infer<typeof issueTitleSchema>;
 export type IssueDescription = z.infer<typeof issueDescriptionSchema>;
+export type LabelName = z.infer<typeof labelNameSchema>;
