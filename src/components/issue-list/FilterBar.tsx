@@ -25,7 +25,6 @@ export type User = {
 };
 
 const UNASSIGNED = 'unassigned';
-// TODO: Remove this fallback when authentication is implemented and use the real current user's ID.
 const ASSIGNED_TO_ME = 'assigned-to-me';
 
 const FilterChip = forwardRef<
@@ -65,6 +64,11 @@ const FilterChip = forwardRef<
 });
 FilterChip.displayName = 'FilterChip';
 
+/*
+ * Deliberately left duplicated: the four `toggleX` functions below all run
+ * the same getAll/delete/forEach/append dance on URLSearchParams. One more
+ * filter type and I'd pull `toggleMultiValueParam(key, value)` out.
+ */
 export function FilterBar({ labels, users }: { labels: Label[]; users: User[] }) {
   const router = useRouter();
   const pathname = usePathname();

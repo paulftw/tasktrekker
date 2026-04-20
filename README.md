@@ -159,7 +159,9 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 - Inline title and description editors with Zod validation mirroring DB constraints.
 - Error toasts on mutation failure using Sonner.
 - Status mutation with optimistic update. Relay auto-rolls back on server error.
-- Real-time across browser windows: Supabase Realtime subscriptions on `issues`, `comments`, and `issue_labels` (list + detail) bridged into the Relay store via `fetchQuery` refetch on event. Status, priority, title, description, new comments, and label add/remove all propagate without reload. Refetch over hand-patching the store from raw row payloads: payloads carry SQL column values but not the encoded `nodeId`, joined fields (e.g. `comment.author.name`), or connection-edge plumbing — patching means re-implementing pieces of pg_graphql client-side. Refetch is one path that handles all cases. Cost is real at scale: one DB write fans out to N refetches across N open tabs, each a full query. Fine for an MVP serving small teams; at Linear scale I'd patch scalar UPDATEs from the payload and reserve refetch for joins and inserts.
+- Real-time across browser windows: Supabase Realtime subscriptions on `issues`, `comments`, and `issue_labels` (list + detail) bridged into the Relay store via `fetchQuery` refetch on event. Status, priority, title, description, new comments, and label add/remove all propagate without reload.
+  - Refetch over hand-patching: raw row payloads carry SQL column values but not the encoded `nodeId`, joined fields (e.g. `comment.author.name`), or connection-edge plumbing. Patching means re-implementing pg_graphql client-side; refetch handles every case in one path.
+  - Scale tradeoff: one DB write fans out to N refetches across N open tabs. Fine for an MVP; at Linear scale I'd patch scalar UPDATEs from the payload and reserve refetch for joins and inserts.
 - Test suite, component layer: Vitest + Testing Library + `relay-test-utils`, SWC transform (same as production, no babel fork). StatusPicker commit contract + `getDataID` normalization regression pin (README Problem 5).
 - Test suite, integration layer: hits demo Supabase directly. Comment-numbering trigger assigns 1..N per issue; StatusPickerUpdateMutation round-trips through pg_graphql; `labels.color` check rejects non-hex. Leaves rows behind — demo DB, no cleanup. Not property-based: we're demonstrating it works, not stress-testing concurrency. Runs via `npm test`.
 - Test suite, E2E layer: nine Playwright tests across four specs. Golden path: list → issue detail → change status, plus add comment. Filters: URL syncing, label search, assignee combinations, and the temporary "Assigned to me" shortcut behavior. Create issue: topbar modal creates an issue, adds labels, and lands on detail. Realtime: two browser contexts prove status and comment propagation. Runs via `npm run test:e2e`; dev server auto-spawns. Unit layer skipped — no pure business logic to pin.
@@ -172,21 +174,21 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 - Issue list cursor-based pagination via `usePaginationFragment` with an `IntersectionObserver`-based infinite scroll trigger.
 - Comment thread cursor-based pagination via `usePaginationFragment` with a "Load more" button.
 
-### Pending
+### Known Issues
 
-- **Authentication:** Replace the temporary authless current-user fallback (first seeded user) — used by the assignee filter's "Assigned to me" shortcut and the comment composer — with proper Supabase Auth + RLS.
+- No mobile responsiveness.
+- A "design" decision to add grouping on the issue list was not compatible with cursor-based pagination. Works for small lists, fetching need a deep overhaul to support large lists with grouping.
+- No keyboard shortcuts.
+- No authentication, current-user is hardcoded.
+- AI generated initial design looks pretty but introduces unprofessional mixture of font sizes and hard to maintain CSS hacks. Real project would build a design system after the initial PoC. I'm stopping at the PoC stage.
+
+### Other potential improvements
+
 - Dropdown filters don't close when clicking on an issue. The click lands on the issue link instead.
-- **Label Filtering:** Current client-side multi-label filter runs *after* pagination, so matches beyond page 1 are invisible — correctness bug, not just scalability. Real fix is a server-side PG procedure or EXISTS filter wired through pg_graphql.
-- **Priority Filter:** Multi-select support (spec implies this).
-- **Typography:** Standardize the scale; remove fractional pixel font sizes to fix sub-pixel baseline alignment.
-
-### Maybe Later
-
-- Group components into folders (FilterTab and components, icons/pills? Dropdowns?)
-- CSS Cleanup.
+- Label filtering: current client-side multi-label filter runs *after* pagination, so matches beyond page 1 are invisible — correctness bug, not just scalability. Real fix is a server-side PG procedure or EXISTS filter wired through pg_graphql.
+- Priority filter: multi-select support (spec implies this).
 - Alphabetic sorting of labels everywhere in UI lists.
-- check if avatar url is used, seems like placeholeder is always generated
-- mobile responsiveness
+- check if avatar url is used, seems like placeholder is always generated
 
 
 ### Punted (would do with more time)
@@ -198,5 +200,5 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 ## Tools
 
 - Claude Code as a development partner -- accelerating boilerplate, researching the Relay/pg_graphql integration, brainstorming.
-- Claude Design for better than nothing UI design (that's why font sizes are chaotic).
+- Claude Design for better than nothing UI design.
 - Codex and Gemini for sanity-checking, code review and consensus on modern best practices.

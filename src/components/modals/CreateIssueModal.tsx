@@ -51,6 +51,12 @@ const addLabelsMutation = graphql`
   }
 `;
 
+/**
+ * Orchestrates form state, two sequential mutations (create issue, then
+ * attach labels), and modal keyboard handling. Worth extracting
+ * `useCreateIssueMutation` once a second create flow exists — for one
+ * modal, the indirection costs more than it saves.
+ */
 export function CreateIssueModal({
   open,
   onClose,
@@ -199,6 +205,9 @@ export function CreateIssueModal({
         }
       }
 
+      // Reaches through to Relay's private `invalidateStore`. Proper fix:
+      // a mutation `updater` that prepends into the IssueList connection,
+      // or `fetchQuery(..., { fetchPolicy: 'network-only' })` on the list.
       const store = environment.getStore() as { invalidateStore?: () => void };
       store.invalidateStore?.();
       onClose();
