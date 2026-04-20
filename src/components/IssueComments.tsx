@@ -47,8 +47,10 @@ const issueFragment = graphql`
 const queryFragment = graphql`
   fragment IssueComments_query on Query {
     # TODO: Remove this when authentication is implemented
-    # We use the first user as a fallback author for new comments
-    firstUser: usersCollection(first: 1) {
+    # We use the first user (alphabetical by name) as a fallback author for new comments.
+    # Must match the FilterBar's "Assigned to me" resolution (IssueList query uses the same ordering)
+    # so comment-author and assigned-to-me refer to the same person.
+    firstUser: usersCollection(first: 1, orderBy: [{ name: AscNullsLast }]) {
       edges {
         node {
           id

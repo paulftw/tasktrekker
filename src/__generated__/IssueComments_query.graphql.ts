@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2758b0d339bbc0ed8859288a12f9eea3>>
+ * @generated SignedSource<<1afd5957f85d0bb8616ee367fbbf4dfd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -38,6 +38,15 @@ const node: ReaderFragment = {
           "kind": "Literal",
           "name": "first",
           "value": 1
+        },
+        {
+          "kind": "Literal",
+          "name": "orderBy",
+          "value": [
+            {
+              "name": "AscNullsLast"
+            }
+          ]
         }
       ],
       "concreteType": "usersConnection",
@@ -75,13 +84,13 @@ const node: ReaderFragment = {
           "storageKey": null
         }
       ],
-      "storageKey": "usersCollection(first:1)"
+      "storageKey": "usersCollection(first:1,orderBy:[{\"name\":\"AscNullsLast\"}])"
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
 
-(node as any).hash = "349688075f7ae5834741890c3d4fe8c8";
+(node as any).hash = "eb2d7cadebeb1bcdd7ac2e4e7cd5bc01";
 
 export default node;
