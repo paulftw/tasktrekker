@@ -119,6 +119,7 @@ create table issue_labels (
 
 alter publication supabase_realtime add table issues;
 alter publication supabase_realtime add table comments;
+alter publication supabase_realtime add table issue_labels;
 
 -- RLS disabled for demo. In production, enable RLS on all tables and scope
 -- policies to auth.uid(). Flagged in README.

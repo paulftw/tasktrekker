@@ -82,3 +82,68 @@ test('realtime: add comment in window A propagates to window B', async ({ browse
   await ctxA.close();
   await ctxB.close();
 });
+
+test('realtime: label add/remove in window A propagates to window B', async ({ browser }) => {
+  const ctxA = await browser.newContext();
+  const ctxB = await browser.newContext();
+  const pageA = await ctxA.newPage();
+  const pageB = await ctxB.newPage();
+
+  // Navigate to the first issue's detail page in both windows.
+  await pageA.goto('/');
+  const firstLink = pageA.locator("a[href^='/issues/']").first();
+  await expect(firstLink).toBeVisible();
+  const href = await firstLink.getAttribute('href');
+  if (!href) throw new Error('no issue link on list');
+
+  await Promise.all([pageA.goto(href), pageB.goto(href)]);
+
+  // Wait for both pages to fully load the sidebar.
+  const addLabelA = pageA.getByRole('button', { name: /^add label$/i });
+  await expect(addLabelA).toBeVisible();
+  await expect(pageB.getByRole('button', { name: /^add label$/i })).toBeVisible();
+
+  // Give B's realtime channel time to subscribe.
+  await pageB.waitForTimeout(1500);
+
+  // --- Phase 1: Add a label in A, assert it appears in B ---
+
+  // Open the label picker and grab the first available (unselected) label.
+  // Skip the "Create new label" action item.
+  await addLabelA.click();
+  const labelItems = pageA.locator('[role="menuitem"]').filter({ hasNotText: /create new label/i });
+  const firstLabelItem = labelItems.first();
+  await expect(firstLabelItem).toBeVisible();
+  const labelName = (await firstLabelItem.textContent())?.trim();
+  if (!labelName) throw new Error('no available label to add');
+
+  // Escape regex special chars in the label name for safe use in RegExp.
+  const escaped = labelName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  await firstLabelItem.click();
+
+  // The label pill should appear in A's sidebar.
+  const pillA = pageA.getByRole('button', { name: new RegExp(`label:\\s*${escaped}`, 'i') });
+  await expect(pillA).toBeVisible();
+
+  // Assert it propagates to B (via Supabase Realtime → refetch).
+  const pillB = pageB.getByRole('button', { name: new RegExp(`label:\\s*${escaped}`, 'i') });
+  await expect(pillB).toBeVisible({ timeout: 10_000 });
+
+  // --- Phase 2: Remove the label in A, assert it disappears from B ---
+
+  // Click the pill to open its dropdown, then click "Remove label".
+  await pillA.click();
+  const removeItem = pageA.getByRole('menuitem', { name: /remove label/i });
+  await expect(removeItem).toBeVisible();
+  await removeItem.click();
+
+  // The pill should disappear from A.
+  await expect(pillA).not.toBeVisible();
+
+  // Assert it disappears from B (via Supabase Realtime → refetch).
+  await expect(pillB).not.toBeVisible({ timeout: 10_000 });
+
+  await ctxA.close();
+  await ctxB.close();
+});
