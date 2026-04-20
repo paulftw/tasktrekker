@@ -22,7 +22,10 @@ export function Dropdown({
   onOpenChange?: (open: boolean) => void;
 }) {
   return (
-    <RDM.Root open={open} onOpenChange={onOpenChange} modal={false}>
+    // Radix default modal={true} keeps outside pointer events inside the menu's
+    // DismissableLayer, so clicking an issue row while a filter is open just
+    // closes the menu instead of also navigating.
+    <RDM.Root open={open} onOpenChange={onOpenChange}>
       {children}
     </RDM.Root>
   );
