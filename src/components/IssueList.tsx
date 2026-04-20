@@ -88,11 +88,11 @@ const GROUP_ORDER: IssueStatus[] = ['in_progress', 'todo', 'backlog', 'done', 'c
 const DEFAULT_COLLAPSED: IssueStatus[] = ['done', 'cancelled'];
 const ISSUE_PAGE_SIZE = 20;
 
-import type { IssueList_query$key } from '@/__generated__/IssueList_query.graphql';
+import type { IssueList_query$data, IssueList_query$key } from '@/__generated__/IssueList_query.graphql';
+import type { IssueListPaginationQuery } from '@/__generated__/IssueListPaginationQuery.graphql';
 
-type Issue = NonNullable<
-  NonNullable<NonNullable<IssueListPaginationQuery['response']['issuesCollection']>['edges']>[number]
->['node'];
+type IssueEdges = NonNullable<NonNullable<IssueList_query$data['issuesCollection']>['edges']>;
+type Issue = NonNullable<IssueEdges[number]>['node'];
 
 export function IssueList() {
   const searchParams = useSearchParams();
@@ -145,8 +145,7 @@ function IssueListContent({
     queryData
   );
 
-  type IssueEdge = NonNullable<NonNullable<IssueListPaginationQuery['response']['issuesCollection']>['edges']>[number];
-  let nodes: Issue[] = (data.issuesCollection?.edges ?? []).map((e) => (e as IssueEdge).node);
+  let nodes: Issue[] = (data.issuesCollection?.edges ?? []).map((e) => (e as IssueEdges[number]).node);
   const labels = (queryData.labelsCollection?.edges ?? []).map((e) => e!.node);
   const users = (queryData.usersCollection?.edges ?? []).map((e) => e!.node);
 
