@@ -48,6 +48,6 @@ test('topbar new issue modal creates an issue and lands on detail', async ({ pag
   await expect(featurePill).toBeVisible();
 
   await featurePill.click();
-  await page.locator('[role="menu"]').getByRole('menuitem', { name: /remove feature/i }).click();
+  await page.locator('[role="menu"]').getByRole('menuitem', { name: /^remove label$/i }).click();
   await expect(page.getByRole('button', { name: /label:\s*feature\.\s*click for options\./i })).toHaveCount(0);
 });
