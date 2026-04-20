@@ -5,16 +5,6 @@
 
 A minimal issue tracker. Next.js, Relay, Supabase/pg_graphql, TypeScript strict, Tailwind.
 
-### Pending
-- **E2E Test Failures:**
-  - `e2e/create-issue.spec.ts`: **Repeatedly broken**. Timeout on `remove feature` label click.
-  - `e2e/filters.spec.ts`: **Repeatedly broken**. `Alice Johnson` visibility failure in multi-select combinations.
-  - `e2e/pagination.spec.ts`: **Flaky**. Comment count mismatch (10 vs 11) in "Load more" verification.
-  - `e2e/golden-path.spec.ts`: **Flaky**. Strict mode violation on "Comment" button (matches "Load more comments" in some states).
-- **Authentication:** Transition from static "first-seeded-user" logic to proper Supabase Auth + RLS.
-- **Label Filtering:** Move client-side multi-label filtering to a server-side PG procedure for scalability.
-- **UI Polishing:** Multi-select for priorities, typography scaling, and Vercel deployment.
-
 ## Setup
 
 ```bash
@@ -184,9 +174,14 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 
 ### Pending
 
-- TODO: Replace the temporary authless current-user fallback (first seeded user) used by the assignee filter's "Assigned to me" shortcut and the comment composer once Supabase Auth lands.
-- Standardize typography scale (remove fractional pixel font sizes to fix sub-pixel baseline alignment issues).
-- Dropdown filters don't close when clicking on an issue. Issue is clicked instead.
+- **Authentication:** Replace the temporary authless current-user fallback (first seeded user) — used by the assignee filter's "Assigned to me" shortcut and the comment composer — with proper Supabase Auth + RLS.
+- **E2E Test Failures:**
+  - `e2e/filters.spec.ts`: **Repeatedly broken**. `Alice Johnson` visibility failure in multi-select combinations.
+  - `e2e/pagination.spec.ts`: **Flaky**. Comment count mismatch (10 vs 11) in "Load more" verification.
+- Dropdown filters don't close when clicking on an issue. The click lands on the issue link instead.
+- **Label Filtering:** Move client-side multi-label filtering to a server-side PG procedure for scalability.
+- **Priority Filter:** Multi-select support (spec implies this).
+- **Typography:** Standardize the scale; remove fractional pixel font sizes to fix sub-pixel baseline alignment.
 
 ### Maybe Later
 
@@ -194,7 +189,6 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 - Group components into folders (FilterTab and components, icons/pills? Dropdowns?)
 - CSS Cleanup.
 - Alphabetic sorting of labels everywhere in UI lists.
-- rename SELECTABLE_PRIORITIES, check if status icons are just as bad
 - check if avatar url is used, seems like placeholeder is always generated
 - mobile responsiveness
 - Change filter by priority to multiselect - spec seems to imply that.
