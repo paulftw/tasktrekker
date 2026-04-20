@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { Dropdown } from './Dropdown';
 import type { IssuePriority } from '@/types/enums';
 import type { PriorityPickerUpdateMutation } from '@/__generated__/PriorityPickerUpdateMutation.graphql';
-import { SELECTABLE_PRIORITIES, PRIORITY_CONFIG } from './PriorityIcon';
+import { ISSUE_PRIORITIES, PRIORITY_CONFIG } from './PriorityIcon';
 
 const mutation = graphql`
   mutation PriorityPickerUpdateMutation($number: Int!, $priority: issue_priority!) {
@@ -61,7 +61,7 @@ export function PriorityPicker({
       </Dropdown.Trigger>
 
       <Dropdown.Menu className="min-w-40">
-        {SELECTABLE_PRIORITIES.map(value => {
+        {ISSUE_PRIORITIES.map(value => {
           const { icon: Icon, label, className: color } = PRIORITY_CONFIG[value];
           const isCurrent = value === priority;
           return (

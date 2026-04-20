@@ -3,9 +3,14 @@
 // Thin wrapper over @radix-ui/react-dropdown-menu with some default styling and simplified API.
 
 import * as RDM from '@radix-ui/react-dropdown-menu';
-import type { ReactNode } from 'react';
+import type { ReactNode, RefObject } from 'react';
 
-import { Check } from 'lucide-react';
+import { Check, Search } from 'lucide-react';
+
+function focusFirstMenuItem(container: HTMLElement | null) {
+  const first = container?.querySelector<HTMLElement>('[role="menuitemcheckbox"],[role="menuitem"]');
+  if (first) first.focus();
+}
 
 export function Dropdown({
   children,
@@ -142,4 +147,50 @@ Dropdown.CheckboxItem = function DropdownCheckboxItem({
 
 Dropdown.Separator = function DropdownSeparator({ className = '' }: { className?: string }) {
   return <RDM.Separator className={`my-1 h-px bg-border-muted ${className}`} />;
+};
+
+// Search field rendered at the top of a Dropdown.Menu. Handles the Radix quirks:
+// blocks typeahead on printable keys, routes ArrowDown to the first menu item,
+// and clears the query on Escape before the menu itself closes.
+Dropdown.SearchInput = function DropdownSearchInput({
+  inputRef,
+  value,
+  onChange,
+  onClear,
+  ariaLabel,
+  placeholder = 'Search…',
+}: {
+  inputRef: RefObject<HTMLInputElement | null>;
+  value: string;
+  onChange: (value: string) => void;
+  onClear: () => void;
+  ariaLabel: string;
+  placeholder?: string;
+}) {
+  return (
+    <div className="flex items-center gap-1.5 px-2 py-1.5 -mt-1 mb-1 border-b border-line-muted">
+      <Search size={12} className="text-fg-subtle shrink-0" />
+      <input
+        ref={inputRef}
+        type="text"
+        aria-label={ariaLabel}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        onKeyDown={e => {
+          if (e.key.length === 1 || e.key === 'Backspace') e.stopPropagation();
+          if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            focusFirstMenuItem(e.currentTarget.closest('[role="menu"]'));
+          }
+          if (e.key === 'Escape' && value) {
+            e.preventDefault();
+            e.stopPropagation();
+            onClear();
+          }
+        }}
+        placeholder={placeholder}
+        className="flex-1 bg-transparent border-0 outline-none text-[12.5px] text-fg placeholder:text-fg-subtle min-w-0"
+      />
+    </div>
+  );
 };

@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { useRealtimeRefetch } from '@/lib/useRealtimeRefetch';
-import { StatusIcon, STATUS_CONFIG } from './StatusIcon';
+import { StatusIcon, STATUS_CONFIG, ISSUE_STATUSES } from './StatusIcon';
 import { PriorityIcon } from './PriorityIcon';
 import { UserAvatar } from './UserAvatar';
 import { LabelPill } from './LabelPill';
@@ -84,7 +84,6 @@ const query = graphql`
   }
 `;
 
-const GROUP_ORDER: IssueStatus[] = ['in_progress', 'todo', 'backlog', 'done', 'cancelled'];
 const DEFAULT_COLLAPSED: IssueStatus[] = ['done', 'cancelled'];
 const ISSUE_PAGE_SIZE = 20;
 
@@ -186,7 +185,7 @@ function IssueListContent({
     });
   }
 
-  const groups = new Map<IssueStatus, Issue[]>(GROUP_ORDER.map(s => [s, []]));
+  const groups = new Map<IssueStatus, Issue[]>(ISSUE_STATUSES.map(s => [s, []]));
   for (const n of nodes) {
     const bucket = groups.get(n.status);
     if (bucket) bucket.push(n);
@@ -210,7 +209,7 @@ function IssueListContent({
     <div className="flex-1 flex flex-col overflow-hidden">
       <FilterBar labels={labels} users={users} />
       <div className="flex-1 overflow-auto">
-        {GROUP_ORDER.filter(s => selectedStatuses.size === 0 || selectedStatuses.has(s)).map(s => {
+        {ISSUE_STATUSES.filter(s => selectedStatuses.size === 0 || selectedStatuses.has(s)).map(s => {
           const items = groups.get(s) ?? [];
           const isCollapsed = collapsed.has(s);
           const cfg = STATUS_CONFIG[s];

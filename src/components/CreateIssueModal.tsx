@@ -3,14 +3,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { graphql, useMutation, useRelayEnvironment } from 'react-relay';
-import { Search, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { toast } from 'sonner';
 import { Dropdown } from './Dropdown';
 import { LabelEditorDialog } from './LabelEditorDialog';
 import { LabelsField } from './LabelsField';
-import { PriorityIcon, PRIORITY_CONFIG, SELECTABLE_PRIORITIES } from './PriorityIcon';
+import { PriorityIcon, PRIORITY_CONFIG, ISSUE_PRIORITIES } from './PriorityIcon';
 import { ShortcutTextarea } from './ShortcutTextarea';
-import { StatusIcon, STATUS_CONFIG, SELECTABLE_STATUSES } from './StatusIcon';
+import { StatusIcon, STATUS_CONFIG, ISSUE_STATUSES } from './StatusIcon';
 import { UserAvatar } from './UserAvatar';
 import { issueDescriptionSchema, issueTitleSchema } from '@/lib/validation';
 import { usePlatformEditorHint } from '@/lib/usePlatformEditorHint';
@@ -50,52 +50,6 @@ const addLabelsMutation = graphql`
     }
   }
 `;
-
-function focusFirstMenuItem(container: HTMLElement | null) {
-  const first = container?.querySelector<HTMLElement>('[role="menuitemcheckbox"],[role="menuitem"]');
-  if (first) first.focus();
-}
-
-function SearchMenuInput({
-  inputRef,
-  value,
-  onChange,
-  onClear,
-  ariaLabel,
-}: {
-  inputRef: React.RefObject<HTMLInputElement | null>;
-  value: string;
-  onChange: (value: string) => void;
-  onClear: () => void;
-  ariaLabel: string;
-}) {
-  return (
-    <div className="flex items-center gap-1.5 px-2 py-1.5 -mt-1 mb-1 border-b border-line-muted">
-      <Search size={12} className="text-fg-subtle shrink-0" />
-      <input
-        ref={inputRef}
-        type="text"
-        aria-label={ariaLabel}
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        onKeyDown={e => {
-          if (e.key.length === 1 || e.key === 'Backspace') e.stopPropagation();
-          if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            focusFirstMenuItem(e.currentTarget.closest('[role="menu"]'));
-          }
-          if (e.key === 'Escape' && value) {
-            e.preventDefault();
-            e.stopPropagation();
-            onClear();
-          }
-        }}
-        placeholder="Search…"
-        className="flex-1 bg-transparent border-0 outline-none text-[12.5px] text-fg placeholder:text-fg-subtle min-w-0"
-      />
-    </div>
-  );
-}
 
 export function CreateIssueModal({
   open,
@@ -358,7 +312,7 @@ export function CreateIssueModal({
               </button>
             </Dropdown.Trigger>
             <Dropdown.Menu className="min-w-44">
-              {SELECTABLE_STATUSES.map(value => (
+              {ISSUE_STATUSES.map(value => (
                 <Dropdown.Item key={value} onClick={() => setStatus(value)}>
                   <StatusIcon status={value} size={14} />
                   <span>{STATUS_CONFIG[value].label}</span>
@@ -377,7 +331,7 @@ export function CreateIssueModal({
               </button>
             </Dropdown.Trigger>
             <Dropdown.Menu className="min-w-44">
-              {SELECTABLE_PRIORITIES.map(value => (
+              {ISSUE_PRIORITIES.map(value => (
                 <Dropdown.Item key={value} onClick={() => setPriority(value)}>
                   <PriorityIcon priority={value} size={14} />
                   <span>{PRIORITY_CONFIG[value].label}</span>
@@ -406,7 +360,7 @@ export function CreateIssueModal({
                 assigneeInputRef.current?.focus();
               }}
             >
-              <SearchMenuInput
+              <Dropdown.SearchInput
                 inputRef={assigneeInputRef}
                 value={assigneeQuery}
                 onChange={setAssigneeQuery}

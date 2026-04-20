@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { Dropdown } from './Dropdown';
 import type { IssueStatus } from '@/types/enums';
 import type { StatusPickerUpdateMutation } from '@/__generated__/StatusPickerUpdateMutation.graphql';
-import { SELECTABLE_STATUSES, STATUS_CONFIG } from './StatusIcon';
+import { ISSUE_STATUSES, STATUS_CONFIG } from './StatusIcon';
 
 const mutation = graphql`
   mutation StatusPickerUpdateMutation($number: Int!, $status: issue_status!) {
@@ -53,7 +53,7 @@ export function StatusPicker({ nodeId, number, status }: { nodeId: string; numbe
       </Dropdown.Trigger>
 
       <Dropdown.Menu className="min-w-40">
-        {SELECTABLE_STATUSES.map(value => {
+        {ISSUE_STATUSES.map(value => {
           const { icon: Icon, label, className: color } = STATUS_CONFIG[value];
           const isCurrent = value === status;
           return (

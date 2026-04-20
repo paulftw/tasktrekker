@@ -47,7 +47,8 @@ export const PRIORITY_CONFIG: Record<IssuePriority, { icon: IconComponent; label
   },
 };
 
-export const SELECTABLE_PRIORITIES: IssuePriority[] = ['urgent', 'high', 'medium', 'low'];
+// Canonical issue priorities in display order. Excludes Relay's `%future added value` sentinel.
+export const ISSUE_PRIORITIES: IssuePriority[] = ['urgent', 'high', 'medium', 'low'];
 
 export function PriorityIcon({
   priority,

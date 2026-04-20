@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useRef, useState } from 'react';
-import { Pencil, Plus, Search, X } from 'lucide-react';
+import { Pencil, Plus, X } from 'lucide-react';
 import { Dropdown } from './Dropdown';
 import { LabelPill } from './LabelPill';
 
@@ -11,50 +11,6 @@ type Label = {
   readonly name: string;
   readonly color: string;
 };
-
-function focusFirstMenuItem(container: HTMLElement | null) {
-  const first = container?.querySelector<HTMLElement>('[role="menuitemcheckbox"],[role="menuitem"]');
-  if (first) first.focus();
-}
-
-function SearchMenuInput({
-  inputRef,
-  value,
-  onChange,
-  onClear,
-}: {
-  inputRef: React.RefObject<HTMLInputElement | null>;
-  value: string;
-  onChange: (value: string) => void;
-  onClear: () => void;
-}) {
-  return (
-    <div className="flex items-center gap-1.5 px-2 py-1.5 -mt-1 mb-1 border-b border-line-muted">
-      <Search size={12} className="text-fg-subtle shrink-0" />
-      <input
-        ref={inputRef}
-        type="text"
-        aria-label="Search labels"
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        onKeyDown={e => {
-          if (e.key.length === 1 || e.key === 'Backspace') e.stopPropagation();
-          if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            focusFirstMenuItem(e.currentTarget.closest('[role="menu"]'));
-          }
-          if (e.key === 'Escape' && value) {
-            e.preventDefault();
-            e.stopPropagation();
-            onClear();
-          }
-        }}
-        placeholder="Search…"
-        className="flex-1 bg-transparent border-0 outline-none text-[12.5px] text-fg placeholder:text-fg-subtle min-w-0"
-      />
-    </div>
-  );
-}
 
 // TODO: multiple components in this file, review. LabelsField name could be better.
 export function LabelsField({
@@ -130,7 +86,13 @@ export function LabelsField({
           }}
         >
           {unselected.length > 0 && (
-            <SearchMenuInput inputRef={inputRef} value={query} onChange={setQuery} onClear={() => setQuery('')} />
+            <Dropdown.SearchInput
+              inputRef={inputRef}
+              value={query}
+              onChange={setQuery}
+              onClear={() => setQuery('')}
+              ariaLabel="Search labels"
+            />
           )}
 
           {filteredLabels.length === 0 && normalizedQuery !== '' && (

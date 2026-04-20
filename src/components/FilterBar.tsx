@@ -2,11 +2,11 @@
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Dropdown } from './Dropdown';
-import { PriorityIcon, SELECTABLE_PRIORITIES, PRIORITY_CONFIG, SignalHigh } from './PriorityIcon';
-import { StatusIcon, SELECTABLE_STATUSES, STATUS_CONFIG } from './StatusIcon';
+import { PriorityIcon, ISSUE_PRIORITIES, PRIORITY_CONFIG, SignalHigh } from './PriorityIcon';
+import { StatusIcon, ISSUE_STATUSES, STATUS_CONFIG } from './StatusIcon';
 import { UserAvatar } from './UserAvatar';
 import type { IssuePriority, IssueStatus } from '@/types/enums';
-import { Tag, X, UserCircle2, Search } from 'lucide-react';
+import { Tag, X, UserCircle2 } from 'lucide-react';
 import { forwardRef, useRef, useState } from 'react';
 
 export type Label = {
@@ -26,53 +26,6 @@ export type User = {
 const UNASSIGNED = 'unassigned';
 // TODO: Remove this fallback when authentication is implemented and use the real current user's ID.
 const ASSIGNED_TO_ME = 'assigned-to-me';
-
-function focusFirstMenuItem(container: HTMLElement | null) {
-  const first = container?.querySelector<HTMLElement>('[role="menuitemcheckbox"],[role="menuitem"]');
-  if (first) first.focus();
-}
-
-function SearchMenuInput({
-  inputRef,
-  value,
-  onChange,
-  onClear,
-  ariaLabel,
-}: {
-  inputRef: React.RefObject<HTMLInputElement | null>;
-  value: string;
-  onChange: (value: string) => void;
-  onClear: () => void;
-  ariaLabel: string;
-}) {
-  return (
-    <div className="flex items-center gap-1.5 px-2 py-1.5 -mt-1 mb-1 border-b border-line-muted">
-      <Search size={12} className="text-fg-subtle shrink-0" />
-      <input
-        ref={inputRef}
-        type="text"
-        aria-label={ariaLabel}
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        onKeyDown={e => {
-          // Block Radix typeahead on printable keys.
-          if (e.key.length === 1 || e.key === 'Backspace') e.stopPropagation();
-          if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            focusFirstMenuItem(e.currentTarget.closest('[role="menu"]'));
-          }
-          if (e.key === 'Escape' && value) {
-            e.preventDefault();
-            e.stopPropagation();
-            onClear();
-          }
-        }}
-        placeholder="Search…"
-        className="flex-1 bg-transparent border-0 outline-none text-[12.5px] text-fg placeholder:text-fg-subtle min-w-0"
-      />
-    </div>
-  );
-}
 
 const FilterChip = forwardRef<
   HTMLButtonElement,
@@ -135,8 +88,6 @@ export function FilterBar({ labels, users }: { labels: Label[]; users: User[] })
     ? users.filter(u => u.name.toLowerCase().includes(normalizedAssigneeQuery))
     : users.filter(u => u.id !== currentUser?.id);
 
-  const STATUS_ORDER: IssueStatus[] = ['in_progress', 'todo', 'backlog', 'done', 'cancelled'];
-
   function togglePriority(priority: IssuePriority) {
     const params = new URLSearchParams(searchParams.toString());
     if (selectedPriority === priority) {
@@ -190,7 +141,7 @@ export function FilterBar({ labels, users }: { labels: Label[]; users: User[] })
 
   const priorityLabel = selectedPriority ? PRIORITY_CONFIG[selectedPriority].label : 'Priority';
 
-  const selectedStatusObjects = STATUS_ORDER.filter(s => selectedStatuses.has(s)).map(s => STATUS_CONFIG[s]);
+  const selectedStatusObjects = ISSUE_STATUSES.filter(s => selectedStatuses.has(s)).map(s => STATUS_CONFIG[s]);
   const statusesLabel =
     selectedStatuses.size > 1 ? `${selectedStatuses.size} statuses` : selectedStatusObjects[0]?.label || 'Status';
 
@@ -263,7 +214,7 @@ export function FilterBar({ labels, users }: { labels: Label[]; users: User[] })
             assigneeInputRef.current?.focus();
           }}
         >
-          <SearchMenuInput
+          <Dropdown.SearchInput
             inputRef={assigneeInputRef}
             value={assigneeQuery}
             onChange={setAssigneeQuery}
@@ -333,7 +284,7 @@ export function FilterBar({ labels, users }: { labels: Label[]; users: User[] })
                   );
                 })()
               ) : selectedStatusObjects.length === 1 ? (
-                <StatusIcon status={STATUS_ORDER.find(s => selectedStatuses.has(s))!} size={12} />
+                <StatusIcon status={ISSUE_STATUSES.find(s => selectedStatuses.has(s))!} size={12} />
               ) : (
                 <StatusIcon status="backlog" size={12} />
               )
@@ -347,7 +298,7 @@ export function FilterBar({ labels, users }: { labels: Label[]; users: User[] })
           />
         </Dropdown.Trigger>
         <Dropdown.Menu align="start" className="w-48">
-          {SELECTABLE_STATUSES.map(s => (
+          {ISSUE_STATUSES.map(s => (
             <Dropdown.CheckboxItem key={s} checked={selectedStatuses.has(s)} onCheckedChange={() => toggleStatus(s)}>
               <StatusIcon status={s} size={14} />
               <span>{STATUS_CONFIG[s].label}</span>
@@ -373,7 +324,7 @@ export function FilterBar({ labels, users }: { labels: Label[]; users: User[] })
           />
         </Dropdown.Trigger>
         <Dropdown.Menu align="start" className="w-48">
-          {SELECTABLE_PRIORITIES.map(p => (
+          {ISSUE_PRIORITIES.map(p => (
             <Dropdown.CheckboxItem
               key={p}
               checked={selectedPriority === p}
@@ -433,7 +384,7 @@ export function FilterBar({ labels, users }: { labels: Label[]; users: User[] })
             labelInputRef.current?.focus();
           }}
         >
-          <SearchMenuInput
+          <Dropdown.SearchInput
             inputRef={labelInputRef}
             value={labelQuery}
             onChange={setLabelQuery}

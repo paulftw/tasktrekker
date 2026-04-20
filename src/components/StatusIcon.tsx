@@ -70,7 +70,9 @@ export const STATUS_CONFIG: Record<IssueStatus, { icon: IconComponent; label: st
   '%future added value': { icon: CircleDashed, label: 'Unknown', className: 'text-status-backlog' },
 };
 
-export const SELECTABLE_STATUSES: IssueStatus[] = ['in_progress', 'todo', 'backlog', 'done', 'cancelled'];
+// Canonical issue statuses in display order. Excludes Relay's `%future added value` sentinel,
+// which is a type-system escape hatch rather than a real enum member.
+export const ISSUE_STATUSES: IssueStatus[] = ['in_progress', 'todo', 'backlog', 'done', 'cancelled'];
 
 export function StatusIcon({
   status,
