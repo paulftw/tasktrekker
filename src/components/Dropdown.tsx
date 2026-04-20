@@ -146,7 +146,7 @@ Dropdown.CheckboxItem = function DropdownCheckboxItem({
 };
 
 Dropdown.Separator = function DropdownSeparator({ className = '' }: { className?: string }) {
-  return <RDM.Separator className={`my-1 h-px bg-border-muted ${className}`} />;
+  return <RDM.Separator className={`my-1 h-px bg-line-muted ${className}`} />;
 };
 
 // Search field rendered at the top of a Dropdown.Menu. Handles the Radix quirks:

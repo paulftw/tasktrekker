@@ -256,7 +256,7 @@ export function FilterBar({ labels, users }: { labels: Label[]; users: User[] })
         </Dropdown.Menu>
       </Dropdown>
 
-      <div aria-hidden className="w-px h-[18px] bg-border mx-1" />
+      <div aria-hidden className="w-px h-[18px] bg-line mx-1" />
 
       <Dropdown>
         <Dropdown.Trigger asChild>
@@ -355,7 +355,7 @@ export function FilterBar({ labels, users }: { labels: Label[]; users: User[] })
                     style={{ backgroundColor: `#${selectedLabelObjects[1]!.color}` }}
                   />
                   <span
-                    className="absolute left-0 top-0 w-2 h-2 rounded-full z-10 ring-1 ring-bg-inset"
+                    className="absolute left-0 top-0 w-2 h-2 rounded-full z-10 ring-1 ring-surface-inset"
                     style={{ backgroundColor: `#${selectedLabelObjects[0]!.color}` }}
                   />
                 </div>
