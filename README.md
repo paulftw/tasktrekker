@@ -179,7 +179,7 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
   - `e2e/filters.spec.ts`: **Repeatedly broken**. `Alice Johnson` visibility failure in multi-select combinations.
   - `e2e/pagination.spec.ts`: **Flaky**. Comment count mismatch (10 vs 11) in "Load more" verification.
 - Dropdown filters don't close when clicking on an issue. The click lands on the issue link instead.
-- **Label Filtering:** Move client-side multi-label filtering to a server-side PG procedure for scalability.
+- **Label Filtering:** Current client-side multi-label filter runs *after* pagination, so matches beyond page 1 are invisible — correctness bug, not just scalability. Real fix is a server-side PG procedure or EXISTS filter wired through pg_graphql.
 - **Priority Filter:** Multi-select support (spec implies this).
 - **Typography:** Standardize the scale; remove fractional pixel font sizes to fix sub-pixel baseline alignment.
 

@@ -148,6 +148,11 @@ function IssueListContent({
   const labels = (queryData.labelsCollection?.edges ?? []).map((e) => e!.node);
   const users = (queryData.usersCollection?.edges ?? []).map((e) => e!.node);
 
+  // KNOWN BUG: label filter runs client-side after pagination, so label matches
+  // beyond page 1 are invisible — pages 1..N can come back empty while matches
+  // exist further down. Correct fix is a server-side `issues_with_all_labels`
+  // procedure or an EXISTS clause wired through a custom pg_graphql filter;
+  // punted for the weekend. Do not rely on this past a single page of results.
   if (selectedLabels.size > 0) {
     nodes = nodes.filter(issue => {
       const issueLabelNames = new Set(
