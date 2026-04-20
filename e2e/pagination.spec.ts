@@ -64,6 +64,7 @@ test('comment list load more button loads older comments', async ({ page }) => {
   // We need an author for comments. Let's fetch the first user.
   const { data: users, error: usersError } = await supabase.from('users').select('id').limit(1);
   expect(usersError).toBeNull();
+  if (!users || users.length === 0) throw new Error('No users available for comment pagination test');
   const authorId = users[0].id;
 
   // Create 11 comments
