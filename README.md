@@ -1,5 +1,8 @@
 # TaskTrekker
 
+> **Live:** https://tasktrekker-drab.vercel.app
+> **Repo:** https://github.com/paulftw/tasktrekker
+
 A minimal issue tracker. Next.js, Relay, Supabase/pg_graphql, TypeScript strict, Tailwind.
 
 ### Pending
