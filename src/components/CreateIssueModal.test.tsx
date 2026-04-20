@@ -1,9 +1,9 @@
-import { Suspense } from 'react';
-import { act, render, screen } from '@testing-library/react';
+import { Suspense, useEffect } from 'react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { RelayEnvironmentProvider, graphql, useLazyLoadQuery } from 'react-relay';
+import { RelayEnvironmentProvider, graphql, useLazyLoadQuery, useRelayEnvironment } from 'react-relay';
 import { createMockEnvironment } from 'relay-test-utils';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
 import { CreateIssueModal } from './CreateIssueModal';
 import type { CreateIssueModalTestQuery } from '@/__generated__/CreateIssueModalTestQuery.graphql';
 
@@ -45,6 +45,14 @@ const testQuery = graphql`
 `;
 
 function TestWrapper({ onClose }: { onClose: () => void }) {
+  const environment = useRelayEnvironment();
+  
+  // Mock invalidateStore to prevent re-fetch suspension warnings in tests
+  useEffect(() => {
+    const store = environment.getStore();
+    (store as any).invalidateStore = () => {};
+  }, [environment]);
+
   const data = useLazyLoadQuery<CreateIssueModalTestQuery>(testQuery, {});
   const users = data.usersCollection?.edges.map(e => e.node) ?? [];
   const labels = data.labelsCollection?.edges.map(e => e.node) ?? [];
@@ -91,6 +99,13 @@ describe('CreateIssueModal', () => {
     mockPush.mockReset();
   });
 
+  afterEach(async () => {
+    // Settle any pending Radix transitions or focus management
+    await act(async () => {
+      await new Promise(resolve => setTimeout(resolve, 0));
+    });
+  });
+
   it('defaults assignee to unassigned and creates todo/medium issues', async () => {
     const { environment } = await renderModal();
     const user = userEvent.setup();
@@ -122,6 +137,12 @@ describe('CreateIssueModal', () => {
     await user.type(screen.getByRole('textbox', { name: /issue title/i }), 'Ship modal');
     await user.click(screen.getByRole('button', { name: /^add label$/i }));
     await user.click(screen.getByRole('menuitem', { name: /bug/i }));
+    
+    // Wait for dropdown to close and focus to settle
+    await waitFor(() => {
+      expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+    });
+
     await user.click(screen.getByRole('button', { name: /^create issue$/i }));
 
     expect(environment.mock.getMostRecentOperation().fragment.node.name).toBe('CreateIssueModalCreateMutation');
@@ -162,13 +183,17 @@ describe('CreateIssueModal', () => {
 
     await user.click(screen.getByRole('button', { name: /^add label$/i }));
     await user.click(screen.getByRole('menuitem', { name: /bug/i }));
+    
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /remove label bug/i })).toBeInTheDocument();
+    });
 
     const removeLabelButton = screen.getByRole('button', { name: /remove label bug/i });
-    expect(removeLabelButton).toBeInTheDocument();
-
     await user.click(removeLabelButton);
 
-    expect(screen.queryByRole('button', { name: /remove label bug/i })).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: /remove label bug/i })).not.toBeInTheDocument();
+    });
   });
 
   it('filters labels in the add label menu', async () => {
@@ -181,6 +206,12 @@ describe('CreateIssueModal', () => {
 
     expect(screen.getByRole('menuitem', { name: /design/i })).toBeInTheDocument();
     expect(screen.queryByRole('menuitem', { name: /bug/i })).not.toBeInTheDocument();
+    
+    // Close menu and wait for cleanup
+    await user.keyboard('{Escape}');
+    await waitFor(() => {
+      expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+    });
   });
 
   it('creates a new label from the add-label menu and selects it', async () => {
@@ -189,6 +220,11 @@ describe('CreateIssueModal', () => {
 
     await user.click(screen.getByRole('button', { name: /^add label$/i }));
     await user.click(screen.getByRole('menuitem', { name: /create new label/i }));
+    
+    await waitFor(() => {
+      expect(screen.getByLabelText(/name/i)).toBeInTheDocument();
+    });
+
     await user.type(screen.getByLabelText(/name/i), 'API');
     await user.click(screen.getByRole('button', { name: /color blue/i }));
     await user.click(screen.getByRole('button', { name: /create label/i }));
@@ -209,6 +245,8 @@ describe('CreateIssueModal', () => {
       }));
     });
 
-    expect(screen.getByRole('button', { name: /remove label api/i })).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /remove label api/i })).toBeInTheDocument();
+    });
   });
 });

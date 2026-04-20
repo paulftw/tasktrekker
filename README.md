@@ -2,6 +2,16 @@
 
 A minimal issue tracker. Next.js, Relay, Supabase/pg_graphql, TypeScript strict, Tailwind.
 
+### Pending
+- **E2E Test Failures:**
+  - `e2e/create-issue.spec.ts`: **Repeatedly broken**. Timeout on `remove feature` label click.
+  - `e2e/filters.spec.ts`: **Repeatedly broken**. `Alice Johnson` visibility failure in multi-select combinations.
+  - `e2e/pagination.spec.ts`: **Flaky**. Comment count mismatch (10 vs 11) in "Load more" verification.
+  - `e2e/golden-path.spec.ts`: **Flaky**. Strict mode violation on "Comment" button (matches "Load more comments" in some states).
+- **Authentication:** Transition from static "first-seeded-user" logic to proper Supabase Auth + RLS.
+- **Label Filtering:** Move client-side multi-label filtering to a server-side PG procedure for scalability.
+- **UI Polishing:** Multi-select for priorities, typography scaling, and Vercel deployment.
+
 ## Setup
 
 ```bash
