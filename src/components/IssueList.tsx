@@ -201,7 +201,7 @@ function IssueListContent({
   ) {
     return (
       <div className="shell-pad py-20 text-center">
-        <p className="text-sm text-text-secondary">No issues yet.</p>
+        <p className="text-sm text-fg-muted">No issues yet.</p>
       </div>
     );
   }
@@ -219,11 +219,11 @@ function IssueListContent({
               <button
                 type="button"
                 onClick={() => toggle(s)}
-                className="shell-pad sticky top-0 z-[2] bg-bg-raised border-b border-border-muted h-8 w-full flex items-center gap-[10px] text-[12px] font-medium text-text cursor-pointer"
+                className="shell-pad sticky top-0 z-[2] bg-surface-raised border-b border-line-muted h-8 w-full flex items-center gap-[10px] text-[12px] font-medium text-fg cursor-pointer"
                 aria-expanded={!isCollapsed}
               >
                 <span
-                  className="w-[18px] inline-flex items-center justify-center text-text-muted transition-transform duration-[120ms]"
+                  className="w-[18px] inline-flex items-center justify-center text-fg-subtle transition-transform duration-[120ms]"
                   style={{ transform: isCollapsed ? 'rotate(-90deg)' : 'none' }}
                   aria-hidden
                 >
@@ -231,10 +231,10 @@ function IssueListContent({
                 </span>
                 <StatusIcon status={s} size={14} />
                 <span>{cfg.label}</span>
-                <span className="mono text-text-muted">{items.length}</span>
+                <span className="mono text-fg-subtle">{items.length}</span>
               </button>
               {!isCollapsed && items.length === 0 && (
-                <div className="shell-pad py-2.5 text-[12px] text-text-muted">No issues</div>
+                <div className="shell-pad py-2.5 text-[12px] text-fg-subtle">No issues</div>
               )}
               {!isCollapsed && items.map(issue => <IssueRow key={issue.nodeId} issue={issue} />)}
             </section>
@@ -249,7 +249,7 @@ function IssueListContent({
           />
         )}
         {isLoadingNext && (
-          <div className="shell-pad py-4 text-center text-[12px] text-text-muted">Loading more...</div>
+          <div className="shell-pad py-4 text-center text-[12px] text-fg-subtle">Loading more...</div>
         )}
       </div>
     </div>
@@ -286,7 +286,7 @@ function IssueRow({ issue }: { issue: Issue }) {
   return (
     <Link
       href={`/issues/${issue.number}`}
-      className="shell-pad grid items-center gap-[10px] h-9 border-b border-border-muted hover:bg-bg-hover transition-colors"
+      className="shell-pad grid items-center gap-[10px] h-9 border-b border-line-muted hover:bg-surface-hover transition-colors"
       style={{
         gridTemplateColumns: '18px 14px minmax(0,1fr) auto auto',
       }}
@@ -298,7 +298,7 @@ function IssueRow({ issue }: { issue: Issue }) {
         <StatusIcon status={issue.status} size={14} />
       </span>
       <span
-        className="text-[13px] text-text overflow-hidden whitespace-nowrap text-ellipsis"
+        className="text-[13px] text-fg overflow-hidden whitespace-nowrap text-ellipsis"
         style={{ fontWeight: 450 }}
       >
         {issue.title}
@@ -308,7 +308,7 @@ function IssueRow({ issue }: { issue: Issue }) {
           <LabelPill key={l.number} label={l} size="xs" />
         ))}
         {overflow > 0 && (
-          <span className="inline-flex items-center rounded-full bg-bg-inset text-text-secondary px-1.5 py-px text-[10px]">
+          <span className="inline-flex items-center rounded-full bg-surface-inset text-fg-muted px-1.5 py-px text-[10px]">
             +{overflow}
           </span>
         )}

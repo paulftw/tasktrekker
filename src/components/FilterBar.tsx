@@ -46,8 +46,8 @@ function SearchMenuInput({
   ariaLabel: string;
 }) {
   return (
-    <div className="flex items-center gap-1.5 px-2 py-1.5 -mt-1 mb-1 border-b border-border-muted">
-      <Search size={12} className="text-text-muted shrink-0" />
+    <div className="flex items-center gap-1.5 px-2 py-1.5 -mt-1 mb-1 border-b border-line-muted">
+      <Search size={12} className="text-fg-subtle shrink-0" />
       <input
         ref={inputRef}
         type="text"
@@ -68,7 +68,7 @@ function SearchMenuInput({
           }
         }}
         placeholder="Search…"
-        className="flex-1 bg-transparent border-0 outline-none text-[12.5px] text-text placeholder:text-text-muted min-w-0"
+        className="flex-1 bg-transparent border-0 outline-none text-[12.5px] text-fg placeholder:text-fg-subtle min-w-0"
       />
     </div>
   );
@@ -209,7 +209,7 @@ export function FilterBar({ labels, users }: { labels: Label[]; users: User[] })
     selectedAssignees.size > 1 ? `${selectedAssignees.size} assignees` : selectedAssigneeObjects[0]?.name || 'Assignee';
 
   return (
-    <div className="shell-pad py-2 border-b border-border-muted flex items-center gap-2">
+    <div className="shell-pad py-2 border-b border-line-muted flex items-center gap-2">
       <Dropdown
         onOpenChange={open => {
           if (!open) setAssigneeQuery('');
@@ -230,7 +230,7 @@ export function FilterBar({ labels, users }: { labels: Label[]; users: User[] })
                   </div>
                   <div
                     className="absolute left-0 top-0 z-10 rounded-full"
-                    style={{ backgroundColor: 'color-mix(in srgb, var(--color-bg-inset) 80%, transparent)' }}
+                    style={{ backgroundColor: 'color-mix(in srgb, var(--color-surface-inset) 80%, transparent)' }}
                   >
                     <UserAvatar
                       user={selectedAssigneeObjects[0].id === UNASSIGNED ? null : selectedAssigneeObjects[0]}
@@ -244,7 +244,7 @@ export function FilterBar({ labels, users }: { labels: Label[]; users: User[] })
                   size={12}
                 />
               ) : (
-                <UserCircle2 size={12} className="text-text-muted" />
+                <UserCircle2 size={12} className="text-fg-subtle" />
               )
             }
             active={selectedAssignees.size > 0}
@@ -300,7 +300,7 @@ export function FilterBar({ labels, users }: { labels: Label[]; users: User[] })
             </Dropdown.CheckboxItem>
           ))}
           {normalizedAssigneeQuery && filteredUsers.length === 0 && (
-            <div className="px-2.5 py-2 text-[12px] text-text-muted">No matches</div>
+            <div className="px-2.5 py-2 text-[12px] text-fg-subtle">No matches</div>
           )}
         </Dropdown.Menu>
       </Dropdown>
@@ -325,7 +325,7 @@ export function FilterBar({ labels, users }: { labels: Label[]; users: User[] })
                       </div>
                       <div
                         className="absolute left-0 top-0 z-10 rounded-full"
-                        style={{ backgroundColor: 'color-mix(in srgb, var(--color-bg-inset) 80%, transparent)' }}
+                        style={{ backgroundColor: 'color-mix(in srgb, var(--color-surface-inset) 80%, transparent)' }}
                       >
                         <TopIcon width={12} height={12} className={selectedStatusObjects[0].className} />
                       </div>
@@ -365,7 +365,7 @@ export function FilterBar({ labels, users }: { labels: Label[]; users: User[] })
               selectedPriority ? (
                 <PriorityIcon priority={selectedPriority} size={12} />
               ) : (
-                <SignalHigh width={12} height={12} className="text-text-muted" />
+                <SignalHigh width={12} height={12} className="text-fg-subtle" />
               )
             }
             active={!!selectedPriority}
@@ -414,7 +414,7 @@ export function FilterBar({ labels, users }: { labels: Label[]; users: User[] })
                   style={{ backgroundColor: `#${selectedLabelObjects[0]!.color}` }}
                 />
               ) : (
-                <Tag size={12} className="text-text-muted" />
+                <Tag size={12} className="text-fg-subtle" />
               )
             }
             active={selectedLabels.size > 0}
@@ -450,7 +450,7 @@ export function FilterBar({ labels, users }: { labels: Label[]; users: User[] })
               <span className="truncate">{l.name}</span>
             </Dropdown.CheckboxItem>
           ))}
-          {filteredLabels.length === 0 && <div className="px-2.5 py-2 text-[12px] text-text-muted">No matches</div>}
+          {filteredLabels.length === 0 && <div className="px-2.5 py-2 text-[12px] text-fg-subtle">No matches</div>}
         </Dropdown.Menu>
       </Dropdown>
     </div>

@@ -1,19 +1,19 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-bg: #ffffff;
-  --color-bg-raised: #f9fafb;
-  --color-bg-inset: #f3f4f6;
-  --color-bg-overlay: #ffffff;
-  --color-bg-hover: #f3f4f6;
-  --color-bg-active: #e5e7eb;
+  --color-surface: #ffffff;
+  --color-surface-raised: #f9fafb;
+  --color-surface-inset: #f3f4f6;
+  --color-surface-overlay: #ffffff;
+  --color-surface-hover: #f3f4f6;
+  --color-surface-active: #e5e7eb;
 
-  --color-border: #e5e7eb;
-  --color-border-muted: #f1f2f4;
+  --color-line: #e5e7eb;
+  --color-line-muted: #f1f2f4;
 
-  --color-text: #111827;
-  --color-text-secondary: #6b7280;
-  --color-text-muted: #9ca3af;
+  --color-fg: #111827;
+  --color-fg-muted: #6b7280;
+  --color-fg-subtle: #9ca3af;
 
   --color-status-backlog: #9ca3af;
   --color-status-todo: #3b82f6;
@@ -40,19 +40,19 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-bg: #0a0a0a;
-    --color-bg-raised: #121213;
-    --color-bg-inset: #17181a;
-    --color-bg-overlay: #1a1b1e;
-    --color-bg-hover: #1a1b1e;
-    --color-bg-active: #25262a;
+    --color-surface: #0a0a0a;
+    --color-surface-raised: #121213;
+    --color-surface-inset: #17181a;
+    --color-surface-overlay: #1a1b1e;
+    --color-surface-hover: #1a1b1e;
+    --color-surface-active: #25262a;
 
-    --color-border: #25262a;
-    --color-border-muted: #1a1b1e;
+    --color-line: #25262a;
+    --color-line-muted: #1a1b1e;
 
-    --color-text: #ededed;
-    --color-text-secondary: #a1a1aa;
-    --color-text-muted: #71717a;
+    --color-fg: #ededed;
+    --color-fg-muted: #a1a1aa;
+    --color-fg-subtle: #71717a;
 
     --color-accent: oklch(0.72 0.14 var(--accent-h));
   }
@@ -60,8 +60,8 @@
 
 @layer base {
   body {
-    background: var(--color-bg);
-    color: var(--color-text);
+    background: var(--color-surface);
+    color: var(--color-fg);
     font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
     font-size: 13px;
     letter-spacing: -0.005em;
@@ -82,12 +82,12 @@
     height: 10px;
   }
   ::-webkit-scrollbar-thumb {
-    background: var(--color-border);
+    background: var(--color-line);
     border-radius: 10px;
-    border: 2px solid var(--color-bg);
+    border: 2px solid var(--color-surface);
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-text-muted);
+    background: var(--color-fg-subtle);
   }
 }
 
@@ -106,8 +106,8 @@
   .modal {
     width: 680px;
     max-width: min(92vw, 680px);
-    background: var(--color-bg-overlay);
-    border: 1px solid var(--color-border);
+    background: var(--color-surface-overlay);
+    border: 1px solid var(--color-line);
     border-radius: 12px;
     box-shadow:
       0 30px 80px rgba(0, 0, 0, 0.35),
@@ -120,9 +120,9 @@
     align-items: center;
     gap: 8px;
     padding: 10px 14px;
-    border-bottom: 1px solid var(--color-border-muted);
+    border-bottom: 1px solid var(--color-line-muted);
     font-size: 11.5px;
-    color: var(--color-text-muted);
+    color: var(--color-fg-subtle);
   }
 
   .modal-body {
@@ -155,7 +155,7 @@
 
   .modal-body textarea.desc::placeholder,
   .modal-body input.title::placeholder {
-    color: var(--color-text-muted);
+    color: var(--color-fg-subtle);
   }
 
   .modal-chips {
@@ -163,7 +163,7 @@
     flex-wrap: wrap;
     gap: 6px;
     padding: 6px 14px 12px;
-    border-top: 1px dashed var(--color-border-muted);
+    border-top: 1px dashed var(--color-line-muted);
     margin-top: 6px;
   }
 
@@ -172,14 +172,14 @@
     align-items: center;
     gap: 8px;
     padding: 10px 14px;
-    border-top: 1px solid var(--color-border-muted);
-    background: var(--color-bg-raised);
+    border-top: 1px solid var(--color-line-muted);
+    background: var(--color-surface-raised);
   }
 
   .modal-foot .hint {
     margin-right: auto;
     font-size: 11px;
-    color: var(--color-text-muted);
+    color: var(--color-fg-subtle);
   }
 
   .label-modal-overlay {
@@ -200,7 +200,7 @@
     display: block;
     font-size: 11px;
     font-weight: 500;
-    color: var(--color-text-muted);
+    color: var(--color-fg-subtle);
     letter-spacing: 0.03em;
     text-transform: uppercase;
   }
@@ -208,16 +208,16 @@
   .label-name-input {
     width: 100%;
     height: 36px;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-line);
     border-radius: 10px;
-    background: var(--color-bg-raised);
+    background: var(--color-surface-raised);
     padding: 0 11px;
     font-size: 13px;
-    color: var(--color-text);
+    color: var(--color-fg);
   }
 
   .label-name-input::placeholder {
-    color: var(--color-text-muted);
+    color: var(--color-fg-subtle);
   }
 
   .label-color-grid {
@@ -231,9 +231,9 @@
     align-items: center;
     justify-content: center;
     aspect-ratio: 1;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-line);
     border-radius: 10px;
-    background: var(--color-bg-raised);
+    background: var(--color-surface-raised);
     transition:
       border-color 120ms ease,
       background-color 120ms ease,
@@ -242,13 +242,13 @@
   }
 
   .label-color-swatch:hover {
-    background: var(--color-bg-hover);
+    background: var(--color-surface-hover);
     transform: translateY(-1px);
   }
 
   .label-color-swatch.is-selected {
-    border-color: color-mix(in oklch, var(--color-accent) 70%, var(--color-border));
-    background: color-mix(in oklch, var(--color-accent) 12%, var(--color-bg-raised));
+    border-color: color-mix(in oklch, var(--color-accent) 70%, var(--color-line));
+    background: color-mix(in oklch, var(--color-accent) 12%, var(--color-surface-raised));
   }
 
   .label-color-swatch:disabled {
@@ -269,9 +269,9 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    border: 1px solid var(--color-border-muted);
+    border: 1px solid var(--color-line-muted);
     border-radius: 12px;
-    background: var(--color-bg-raised);
+    background: var(--color-surface-raised);
     padding: 12px;
   }
 
@@ -282,22 +282,22 @@
     height: 26px;
     padding: 0 9px;
     border-radius: 999px;
-    border: 1px dashed var(--color-border);
+    border: 1px dashed var(--color-line);
     background: transparent;
     font-size: 12px;
-    color: var(--color-text-secondary);
+    color: var(--color-fg-muted);
     line-height: 1;
     cursor: pointer;
   }
   .chip:hover {
-    background: var(--color-bg-hover);
-    color: var(--color-text);
+    background: var(--color-surface-hover);
+    color: var(--color-fg);
     border-style: solid;
   }
   .chip.solid {
     border-style: solid;
-    background: var(--color-bg-inset);
-    color: var(--color-text);
+    background: var(--color-surface-inset);
+    color: var(--color-fg);
   }
   .chip .chip-icon {
     display: inline-flex;
@@ -310,16 +310,16 @@
     display: block;
   }
   .chip .plus {
-    color: var(--color-text-muted);
+    color: var(--color-fg-subtle);
     font-size: 13px;
     line-height: 1;
   }
   .chip .remove {
     margin-left: 2px;
-    color: var(--color-text-muted);
+    color: var(--color-fg-subtle);
   }
   .chip .remove:hover {
-    color: var(--color-text);
+    color: var(--color-fg);
   }
 }
 

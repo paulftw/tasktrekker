@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <ErrorBoundary>
       <AppShell>
-        <Suspense fallback={<div className="flex-1 flex items-center justify-center text-text-muted">Loading...</div>}>
+        <Suspense fallback={<div className="flex-1 flex items-center justify-center text-fg-subtle">Loading...</div>}>
           <IssueList />
         </Suspense>
       </AppShell>

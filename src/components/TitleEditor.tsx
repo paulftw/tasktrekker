@@ -77,7 +77,7 @@ export function TitleEditor({ nodeId, number, title }: { nodeId: string; number:
           setValue(title);
         }}
         aria-label="Edit title"
-        className="text-left w-full rounded -mx-1 px-1 py-0.5 hover:bg-bg-hover transition-colors cursor-text"
+        className="text-left w-full rounded -mx-1 px-1 py-0.5 hover:bg-surface-hover transition-colors cursor-text"
       >
         {title}
       </button>
@@ -107,7 +107,7 @@ export function TitleEditor({ nodeId, number, title }: { nodeId: string; number:
         disabled={isInFlight}
         aria-label="Title"
         aria-invalid={error !== null}
-        className="block w-full rounded px-1 py-0.5 bg-bg-inset text-xl font-semibold text-text border border-border focus:border-text-secondary focus:outline-none disabled:opacity-60 resize-none overflow-hidden"
+        className="block w-full rounded px-1 py-0.5 bg-surface-inset text-xl font-semibold text-fg border border-line focus:border-fg-muted focus:outline-none disabled:opacity-60 resize-none overflow-hidden"
       />
       {error && (
         <p role="alert" className="mt-1 px-1 text-xs text-status-cancelled">

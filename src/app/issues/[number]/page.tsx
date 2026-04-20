@@ -13,7 +13,7 @@ export default function IssuePage({ params }: { params: Promise<{ number: string
   return (
     <ErrorBoundary>
       <AppShell>
-        <Suspense fallback={<div className="flex-1 flex items-center justify-center text-text-muted">Loading...</div>}>
+        <Suspense fallback={<div className="flex-1 flex items-center justify-center text-fg-subtle">Loading...</div>}>
           {valid ? <IssueDetail number={number} /> : <IssueNotFound />}
         </Suspense>
       </AppShell>

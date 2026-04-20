@@ -16,7 +16,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
 function Topbar() {
   return (
-    <header className="shell-pad h-[46px] border-b border-border flex items-center gap-[10px] shrink-0">
+    <header className="shell-pad h-[46px] border-b border-line flex items-center gap-[10px] shrink-0">
       <Link href="/" className="flex items-center gap-1.5 rounded hover:opacity-80 transition-opacity">
         <div
           aria-hidden

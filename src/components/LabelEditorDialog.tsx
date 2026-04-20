@@ -285,7 +285,7 @@ function LabelEditorDialogInner({
             onClick={closeDialog}
             disabled={busy}
             aria-label="Close"
-            className="ml-auto inline-flex size-[22px] items-center justify-center rounded-[6px] text-text-muted transition-colors hover:bg-bg-hover hover:text-text disabled:opacity-50"
+            className="ml-auto inline-flex size-[22px] items-center justify-center rounded-[6px] text-fg-subtle transition-colors hover:bg-surface-hover hover:text-fg disabled:opacity-50"
           >
             <X size={12} />
           </button>
@@ -348,7 +348,7 @@ function LabelEditorDialogInner({
             </div>
 
             {mode === 'edit' && (
-              <p className="text-[12px] leading-5 text-text-secondary">
+              <p className="text-[12px] leading-5 text-fg-muted">
                 Deleting it removes the label from every issue.
               </p>
             )}
@@ -363,7 +363,7 @@ function LabelEditorDialogInner({
                 void handleDelete();
               }}
               disabled={busy}
-              className="inline-flex h-8 items-center gap-1.5 rounded-md border border-transparent px-3 text-[12px] font-medium text-status-cancelled transition-colors hover:bg-bg-hover disabled:opacity-50"
+              className="inline-flex h-8 items-center gap-1.5 rounded-md border border-transparent px-3 text-[12px] font-medium text-status-cancelled transition-colors hover:bg-surface-hover disabled:opacity-50"
             >
               <Trash2 className="size-3.5" strokeWidth={2} />
               Delete label
@@ -375,7 +375,7 @@ function LabelEditorDialogInner({
             type="button"
             onClick={closeDialog}
             disabled={busy}
-            className="ml-auto inline-flex h-8 items-center rounded-md border border-border bg-transparent px-3 text-[12px] font-medium text-text transition-colors hover:bg-bg-hover disabled:opacity-50"
+            className="ml-auto inline-flex h-8 items-center rounded-md border border-line bg-transparent px-3 text-[12px] font-medium text-fg transition-colors hover:bg-surface-hover disabled:opacity-50"
           >
             Cancel
           </button>

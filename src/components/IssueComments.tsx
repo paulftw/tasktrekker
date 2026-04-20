@@ -130,13 +130,13 @@ export function IssueComments({ issue, query }: { issue: IssueComments_issue$key
 
   return (
     <div>
-      <h2 className="text-[11px] font-medium text-text-muted uppercase tracking-[0.04em] mb-3">
+      <h2 className="text-[11px] font-medium text-fg-subtle uppercase tracking-[0.04em] mb-3">
         Activity
-        {comments.length > 0 && <span className="ml-1.5 mono text-text-muted normal-case">{comments.length}</span>}
+        {comments.length > 0 && <span className="ml-1.5 mono text-fg-subtle normal-case">{comments.length}</span>}
       </h2>
 
       {comments.length === 0 ? (
-        <p className="text-[13px] text-text-muted italic mb-6">No comments yet.</p>
+        <p className="text-[13px] text-fg-subtle italic mb-6">No comments yet.</p>
       ) : (
         <div className="space-y-4 mb-6">
           {comments.map(({ node }) => (
@@ -144,15 +144,15 @@ export function IssueComments({ issue, query }: { issue: IssueComments_issue$key
               <UserAvatar user={node.author} size={24} />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="text-[13px] font-medium text-text">{node.author.name}</span>
+                  <span className="text-[13px] font-medium text-fg">{node.author.name}</span>
                   <a
                     href={`#comment-${node.number}`}
-                    className="mono text-[11px] text-text-muted hover:text-text-secondary transition-colors"
+                    className="mono text-[11px] text-fg-subtle hover:text-fg-muted transition-colors"
                   >
                     {DATE_FORMAT.format(new Date(node.created_at))}
                   </a>
                 </div>
-                <p className="text-[13px] text-text mt-1 whitespace-pre-wrap leading-relaxed">{node.body}</p>
+                <p className="text-[13px] text-fg mt-1 whitespace-pre-wrap leading-relaxed">{node.body}</p>
               </div>
             </div>
           ))}
@@ -162,7 +162,7 @@ export function IssueComments({ issue, query }: { issue: IssueComments_issue$key
                 type="button"
                 disabled={isLoadingNext}
                 onClick={() => loadNext(COMMENTS_PAGE_SIZE)}
-                className="px-4 py-2 bg-bg-raised text-text-secondary hover:text-text border border-border-muted rounded-md text-[12px] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 bg-surface-raised text-fg-muted hover:text-fg border border-line-muted rounded-md text-[12px] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoadingNext ? 'Loading...' : 'Load more comments'}
               </button>
@@ -173,7 +173,7 @@ export function IssueComments({ issue, query }: { issue: IssueComments_issue$key
 
       <form
         onSubmit={onSubmit}
-        className="mt-5 border border-border rounded-lg bg-bg-raised transition-all focus-within:border-[var(--color-accent)] focus-within:ring-[3px] focus-within:ring-[color-mix(in_oklch,var(--color-accent)_15%,transparent)] focus-within:bg-bg"
+        className="mt-5 border border-line rounded-lg bg-surface-raised transition-all focus-within:border-[var(--color-accent)] focus-within:ring-[3px] focus-within:ring-[color-mix(in_oklch,var(--color-accent)_15%,transparent)] focus-within:bg-surface"
       >
         <ShortcutTextarea
           ref={textareaRef}
@@ -185,8 +185,8 @@ export function IssueComments({ issue, query }: { issue: IssueComments_issue$key
           className="w-full min-h-[56px] px-3 py-2.5 border-0 bg-transparent outline-none focus:outline-none resize-none text-[13px] leading-relaxed"
           disabled={isInFlight}
         />
-        <div className="flex items-center px-2 py-1.5 pl-3 border-t border-border-muted">
-          {editorHint && <span className="text-[11px] text-text-muted mr-auto">{editorHint}</span>}
+        <div className="flex items-center px-2 py-1.5 pl-3 border-t border-line-muted">
+          {editorHint && <span className="text-[11px] text-fg-subtle mr-auto">{editorHint}</span>}
           <button
             type="submit"
             disabled={!body.trim() || isInFlight}

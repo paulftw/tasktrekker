@@ -29,8 +29,8 @@ function SearchMenuInput({
   onClear: () => void;
 }) {
   return (
-    <div className="flex items-center gap-1.5 px-2 py-1.5 -mt-1 mb-1 border-b border-border-muted">
-      <Search size={12} className="text-text-muted shrink-0" />
+    <div className="flex items-center gap-1.5 px-2 py-1.5 -mt-1 mb-1 border-b border-line-muted">
+      <Search size={12} className="text-fg-subtle shrink-0" />
       <input
         ref={inputRef}
         type="text"
@@ -50,7 +50,7 @@ function SearchMenuInput({
           }
         }}
         placeholder="Search…"
-        className="flex-1 bg-transparent border-0 outline-none text-[12.5px] text-text placeholder:text-text-muted min-w-0"
+        className="flex-1 bg-transparent border-0 outline-none text-[12.5px] text-fg placeholder:text-fg-subtle min-w-0"
       />
     </div>
   );
@@ -115,7 +115,7 @@ export function LabelsField({
         <Dropdown.Trigger
           disabled={disabled}
           aria-label="Add label"
-          className="inline-flex items-center gap-1 h-[22px] px-2 rounded-full text-[10.5px] text-text-muted border border-dashed border-border hover:text-text hover:border-text-muted transition-colors disabled:opacity-60 cursor-pointer"
+          className="inline-flex items-center gap-1 h-[22px] px-2 rounded-full text-[10.5px] text-fg-subtle border border-dashed border-line hover:text-fg hover:border-fg-subtle transition-colors disabled:opacity-60 cursor-pointer"
         >
           <Plus className="size-2.5" strokeWidth={2.5} />
           <span>Add label</span>
@@ -134,13 +134,13 @@ export function LabelsField({
           )}
 
           {filteredLabels.length === 0 && normalizedQuery !== '' && (
-            <div className="px-2.5 py-2 text-[12px] text-text-muted shrink-0">No matches</div>
+            <div className="px-2.5 py-2 text-[12px] text-fg-subtle shrink-0">No matches</div>
           )}
 
           {onCreateLabel && (
             <div className="shrink-0">
               <Dropdown.Item onClick={onCreateLabel}>
-                <Plus className="size-3.5 text-text-muted" strokeWidth={2} />
+                <Plus className="size-3.5 text-fg-subtle" strokeWidth={2} />
                 <span>Create new label</span>
               </Dropdown.Item>
               {filteredLabels.length > 0 && <Dropdown.Separator />}
@@ -157,7 +157,7 @@ export function LabelsField({
               ))
             ) : (
               normalizedQuery === '' &&
-              !onCreateLabel && <div className="px-2.5 py-2 text-[12px] text-text-muted">{emptyMessage}</div>
+              !onCreateLabel && <div className="px-2.5 py-2 text-[12px] text-fg-subtle">{emptyMessage}</div>
             )}
           </div>
         </Dropdown.Menu>
@@ -209,7 +209,7 @@ function SelectedLabel({
       <Dropdown.Menu className="min-w-44 w-56 max-w-[calc(100vw-2rem)]">
         {onEditLabel && (
           <Dropdown.Item onClick={() => onEditLabel(label)}>
-            <Pencil className="size-3.5 text-text-muted" strokeWidth={2.2} />
+            <Pencil className="size-3.5 text-fg-subtle" strokeWidth={2.2} />
             <span>Edit label</span>
           </Dropdown.Item>
         )}

@@ -70,8 +70,8 @@ function SearchMenuInput({
   ariaLabel: string;
 }) {
   return (
-    <div className="flex items-center gap-1.5 px-2 py-1.5 -mt-1 mb-1 border-b border-border-muted">
-      <Search size={12} className="text-text-muted shrink-0" />
+    <div className="flex items-center gap-1.5 px-2 py-1.5 -mt-1 mb-1 border-b border-line-muted">
+      <Search size={12} className="text-fg-subtle shrink-0" />
       <input
         ref={inputRef}
         type="text"
@@ -91,7 +91,7 @@ function SearchMenuInput({
           }
         }}
         placeholder="Search…"
-        className="flex-1 bg-transparent border-0 outline-none text-[12.5px] text-text placeholder:text-text-muted min-w-0"
+        className="flex-1 bg-transparent border-0 outline-none text-[12.5px] text-fg placeholder:text-fg-subtle min-w-0"
       />
     </div>
   );
@@ -290,7 +290,7 @@ export function CreateIssueModal({
             onClick={onClose}
             disabled={isSubmitting}
             aria-label="Close"
-            className="ml-auto inline-flex size-[22px] items-center justify-center rounded-[6px] text-text-muted transition-colors hover:bg-bg-hover hover:text-text disabled:opacity-50"
+            className="ml-auto inline-flex size-[22px] items-center justify-center rounded-[6px] text-fg-subtle transition-colors hover:bg-surface-hover hover:text-fg disabled:opacity-50"
           >
             <X size={12} />
           </button>
@@ -427,7 +427,7 @@ export function CreateIssueModal({
                   <span className="truncate">{user.name}</span>
                 </Dropdown.Item>
               ))}
-              {filteredUsers.length === 0 && <div className="px-2.5 py-2 text-[12px] text-text-muted">No matches</div>}
+              {filteredUsers.length === 0 && <div className="px-2.5 py-2 text-[12px] text-fg-subtle">No matches</div>}
             </Dropdown.Menu>
           </Dropdown>
 
@@ -448,7 +448,7 @@ export function CreateIssueModal({
             type="button"
             onClick={onClose}
             disabled={isSubmitting}
-            className="inline-flex h-8 items-center rounded-md border border-border bg-transparent px-3 text-[12px] font-medium text-text transition-colors hover:bg-bg-hover disabled:opacity-50"
+            className="inline-flex h-8 items-center rounded-md border border-line bg-transparent px-3 text-[12px] font-medium text-fg transition-colors hover:bg-surface-hover disabled:opacity-50"
           >
             Cancel
           </button>

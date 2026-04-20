@@ -73,7 +73,7 @@ const DATE_FORMAT = new Intl.DateTimeFormat('en-US', {
 
 function SectionHead({ children }: { children: ReactNode }) {
   return (
-    <div className="text-[11px] font-medium text-text-muted uppercase tracking-[0.05em] pt-4 pb-1.5 mt-2.5 border-t border-border-muted first:pt-0 first:mt-0 first:border-t-0">
+    <div className="text-[11px] font-medium text-fg-subtle uppercase tracking-[0.05em] pt-4 pb-1.5 mt-2.5 border-t border-line-muted first:pt-0 first:mt-0 first:border-t-0">
       {children}
     </div>
   );
@@ -82,7 +82,7 @@ function SectionHead({ children }: { children: ReactNode }) {
 function PropertyRow({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="grid items-center gap-2 py-1" style={{ gridTemplateColumns: '80px minmax(0,1fr)' }}>
-      <div className="text-[11.5px] text-text-muted tracking-[0.02em]">{label}</div>
+      <div className="text-[11.5px] text-fg-subtle tracking-[0.02em]">{label}</div>
       <div className="min-w-0">{children}</div>
     </div>
   );

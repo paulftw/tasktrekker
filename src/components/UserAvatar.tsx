@@ -20,7 +20,7 @@ export function UserAvatar({ user, size = 22 }: { user: { name: string } | null 
   if (!user) {
     return (
       <div
-        className="rounded-full border border-dashed border-text-muted text-text-muted flex items-center justify-center shrink-0"
+        className="rounded-full border border-dashed border-fg-subtle text-fg-subtle flex items-center justify-center shrink-0"
         style={{ width: size, height: size, fontSize: size * 0.5 }}
         aria-label="Unassigned"
       >

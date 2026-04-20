@@ -19,15 +19,15 @@ export function IssueHeader({ issue }: { issue: IssueHeader_issue$key }) {
 
   return (
     <div>
-      <div className="flex items-center gap-1.5 text-[12px] text-text-secondary mb-3">
-        <Link href="/" className="inline-flex items-center gap-1 hover:text-text transition-colors">
+      <div className="flex items-center gap-1.5 text-[12px] text-fg-muted mb-3">
+        <Link href="/" className="inline-flex items-center gap-1 hover:text-fg transition-colors">
           <ArrowLeft className="size-3.5" strokeWidth={2} />
           Issues
         </Link>
-        <span className="text-text-muted">/</span>
-        <span className="mono text-text-muted">#{data.number}</span>
+        <span className="text-fg-subtle">/</span>
+        <span className="mono text-fg-subtle">#{data.number}</span>
       </div>
-      <h1 className="text-[22px] font-semibold text-text leading-[1.25] tracking-[-0.02em]">
+      <h1 className="text-[22px] font-semibold text-fg leading-[1.25] tracking-[-0.02em]">
         <TitleEditor nodeId={data.nodeId} number={data.number} title={data.title} />
       </h1>
     </div>

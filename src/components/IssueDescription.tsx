@@ -17,7 +17,7 @@ export function IssueDescription({ issue }: { issue: IssueDescription_issue$key 
 
   return (
     <div>
-      <h2 className="text-sm font-medium text-text-secondary mb-2">Description</h2>
+      <h2 className="text-sm font-medium text-fg-muted mb-2">Description</h2>
       <DescriptionEditor nodeId={data.nodeId} number={data.number} description={data.description} />
     </div>
   );

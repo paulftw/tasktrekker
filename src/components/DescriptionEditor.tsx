@@ -84,12 +84,12 @@ export function DescriptionEditor({
         type="button"
         onClick={() => setEditing(true)}
         aria-label="Edit description"
-        className="block text-left w-full rounded -mx-2 px-2 py-1.5 hover:bg-bg-hover transition-colors cursor-text"
+        className="block text-left w-full rounded -mx-2 px-2 py-1.5 hover:bg-surface-hover transition-colors cursor-text"
       >
         {description ? (
-          <span className="text-sm text-text whitespace-pre-wrap">{description}</span>
+          <span className="text-sm text-fg whitespace-pre-wrap">{description}</span>
         ) : (
-          <span className="text-sm text-text-muted italic">No description provided.</span>
+          <span className="text-sm text-fg-subtle italic">No description provided.</span>
         )}
       </button>
     );
@@ -111,7 +111,7 @@ export function DescriptionEditor({
         aria-label="Description"
         aria-invalid={error !== null}
         rows={6}
-        className="block w-full rounded px-2 py-1.5 bg-bg-inset text-sm text-text border border-border focus:border-text-secondary focus:outline-none resize-y disabled:opacity-60"
+        className="block w-full rounded px-2 py-1.5 bg-surface-inset text-sm text-fg border border-line focus:border-fg-muted focus:outline-none resize-y disabled:opacity-60"
       />
       <div className="mt-1 flex items-center justify-between px-2">
         {error ? (
@@ -119,7 +119,7 @@ export function DescriptionEditor({
             {error}
           </p>
         ) : editorHint ? (
-          <p className="text-xs text-text-muted">{editorHint}</p>
+          <p className="text-xs text-fg-subtle">{editorHint}</p>
         ) : null}
       </div>
     </div>

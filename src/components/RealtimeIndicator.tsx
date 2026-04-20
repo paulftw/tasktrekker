@@ -25,7 +25,7 @@ export function RealtimeIndicator() {
   const cfg = CONFIG[status];
   return (
     <span
-      className="inline-flex items-center gap-1.5 pl-2 pr-2.5 py-1 rounded-full bg-bg-inset border border-border text-[11px] text-text-secondary"
+      className="inline-flex items-center gap-1.5 pl-2 pr-2.5 py-1 rounded-full bg-surface-inset border border-line text-[11px] text-fg-muted"
       title={`Realtime: ${cfg.label}`}
     >
       <span

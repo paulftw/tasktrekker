@@ -83,8 +83,8 @@ export function AssigneePicker({
       <Dropdown.Trigger
         disabled={isInFlight}
         aria-label={`Assignee: ${label}. Click to change.`}
-        className={`flex items-center gap-1.5 px-1.5 py-[3px] -ml-1.5 rounded-[5px] text-[12.5px] hover:bg-bg-hover transition-colors disabled:opacity-60 cursor-pointer max-w-full min-w-0 ${
-          assignee ? 'text-text' : 'text-text-muted'
+        className={`flex items-center gap-1.5 px-1.5 py-[3px] -ml-1.5 rounded-[5px] text-[12.5px] hover:bg-surface-hover transition-colors disabled:opacity-60 cursor-pointer max-w-full min-w-0 ${
+          assignee ? 'text-fg' : 'text-fg-subtle'
         }`}
       >
         <UserAvatar user={assignee ?? null} size={18} />

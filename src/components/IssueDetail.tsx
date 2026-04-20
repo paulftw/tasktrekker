@@ -29,7 +29,7 @@ const query = graphql`
 export function IssueNotFound() {
   return (
     <div className="shell-pad py-10">
-      <p className="text-[13px] text-text-muted">Issue not found.</p>
+      <p className="text-[13px] text-fg-subtle">Issue not found.</p>
     </div>
   );
 }
@@ -56,7 +56,7 @@ export function IssueDetail({ number }: { number: number }) {
         <div className="flex-1 min-w-0 space-y-6">
           <IssueHeader issue={issue} />
           <IssueDescription issue={issue} />
-          <hr className="border-border-muted" />
+          <hr className="border-line-muted" />
           <IssueComments issue={issue} query={data} />
         </div>
         <div className="w-60 flex-shrink-0">

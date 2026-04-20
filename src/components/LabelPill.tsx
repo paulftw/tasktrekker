@@ -33,10 +33,10 @@ export function LabelPill({
     : '';
 
   const menuStyles = isMenu
-    ? 'group-hover:bg-bg-hover group-hover:text-text'
+    ? 'group-hover:bg-surface-hover group-hover:text-fg'
     : '';
 
-  const classes = `inline-flex items-center rounded-full bg-bg-inset text-text-secondary max-w-full min-w-0 transition-all duration-200 ${SIZE_CLASSES[size]} ${destructiveStyles} ${menuStyles} ${className}`;
+  const classes = `inline-flex items-center rounded-full bg-surface-inset text-fg-muted max-w-full min-w-0 transition-all duration-200 ${SIZE_CLASSES[size]} ${destructiveStyles} ${menuStyles} ${className}`;
 
   return (
     <span className={classes}>
@@ -55,14 +55,14 @@ export function LabelPill({
       {isRemove && (
         <X
           aria-hidden
-          className={`${ICON_CLASSES[size]} shrink-0 text-text-muted transition-all duration-200 group-hover:text-status-cancelled group-hover:scale-125`}
+          className={`${ICON_CLASSES[size]} shrink-0 text-fg-subtle transition-all duration-200 group-hover:text-status-cancelled group-hover:scale-125`}
           strokeWidth={2}
         />
       )}
       {isMenu && (
         <MoreVertical
           aria-hidden
-          className={`${ICON_CLASSES[size]} shrink-0 text-text-muted transition-colors duration-200 group-hover:text-text`}
+          className={`${ICON_CLASSES[size]} shrink-0 text-fg-subtle transition-colors duration-200 group-hover:text-fg`}
           strokeWidth={2}
         />
       )}

@@ -54,7 +54,7 @@ export function PriorityPicker({
       <Dropdown.Trigger
         disabled={isInFlight}
         aria-label={`Priority: ${current.label}. Click to change.`}
-        className="inline-flex items-center gap-1.5 px-1.5 py-[3px] -ml-1.5 rounded-[5px] text-[12.5px] text-text hover:bg-bg-hover transition-colors disabled:opacity-60 cursor-pointer"
+        className="inline-flex items-center gap-1.5 px-1.5 py-[3px] -ml-1.5 rounded-[5px] text-[12.5px] text-fg hover:bg-surface-hover transition-colors disabled:opacity-60 cursor-pointer"
       >
         <CurrentIcon width={14} height={14} className={`${current.className} -translate-y-[0.5px]`} />
         <span>{current.label}</span>

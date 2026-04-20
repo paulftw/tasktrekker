@@ -77,7 +77,7 @@ Dropdown.Menu = function DropdownMenu({
         side={side}
         sideOffset={sideOffset}
         collisionPadding={8}
-        className={`z-[100] rounded-md border border-border bg-bg-overlay shadow-lg py-1 overflow-hidden ${className}`}
+        className={`z-[100] rounded-md border border-line bg-surface-overlay shadow-lg py-1 overflow-hidden ${className}`}
         {...extraProps}
       >
         {children}
@@ -98,7 +98,7 @@ Dropdown.Item = function DropdownItem({
   return (
     <RDM.Item
       onSelect={() => onClick()}
-      className={`w-full min-w-0 flex items-center gap-2 px-2.5 py-1.5 text-sm text-text hover:bg-bg-hover data-[highlighted]:bg-bg-hover transition-colors outline-none cursor-pointer ${className}`}
+      className={`w-full min-w-0 flex items-center gap-2 px-2.5 py-1.5 text-sm text-fg hover:bg-surface-hover data-[highlighted]:bg-surface-hover transition-colors outline-none cursor-pointer ${className}`}
     >
       {children}
     </RDM.Item>
@@ -128,11 +128,11 @@ Dropdown.CheckboxItem = function DropdownCheckboxItem({
           e.preventDefault();
         }
       }}
-      className={`w-full min-w-0 flex items-center gap-2 px-2.5 py-1.5 text-sm text-text hover:bg-bg-hover data-[highlighted]:bg-bg-hover transition-colors outline-none cursor-pointer ${className}`}
+      className={`w-full min-w-0 flex items-center gap-2 px-2.5 py-1.5 text-sm text-fg hover:bg-surface-hover data-[highlighted]:bg-surface-hover transition-colors outline-none cursor-pointer ${className}`}
     >
       <div className="flex-shrink-0 w-[14px] flex items-center justify-center">
         <RDM.ItemIndicator>
-          <Check size={14} className="text-text" />
+          <Check size={14} className="text-fg" />
         </RDM.ItemIndicator>
       </div>
       {children}

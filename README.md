@@ -185,20 +185,19 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 ### Pending
 
 - TODO: Replace the temporary authless current-user fallback (first seeded user) used by the assignee filter's "Assigned to me" shortcut and the comment composer once Supabase Auth lands.
-- Deploy to Vercel.
 - Standardize typography scale (remove fractional pixel font sizes to fix sub-pixel baseline alignment issues).
-- Change filter by priority to multiselect - spec seems to imply that.
+- Dropdown filters don't close when clicking on an issue. Issue is clicked instead.
 
 ### Maybe Later
 
 - Filter on multiple labels is done clientside, it messes with the infinite scroll. Add pg procedure to handle this?
 - Group components into folders (FilterTab and components, icons/pills? Dropdowns?)
-- Cleanup CSS.
+- CSS Cleanup.
 - Alphabetic sorting of labels everywhere in UI lists.
-- text-text-muted - wtf?
 - rename SELECTABLE_PRIORITIES, check if status icons are just as bad
 - check if avatar url is used, seems like placeholeder is always generated
 - mobile responsiveness
+- Change filter by priority to multiselect - spec seems to imply that.
 
 
 ### Punted (would do with more time)
