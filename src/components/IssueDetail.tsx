@@ -41,7 +41,7 @@ export function IssueDetail({ number }: { number: number }) {
     [
       { table: 'issues', filter: `id=eq.${number}` },
       { table: 'comments', filter: `issue_id=eq.${number}` },
-      { table: 'issue_labels', filter: `issue_id=eq.${number}` },
+      { table: 'issue_labels' },
     ],
     query,
     { number },
