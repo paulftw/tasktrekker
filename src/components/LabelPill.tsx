@@ -1,58 +1,71 @@
-import { X } from 'lucide-react';
+import { X, MoreVertical } from 'lucide-react';
 
 type LabelLike = { name: string; color: string };
 
 const SIZE_CLASSES = {
-  sm: 'px-2 py-0.5 text-[10.5px] gap-1.5',
-  xs: 'px-1.5 py-px text-[10px] gap-1',
+  sm: 'px-2 py-1 text-[11px] gap-2',
+  xs: 'px-1 text-[10px] gap-1',
 } as const;
 
-const REMOVE_ICON_CLASSES = {
+const ICON_CLASSES = {
   sm: 'size-3',
   xs: 'size-2.5',
 } as const;
+
+export type LabelPillAction = 'remove' | 'menu';
 
 export function LabelPill({
   label,
   size = 'sm',
   className = '',
-  onRemove,
-  disabled = false,
-  showRemoveIcon = onRemove !== undefined,
+  action,
 }: {
   label: LabelLike;
   size?: keyof typeof SIZE_CLASSES;
   className?: string;
-  onRemove?: () => void;
-  disabled?: boolean;
-  showRemoveIcon?: boolean;
+  action?: LabelPillAction;
 }) {
-  const classes = `inline-flex items-center rounded-full bg-bg-inset text-text-secondary max-w-full min-w-0 ${SIZE_CLASSES[size]} ${className}`;
-  const contents = (
-    <>
-      <span className="size-1.5 rounded-full shrink-0" style={{ backgroundColor: `#${label.color}` }} />
-      <span className="truncate">{label.name}</span>
-      {showRemoveIcon && (
-        <X aria-hidden className={`${REMOVE_ICON_CLASSES[size]} shrink-0 text-text-muted`} strokeWidth={2} />
-      )}
-    </>
-  );
+  const isRemove = action === 'remove';
+  const isMenu = action === 'menu';
 
-  if (onRemove) {
-    return (
-      <button
-        type="button"
-        onClick={onRemove}
-        disabled={disabled}
-        aria-label={`Remove label ${label.name}`}
-        className={`${classes} border-0 cursor-pointer appearance-none transition-colors hover:bg-bg-hover hover:text-text disabled:cursor-default disabled:opacity-60`}
-      >
-        {contents}
-      </button>
-    );
-  }
+  const destructiveStyles = isRemove
+    ? 'group-hover:bg-status-cancelled/10 group-hover:ring-1 group-hover:ring-inset group-hover:ring-status-cancelled/30 group-hover:text-status-cancelled'
+    : '';
+
+  const menuStyles = isMenu
+    ? 'group-hover:bg-bg-hover group-hover:text-text'
+    : '';
+
+  const classes = `inline-flex items-center rounded-full bg-bg-inset text-text-secondary max-w-full min-w-0 transition-all duration-200 ${SIZE_CLASSES[size]} ${destructiveStyles} ${menuStyles} ${className}`;
 
   return (
-    <span className={classes}>{contents}</span>
+    <span className={classes}>
+      <span className="relative size-1.5 shrink-0">
+        <span
+          className={`absolute inset-0 rounded-full transition-opacity duration-200 ${
+            isRemove ? 'group-hover:opacity-0' : ''
+          }`}
+          style={{ backgroundColor: `#${label.color}` }}
+        />
+        {isRemove && (
+          <span className="absolute inset-0 rounded-full bg-status-cancelled opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+        )}
+      </span>
+      <span className="truncate">{label.name}</span>
+      {isRemove && (
+        <X
+          aria-hidden
+          className={`${ICON_CLASSES[size]} shrink-0 text-text-muted transition-all duration-200 group-hover:text-status-cancelled group-hover:scale-125`}
+          strokeWidth={2}
+        />
+      )}
+      {isMenu && (
+        <MoreVertical
+          aria-hidden
+          className={`${ICON_CLASSES[size]} shrink-0 text-text-muted transition-colors duration-200 group-hover:text-text`}
+          strokeWidth={2}
+        />
+      )}
+    </span>
   );
 }

@@ -1,9 +1,11 @@
+import { Suspense } from 'react';
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { RelayEnvironmentProvider } from 'react-relay';
+import { RelayEnvironmentProvider, graphql, useLazyLoadQuery } from 'react-relay';
 import { createMockEnvironment } from 'relay-test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CreateIssueModal } from './CreateIssueModal';
+import type { CreateIssueModalTestQuery } from '@/__generated__/CreateIssueModalTestQuery.graphql';
 
 const mockPush = vi.fn();
 
@@ -17,26 +19,69 @@ vi.mock('@/lib/usePlatformEditorHint', () => ({
   usePlatformEditorHint: () => null,
 }));
 
-function renderModal() {
+const testQuery = graphql`
+  query CreateIssueModalTestQuery @relay_test_operation {
+    usersCollection(first: 100) {
+      edges {
+        node {
+          id
+          name
+          avatar_url
+          nodeId
+        }
+      }
+    }
+    labelsCollection(first: 100, orderBy: [{ name: AscNullsLast }]) {
+      edges {
+        node {
+          number
+          name
+          color
+          nodeId
+        }
+      }
+    }
+  }
+`;
+
+function TestWrapper({ onClose }: { onClose: () => void }) {
+  const data = useLazyLoadQuery<CreateIssueModalTestQuery>(testQuery, {});
+  const users = data.usersCollection?.edges.map(e => e.node) ?? [];
+  const labels = data.labelsCollection?.edges.map(e => e.node) ?? [];
+
+  return <CreateIssueModal open onClose={onClose} users={users} labels={labels} />;
+}
+
+async function renderModal() {
   const environment = createMockEnvironment();
   const onClose = vi.fn();
 
   render(
     <RelayEnvironmentProvider environment={environment}>
-      <CreateIssueModal
-        open
-        onClose={onClose}
-        users={[
-          { nodeId: 'users:1', id: 'u1', name: 'Ada Lovelace', avatar_url: null },
-          { nodeId: 'users:2', id: 'u2', name: 'Grace Hopper', avatar_url: null },
-        ]}
-        labels={[
-          { nodeId: 'labels:1', number: 1, name: 'Bug', color: 'ef4444' },
-          { nodeId: 'labels:2', number: 2, name: 'Design', color: '10b981' },
-        ]}
-      />
+      <Suspense fallback="Loading...">
+        <TestWrapper onClose={onClose} />
+      </Suspense>
     </RelayEnvironmentProvider>,
   );
+
+  await act(async () => {
+    environment.mock.resolveMostRecentOperation(() => ({
+      data: {
+        usersCollection: {
+          edges: [
+            { node: { nodeId: 'users:1', id: 'u1', name: 'Ada Lovelace', avatar_url: null } },
+            { node: { nodeId: 'users:2', id: 'u2', name: 'Grace Hopper', avatar_url: null } },
+          ],
+        },
+        labelsCollection: {
+          edges: [
+            { node: { nodeId: 'labels:1', number: 1, name: 'Bug', color: 'ef4444' } },
+            { node: { nodeId: 'labels:2', number: 2, name: 'Design', color: '10b981' } },
+          ],
+        },
+      },
+    }));
+  });
 
   return { environment, onClose };
 }
@@ -47,7 +92,7 @@ describe('CreateIssueModal', () => {
   });
 
   it('defaults assignee to unassigned and creates todo/medium issues', async () => {
-    const { environment } = renderModal();
+    const { environment } = await renderModal();
     const user = userEvent.setup();
 
     expect(screen.getByRole('button', { name: /unassigned/i })).toBeInTheDocument();
@@ -71,7 +116,7 @@ describe('CreateIssueModal', () => {
   });
 
   it('creates label links after the issue insert resolves', async () => {
-    const { environment, onClose } = renderModal();
+    const { environment, onClose } = await renderModal();
     const user = userEvent.setup();
 
     await user.type(screen.getByRole('textbox', { name: /issue title/i }), 'Ship modal');
@@ -112,7 +157,7 @@ describe('CreateIssueModal', () => {
   });
 
   it('removes a selected label by clicking the pill', async () => {
-    renderModal();
+    await renderModal();
     const user = userEvent.setup();
 
     await user.click(screen.getByRole('button', { name: /^add label$/i }));
@@ -127,7 +172,7 @@ describe('CreateIssueModal', () => {
   });
 
   it('filters labels in the add label menu', async () => {
-    renderModal();
+    await renderModal();
     const user = userEvent.setup();
 
     await user.click(screen.getByRole('button', { name: /^add label$/i }));
@@ -136,5 +181,34 @@ describe('CreateIssueModal', () => {
 
     expect(screen.getByRole('menuitem', { name: /design/i })).toBeInTheDocument();
     expect(screen.queryByRole('menuitem', { name: /bug/i })).not.toBeInTheDocument();
+  });
+
+  it('creates a new label from the add-label menu and selects it', async () => {
+    const { environment } = await renderModal();
+    const user = userEvent.setup();
+
+    await user.click(screen.getByRole('button', { name: /^add label$/i }));
+    await user.click(screen.getByRole('menuitem', { name: /create new label/i }));
+    await user.type(screen.getByLabelText(/name/i), 'API');
+    await user.click(screen.getByRole('button', { name: /color blue/i }));
+    await user.click(screen.getByRole('button', { name: /create label/i }));
+
+    const operation = environment.mock.getMostRecentOperation();
+    expect(operation.fragment.node.name).toBe('LabelEditorDialogCreateMutation');
+    expect(operation.request.variables).toEqual({
+      objects: [{ name: 'API', color: '3b82f6' }],
+    });
+
+    await act(async () => {
+      environment.mock.resolveMostRecentOperation(() => ({
+        data: {
+          insertIntolabelsCollection: {
+            records: [{ nodeId: 'labels:3', number: 3, name: 'API', color: '3b82f6' }],
+          },
+        },
+      }));
+    });
+
+    expect(screen.getByRole('button', { name: /remove label api/i })).toBeInTheDocument();
   });
 });

@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useRef, useState } from 'react';
-import { Plus, Search } from 'lucide-react';
+import { Pencil, Plus, Search, X } from 'lucide-react';
 import { Dropdown } from './Dropdown';
 import { LabelPill } from './LabelPill';
 
@@ -56,11 +56,14 @@ function SearchMenuInput({
   );
 }
 
+// TODO: multiple components in this file, review. LabelsField name could be better.
 export function LabelsField({
   labels,
   selected,
   onAddLabel,
   onRemoveLabel,
+  onCreateLabel,
+  onEditLabel,
   removeMode,
   disabled = false,
   menuAlign = 'start',
@@ -69,6 +72,8 @@ export function LabelsField({
   selected: ReadonlyArray<Label>;
   onAddLabel: (label: Label) => void;
   onRemoveLabel: (label: Label) => void;
+  onCreateLabel?: () => void;
+  onEditLabel?: (label: Label) => void;
   removeMode: 'instant' | 'confirm';
   disabled?: boolean;
   menuAlign?: 'start' | 'end';
@@ -96,6 +101,7 @@ export function LabelsField({
           key={label.nodeId}
           label={label}
           onRemove={() => onRemoveLabel(label)}
+          onEditLabel={onEditLabel}
           removeMode={removeMode}
           disabled={disabled}
         />
@@ -117,7 +123,7 @@ export function LabelsField({
 
         <Dropdown.Menu
           align={menuAlign}
-          className="min-w-52 w-64 max-w-[calc(100vw-2rem)] max-h-64 overflow-auto"
+          className="min-w-52 w-64 max-w-[calc(100vw-2rem)] max-h-64 overflow-hidden flex flex-col"
           onOpenAutoFocus={event => {
             event.preventDefault();
             inputRef.current?.focus();
@@ -127,35 +133,66 @@ export function LabelsField({
             <SearchMenuInput inputRef={inputRef} value={query} onChange={setQuery} onClear={() => setQuery('')} />
           )}
 
-          {filteredLabels.length === 0 ? (
-            <div className="px-2.5 py-2 text-[12px] text-text-muted">{emptyMessage}</div>
-          ) : (
-            filteredLabels.map(label => (
-              <Dropdown.Item key={label.nodeId} onClick={() => onAddLabel(label)}>
-                <span className="size-2 rounded-full shrink-0" style={{ backgroundColor: `#${label.color}` }} />
-                <span className="flex-1 truncate text-left">{label.name}</span>
-              </Dropdown.Item>
-            ))
+          {filteredLabels.length === 0 && normalizedQuery !== '' && (
+            <div className="px-2.5 py-2 text-[12px] text-text-muted shrink-0">No matches</div>
           )}
+
+          {onCreateLabel && (
+            <div className="shrink-0">
+              <Dropdown.Item onClick={onCreateLabel}>
+                <Plus className="size-3.5 text-text-muted" strokeWidth={2} />
+                <span>Create new label</span>
+              </Dropdown.Item>
+              {filteredLabels.length > 0 && <Dropdown.Separator />}
+            </div>
+          )}
+
+          <div className="overflow-y-auto min-h-0">
+            {filteredLabels.length > 0 ? (
+              filteredLabels.map(label => (
+                <Dropdown.Item key={label.nodeId} onClick={() => onAddLabel(label)}>
+                  <span className="size-2 rounded-full shrink-0" style={{ backgroundColor: `#${label.color}` }} />
+                  <span className="flex-1 truncate text-left">{label.name}</span>
+                </Dropdown.Item>
+              ))
+            ) : (
+              normalizedQuery === '' &&
+              !onCreateLabel && <div className="px-2.5 py-2 text-[12px] text-text-muted">{emptyMessage}</div>
+            )}
+          </div>
         </Dropdown.Menu>
       </Dropdown>
     </div>
   );
 }
 
+// TODO: rename this component to something more descriptive.
 function SelectedLabel({
   label,
   onRemove,
+  onEditLabel,
   removeMode,
   disabled,
 }: {
   label: Label;
   onRemove: () => void;
+  onEditLabel?: (label: Label) => void;
   removeMode: 'instant' | 'confirm';
   disabled: boolean;
 }) {
   if (removeMode === 'instant') {
-    return <LabelPill label={label} onRemove={onRemove} disabled={disabled} />;
+    return (
+      <button
+        type="button"
+        onClick={onRemove}
+        disabled={disabled}
+        title={`Click to remove label ${label.name}`}
+        aria-label={`Remove label ${label.name}`}
+        className="group border-0 bg-transparent p-0 appearance-none cursor-pointer disabled:cursor-default disabled:opacity-60"
+      >
+        <LabelPill label={label} action="remove" />
+      </button>
+    );
   }
 
   return (
@@ -166,17 +203,22 @@ function SelectedLabel({
           aria-label={`Label: ${label.name}. Click for options.`}
           className="group max-w-full min-w-0 border-0 bg-transparent p-0 appearance-none cursor-pointer disabled:cursor-default disabled:opacity-60"
         >
-          <LabelPill
-            label={label}
-            showRemoveIcon
-            className="pointer-events-none transition-colors group-hover:bg-bg-hover group-hover:text-text"
-          />
+          <LabelPill label={label} action="menu" />
         </button>
       </Dropdown.Trigger>
       <Dropdown.Menu className="min-w-44 w-56 max-w-[calc(100vw-2rem)]">
-        <Dropdown.Item onClick={onRemove}>
-          <span className="text-text-muted">Remove</span>
-          <LabelPill label={label} />
+        {onEditLabel && (
+          <Dropdown.Item onClick={() => onEditLabel(label)}>
+            <Pencil className="size-3.5 text-text-muted" strokeWidth={2.2} />
+            <span>Edit label</span>
+          </Dropdown.Item>
+        )}
+        <Dropdown.Item
+          onClick={onRemove}
+          className="data-[highlighted]:!bg-status-cancelled/10"
+        >
+          <X className="size-3.5 text-status-cancelled opacity-80" strokeWidth={2.2} />
+          <span>Remove label</span>
         </Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>

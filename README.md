@@ -165,27 +165,35 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 - Add comment widget with optimistic updates, cross-window realtime propagation, and platform-aware keyboard shortcut handling.
 - Create issue flow: topbar `+ New issue` launches a modal wired to Relay mutations, `C` opens it, `Cmd/Ctrl+Enter` submits it, and successful create navigates straight to the new detail page. Status / priority / assignee / labels all live in the modal; add-label menus are searchable.
 - Issue list filters: status, labels, assignee, and single-select priority, synced with URL state. Labels and assignees have inline search, and the assignee menu exposes temporary "Assigned to me" / "Unassigned" shortcuts above the user list.
+- UI way to create new label via the label picker dropdown, integrated with Relay mutations and caching.
 
 ### Pending
 
 - TODO: Replace the temporary authless current-user fallback (first seeded user) used by the assignee filter's "Assigned to me" shortcut and the comment composer once Supabase Auth lands.
 - Issue list cursor-based pagination.
 - Comment thread cursor-based pagination.
-- UI way to create new label.
 - Deploy to Vercel.
 - Standardize typography scale (remove fractional pixel font sizes to fix sub-pixel baseline alignment issues).
 - Change filter by priority to multiselect - spec seems to imply that.
 
 ### Maybe Later
 
+- remove label does not propagate cross browser tabs.
+- Filter on multiple labels is done clientside, it messes with the infinite scroll. Add pg procedure to handle this?
+- Group components into folders (FilterTab and components, icons/pills? Dropdowns?)
+- Cleanup CSS.
 - Alphabetic sorting of labels everywhere in UI lists.
 - text-text-muted - wtf?
 - rename SELECTABLE_PRIORITIES, check if status icons are just as bad
+- check if avatar url is used, seems like placeholeder is always generated
+- mobile responsiveness
+
 
 ### Punted (would do with more time)
 
 - Auth: Supabase Auth with OAuth, RLS policies. Current TODO on top: remove the first-seeded-user fallback that stands in for "me" until auth exists.
 - Read/unread comment count on issue list.
+- Create label after search should prepopulate with search text.
 - Command palette and a broader keyboard-shortcut layer.
 
 ## Tools
