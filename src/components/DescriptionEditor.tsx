@@ -5,7 +5,7 @@ import { graphql, useMutation } from 'react-relay';
 import { toast } from 'sonner';
 import { ShortcutTextarea } from './ShortcutTextarea';
 import { issueDescriptionSchema } from '@/lib/validation';
-import { usePlatform } from '@/lib/usePlatform';
+import { usePlatformEditorHint } from '@/lib/usePlatformEditorHint';
 import type { DescriptionEditorUpdateMutation } from '@/__generated__/DescriptionEditorUpdateMutation.graphql';
 
 const mutation = graphql`
@@ -33,7 +33,7 @@ export function DescriptionEditor({
   const [error, setError] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [commit, isInFlight] = useMutation<DescriptionEditorUpdateMutation>(mutation);
-  const platform = usePlatform();
+  const editorHint = usePlatformEditorHint('save');
 
   useEffect(() => {
     if (!editing) setValue(description);
@@ -118,18 +118,8 @@ export function DescriptionEditor({
           <p role="alert" className="text-xs text-status-cancelled">
             {error}
           </p>
-        ) : platform !== 'mobile' && platform !== null ? (
-          <p className="text-xs text-text-muted">
-            {platform === 'mac' ? (
-              <>
-                <kbd>⌘↵</kbd> to save, <kbd>Esc</kbd> to cancel
-              </>
-            ) : (
-              <>
-                <kbd>Ctrl</kbd>+<kbd>Enter</kbd> to save, <kbd>Esc</kbd> to cancel
-              </>
-            )}
-          </p>
+        ) : editorHint ? (
+          <p className="text-xs text-text-muted">{editorHint}</p>
         ) : null}
       </div>
     </div>

@@ -7,7 +7,7 @@ import { ShortcutTextarea } from './ShortcutTextarea';
 import { toast } from 'sonner';
 import type { IssueComments_issue$key } from '@/__generated__/IssueComments_issue.graphql';
 import type { IssueComments_query$key } from '@/__generated__/IssueComments_query.graphql';
-import { usePlatform } from '@/lib/usePlatform';
+import { usePlatformEditorHint } from '@/lib/usePlatformEditorHint';
 import type { IssueCommentsAddMutation } from '@/__generated__/IssueCommentsAddMutation.graphql';
 
 const issueFragment = graphql`
@@ -47,15 +47,8 @@ const queryFragment = graphql`
 `;
 
 const addCommentMutation = graphql`
-  mutation IssueCommentsAddMutation(
-    $connections: [ID!]!
-    $issue_id: Int!
-    $body: String!
-    $author_id: UUID!
-  ) {
-    insertIntocommentsCollection(
-      objects: [{ issue_id: $issue_id, body: $body, author_id: $author_id }]
-    ) {
+  mutation IssueCommentsAddMutation($connections: [ID!]!, $issue_id: Int!, $body: String!, $author_id: UUID!) {
+    insertIntocommentsCollection(objects: [{ issue_id: $issue_id, body: $body, author_id: $author_id }]) {
       records @appendNode(connections: $connections, edgeTypeName: "commentsEdge") {
         nodeId
         number
@@ -75,19 +68,13 @@ const DATE_FORMAT = new Intl.DateTimeFormat('en-US', {
   day: 'numeric',
 });
 
-export function IssueComments({
-  issue,
-  query,
-}: {
-  issue: IssueComments_issue$key;
-  query: IssueComments_query$key;
-}) {
+export function IssueComments({ issue, query }: { issue: IssueComments_issue$key; query: IssueComments_query$key }) {
   const data = useFragment(issueFragment, issue);
   const queryData = useFragment(queryFragment, query);
   const [commit, isInFlight] = useMutation<IssueCommentsAddMutation>(addCommentMutation);
   const [body, setBody] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const platform = usePlatform();
+  const editorHint = usePlatformEditorHint('comment');
 
   function handleCancel() {
     setBody('');
@@ -101,10 +88,7 @@ export function IssueComments({
   function submitComment() {
     if (!body.trim() || !authorId || isInFlight) return;
 
-    const connectionId = ConnectionHandler.getConnectionID(
-      data.nodeId,
-      'IssueComments_issue__commentsCollection',
-    );
+    const connectionId = ConnectionHandler.getConnectionID(data.nodeId, 'IssueComments_issue__commentsCollection');
 
     commit({
       variables: {
@@ -133,11 +117,9 @@ export function IssueComments({
     <div>
       <h2 className="text-[11px] font-medium text-text-muted uppercase tracking-[0.04em] mb-3">
         Activity
-        {comments.length > 0 && (
-          <span className="ml-1.5 mono text-text-muted normal-case">{comments.length}</span>
-        )}
+        {comments.length > 0 && <span className="ml-1.5 mono text-text-muted normal-case">{comments.length}</span>}
       </h2>
-      
+
       {comments.length === 0 ? (
         <p className="text-[13px] text-text-muted italic mb-6">No comments yet.</p>
       ) : (
@@ -155,16 +137,17 @@ export function IssueComments({
                     {DATE_FORMAT.format(new Date(node.created_at))}
                   </a>
                 </div>
-                <p className="text-[13px] text-text mt-1 whitespace-pre-wrap leading-relaxed">
-                  {node.body}
-                </p>
+                <p className="text-[13px] text-text mt-1 whitespace-pre-wrap leading-relaxed">{node.body}</p>
               </div>
             </div>
           ))}
         </div>
       )}
 
-      <form onSubmit={onSubmit} className="mt-5 border border-border rounded-lg bg-bg-raised transition-all focus-within:border-[var(--color-accent)] focus-within:ring-[3px] focus-within:ring-[color-mix(in_oklch,var(--color-accent)_15%,transparent)] focus-within:bg-bg">
+      <form
+        onSubmit={onSubmit}
+        className="mt-5 border border-border rounded-lg bg-bg-raised transition-all focus-within:border-[var(--color-accent)] focus-within:ring-[3px] focus-within:ring-[color-mix(in_oklch,var(--color-accent)_15%,transparent)] focus-within:bg-bg"
+      >
         <ShortcutTextarea
           ref={textareaRef}
           value={body}
@@ -176,13 +159,7 @@ export function IssueComments({
           disabled={isInFlight}
         />
         <div className="flex items-center px-2 py-1.5 pl-3 border-t border-border-muted">
-          <span className="text-[11px] text-text-muted mr-auto">
-            {platform === 'mac'
-              ? '⌘↵ to send, Esc to cancel'
-              : platform === 'windows'
-                ? 'Ctrl+Enter to send, Esc to cancel'
-                : null}
-          </span>
+          {editorHint && <span className="text-[11px] text-text-muted mr-auto">{editorHint}</span>}
           <button
             type="submit"
             disabled={!body.trim() || isInFlight}

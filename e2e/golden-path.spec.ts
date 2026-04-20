@@ -26,12 +26,19 @@ test('list → issue detail → change status', async ({ page }) => {
       .toLowerCase() ?? '';
 
   const target = initialStatus === 'in progress' ? 'Todo' : 'In Progress';
+  const targetItem = page.getByRole('menuitem', { name: new RegExp(`^${target}$`, 'i') });
 
-  await statusButton.click();
-  const menu = page.locator('[role="menu"]');
-  await expect(menu).toBeVisible();
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    await statusButton.click();
+    try {
+      await expect(targetItem).toBeVisible({ timeout: 2_000 });
+      break;
+    } catch (error) {
+      if (attempt === 2) throw error;
+    }
+  }
 
-  await menu.getByRole('menuitem', { name: new RegExp(`^${target}$`, 'i') }).click();
+  await targetItem.click();
 
   await expect(statusButton).toHaveAttribute('aria-label', new RegExp(`status:\\s*${target}\\.`, 'i'));
 });

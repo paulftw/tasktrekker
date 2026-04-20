@@ -1,6 +1,6 @@
-import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
+import { CreateIssueLauncher } from './CreateIssueLauncher';
 import { RealtimeIndicator } from './RealtimeIndicator';
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -29,21 +29,11 @@ function Topbar() {
         >
           T
         </div>
-        <span className="text-[13px] font-semibold tracking-tight">TaskTrekker</span>
+        <span className="text-[13px] font-semibold">TaskTrekker</span>
       </Link>
       <div className="ml-auto flex items-center gap-1.5">
         <RealtimeIndicator />
-        <button
-          type="button"
-          disabled
-          aria-disabled="true"
-          title="New issue — not yet implemented"
-          className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-md text-[12px] font-medium text-white opacity-60 cursor-not-allowed"
-          style={{ background: 'var(--color-accent)' }}
-        >
-          <Plus className="size-[13px]" strokeWidth={2} />
-          New issue
-        </button>
+        <CreateIssueLauncher />
       </div>
     </header>
   );

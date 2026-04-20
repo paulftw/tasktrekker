@@ -159,16 +159,16 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 - Real-time across browser windows: Supabase Realtime subscriptions on `issues` (list + detail) and `comments` (detail) bridged into the Relay store via `fetchQuery` refetch on event. Status, priority, title, description, and new comments propagate without reload. Refetch over hand-patching the store from raw row payloads: payloads carry SQL column values but not the encoded `nodeId`, joined fields (e.g. `comment.author.name`), or connection-edge plumbing — patching means re-implementing pieces of pg_graphql client-side. Refetch is one path that handles all cases. Cost is real at scale: one DB write fans out to N refetches across N open tabs, each a full query. Fine for an MVP serving small teams; at Linear scale I'd patch scalar UPDATEs from the payload and reserve refetch for joins and inserts.
 - Test suite, component layer: Vitest + Testing Library + `relay-test-utils`, SWC transform (same as production, no babel fork). StatusPicker commit contract + `getDataID` normalization regression pin (README Problem 5).
 - Test suite, integration layer: hits demo Supabase directly. Comment-numbering trigger assigns 1..N per issue; StatusPickerUpdateMutation round-trips through pg_graphql; `labels.color` check rejects non-hex. Leaves rows behind — demo DB, no cleanup. Not property-based: we're demonstrating it works, not stress-testing concurrency. Runs via `npm test`.
-- Test suite, E2E layer: two Playwright tests. (1) Golden path: list → click issue → change status via picker → assert the button's `aria-label` reflects the new status. Proves the full wiring (Relay fetch, route params, mutation commit, optimistic update, store re-read via `getDataID`). (2) Realtime: two browser contexts on the same issue, change status in A, assert it propagates to B. Proves the Supabase Realtime → Relay refetch bridge. Runs via `npx playwright test`; dev server auto-spawns. Unit layer skipped — no pure business logic to pin.
+- Test suite, E2E layer: nine Playwright tests across four specs. Golden path: list → issue detail → change status, plus add comment. Filters: URL syncing, label search, assignee combinations, and the temporary "Assigned to me" shortcut behavior. Create issue: topbar modal creates an issue, adds labels, and lands on detail. Realtime: two browser contexts prove status and comment propagation. Runs via `npx playwright test`; dev server auto-spawns. Unit layer skipped — no pure business logic to pin.
 - Claude Design applied - layout, icons, grouped view.
 - Shared `LabelPill` component drives the sidebar, list rows, and the remove-label dropdown item — one source of truth for the dot+name pill. Realtime extended to subscribe to `issue_labels` so cross-window add/remove propagates.
 - Add comment widget with optimistic updates, cross-window realtime propagation, and platform-aware keyboard shortcut handling.
+- Create issue flow: topbar `+ New issue` launches a modal wired to Relay mutations, `C` opens it, `Cmd/Ctrl+Enter` submits it, and successful create navigates straight to the new detail page. Status / priority / assignee / labels all live in the modal; add-label menus are searchable.
 - Issue list filters: status, labels, assignee, and single-select priority, synced with URL state. Labels and assignees have inline search, and the assignee menu exposes temporary "Assigned to me" / "Unassigned" shortcuts above the user list.
 
 ### Pending
 
 - TODO: Replace the temporary authless current-user fallback (first seeded user) used by the assignee filter's "Assigned to me" shortcut and the comment composer once Supabase Auth lands.
-- Create Issue UI.
 - Issue list cursor-based pagination.
 - Comment thread cursor-based pagination.
 - UI way to create new label.
@@ -186,7 +186,7 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 
 - Auth: Supabase Auth with OAuth, RLS policies. Current TODO on top: remove the first-seeded-user fallback that stands in for "me" until auth exists.
 - Read/unread comment count on issue list.
-- Keyboard shortcuts.
+- Command palette and a broader keyboard-shortcut layer.
 
 ## Tools
 

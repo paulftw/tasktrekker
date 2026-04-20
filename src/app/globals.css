@@ -92,23 +92,156 @@
 }
 
 @layer components {
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    display: grid;
+    place-items: flex-start center;
+    padding-top: 10vh;
+    background: color-mix(in srgb, #0a0a0a 40%, transparent);
+    backdrop-filter: blur(2px);
+  }
+
+  .modal {
+    width: 680px;
+    max-width: min(92vw, 680px);
+    background: var(--color-bg-overlay);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    box-shadow:
+      0 30px 80px rgba(0, 0, 0, 0.35),
+      0 0 0 1px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+  }
+
+  .modal-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--color-border-muted);
+    font-size: 11.5px;
+    color: var(--color-text-muted);
+  }
+
+  .modal-body {
+    padding: 10px 18px 4px;
+  }
+
+  .modal-body input.title {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    padding: 6px 0;
+  }
+
+  .modal-body textarea.desc {
+    width: 100%;
+    min-height: 54px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font-size: 13px;
+    line-height: 1.5;
+    padding: 4px 0;
+    resize: none;
+    overflow: hidden;
+  }
+
+  .modal-body textarea.desc::placeholder,
+  .modal-body input.title::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  .modal-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 6px 14px 12px;
+    border-top: 1px dashed var(--color-border-muted);
+    margin-top: 6px;
+  }
+
+  .modal-foot {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-top: 1px solid var(--color-border-muted);
+    background: var(--color-bg-raised);
+  }
+
+  .modal-foot .hint {
+    margin-right: auto;
+    font-size: 11px;
+    color: var(--color-text-muted);
+  }
+
   .chip {
-    display: inline-flex; align-items: center; gap: 6px;
-    height: 26px; padding: 0 9px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 26px;
+    padding: 0 9px;
     border-radius: 999px;
     border: 1px dashed var(--color-border);
     background: transparent;
-    font-size: 12px; color: var(--color-text-secondary);
+    font-size: 12px;
+    color: var(--color-text-secondary);
     line-height: 1;
     cursor: pointer;
   }
-  .chip:hover { background: var(--color-bg-hover); color: var(--color-text); border-style: solid; }
-  .chip.solid { border-style: solid; background: var(--color-bg-inset); color: var(--color-text); }
-  .chip .chip-icon { display: inline-flex; align-items: center; justify-content: center; line-height: 0; flex-shrink: 0; }
-  .chip .chip-icon > svg { display: block; }
-  .chip .plus { color: var(--color-text-muted); font-size: 13px; line-height: 1; }
-  .chip .remove { margin-left: 2px; color: var(--color-text-muted); }
-  .chip .remove:hover { color: var(--color-text); }
+  .chip:hover {
+    background: var(--color-bg-hover);
+    color: var(--color-text);
+    border-style: solid;
+  }
+  .chip.solid {
+    border-style: solid;
+    background: var(--color-bg-inset);
+    color: var(--color-text);
+  }
+  .chip .chip-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+    flex-shrink: 0;
+  }
+  .chip .chip-icon > svg {
+    display: block;
+  }
+  .chip .plus {
+    color: var(--color-text-muted);
+    font-size: 13px;
+    line-height: 1;
+  }
+  .chip .remove {
+    margin-left: 2px;
+    color: var(--color-text-muted);
+  }
+  .chip .remove:hover {
+    color: var(--color-text);
+  }
+}
+
+@media (max-width: 640px) {
+  .modal-overlay {
+    padding-top: 0;
+    align-items: stretch;
+  }
+
+  .modal {
+    width: 100%;
+    max-width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
 }
 
 /* Shared horizontal padding anchoring topbar, group-header, and list row to

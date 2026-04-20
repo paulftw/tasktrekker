@@ -26,3 +26,21 @@ export function usePlatform() {
   // It returns null on the server/first-render, then immediately re-renders with the actual client value.
   return useSyncExternalStore(emptySubscribe, getPlatform, () => null);
 }
+
+export function usePlatformEditorHint(action: string) {
+  const platform = usePlatform();
+  if (platform === 'mac') {
+    return (
+      <>
+        <kbd>⌘↵</kbd> to {action} · <kbd>Esc</kbd> to cancel
+      </>
+    );
+  } else if (platform === 'windows') {
+    return (
+      <>
+        <kbd>Ctrl</kbd>+<kbd>Enter</kbd> to {action} · <kbd>Esc</kbd> to cancel
+      </>
+    );
+  }
+  return null;
+}

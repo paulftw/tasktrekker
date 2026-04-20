@@ -1,17 +1,37 @@
-import { forwardRef } from 'react';
+import { forwardRef, useEffect, useRef } from 'react';
 
 interface ShortcutTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   onSubmitShortcut?: () => void;
   onCancelShortcut?: () => void;
+  autoGrow?: boolean;
 }
 
 export const ShortcutTextarea = forwardRef<HTMLTextAreaElement, ShortcutTextareaProps>(
-  ({ onSubmitShortcut, onCancelShortcut, onKeyDown, ...props }, ref) => {
+  ({ onSubmitShortcut, onCancelShortcut, onKeyDown, autoGrow = true, ...props }, ref) => {
+    const innerRef = useRef<HTMLTextAreaElement | null>(null);
+
+    useEffect(() => {
+      if (!innerRef.current) return;
+      if (!autoGrow) {
+        innerRef.current.style.height = '';
+        return;
+      }
+      innerRef.current.style.height = 'auto';
+      innerRef.current.style.height = `${innerRef.current.scrollHeight}px`;
+    }, [autoGrow, props.value]);
+
     return (
       <textarea
-        ref={ref}
+        ref={node => {
+          innerRef.current = node;
+          if (typeof ref === 'function') {
+            ref(node);
+          } else if (ref) {
+            ref.current = node;
+          }
+        }}
         {...props}
-        onKeyDown={(e) => {
+        onKeyDown={e => {
           if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
             if (onSubmitShortcut) {
               e.preventDefault();
@@ -28,6 +48,6 @@ export const ShortcutTextarea = forwardRef<HTMLTextAreaElement, ShortcutTextarea
         }}
       />
     );
-  }
+  },
 );
 ShortcutTextarea.displayName = 'ShortcutTextarea';

@@ -79,18 +79,18 @@ const FilterChip = forwardRef<
   {
     label: string;
     icon: React.ReactNode;
-    value: boolean;
+    active: boolean;
     placeholder: string;
     onClear: () => void;
   } & React.ComponentPropsWithoutRef<'button'>
->(({ label, icon, value, placeholder, onClear, ...props }, ref) => {
+>(({ label, icon, active, placeholder, onClear, ...props }, ref) => {
   return (
-    <button ref={ref} className={`chip ${value ? 'solid' : ''}`} {...props}>
+    <button ref={ref} className={`chip ${active ? 'solid' : ''}`} {...props}>
       <span aria-hidden className="chip-icon">
         {icon}
       </span>
-      {value ? label : placeholder}
-      {value ? (
+      {active ? label : placeholder}
+      {active ? (
         <span
           className="remove"
           onClick={e => {
@@ -209,7 +209,7 @@ export function FilterBar({ labels, users }: { labels: Label[]; users: User[] })
     selectedAssignees.size > 1 ? `${selectedAssignees.size} assignees` : selectedAssigneeObjects[0]?.name || 'Assignee';
 
   return (
-    <div className="shell-pad py-3 border-b border-border-muted flex items-center gap-2">
+    <div className="shell-pad py-2 border-b border-border-muted flex items-center gap-2">
       <Dropdown
         onOpenChange={open => {
           if (!open) setAssigneeQuery('');
@@ -247,7 +247,7 @@ export function FilterBar({ labels, users }: { labels: Label[]; users: User[] })
                 <UserCircle2 size={12} className="text-text-muted" />
               )
             }
-            value={selectedAssignees.size > 0}
+            active={selectedAssignees.size > 0}
             onClear={() => {
               const params = new URLSearchParams(searchParams.toString());
               params.delete('assignee');
@@ -333,15 +333,12 @@ export function FilterBar({ labels, users }: { labels: Label[]; users: User[] })
                   );
                 })()
               ) : selectedStatusObjects.length === 1 ? (
-                <StatusIcon
-                  status={STATUS_ORDER.find(s => selectedStatuses.has(s))!}
-                  size={12}
-                />
+                <StatusIcon status={STATUS_ORDER.find(s => selectedStatuses.has(s))!} size={12} />
               ) : (
                 <StatusIcon status="backlog" size={12} />
               )
             }
-            value={selectedStatuses.size > 0}
+            active={selectedStatuses.size > 0}
             onClear={() => {
               const params = new URLSearchParams(searchParams.toString());
               params.delete('status');
@@ -371,7 +368,7 @@ export function FilterBar({ labels, users }: { labels: Label[]; users: User[] })
                 <SignalHigh width={12} height={12} className="text-text-muted" />
               )
             }
-            value={!!selectedPriority}
+            active={!!selectedPriority}
             onClear={() => selectedPriority && togglePriority(selectedPriority)}
           />
         </Dropdown.Trigger>
@@ -420,7 +417,7 @@ export function FilterBar({ labels, users }: { labels: Label[]; users: User[] })
                 <Tag size={12} className="text-text-muted" />
               )
             }
-            value={selectedLabels.size > 0}
+            active={selectedLabels.size > 0}
             onClear={() => {
               const params = new URLSearchParams(searchParams.toString());
               params.delete('label');
