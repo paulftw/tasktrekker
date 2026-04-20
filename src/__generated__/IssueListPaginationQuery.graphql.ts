@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d60afdaaddfd7de4e59d5ad7e280ec46>>
+ * @generated SignedSource<<a4d31b4a90d09a9436c9f1be83d77d56>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -82,206 +82,55 @@ export type DatetimeFilter = {
 export type IDFilter = {
   eq?: string | null | undefined;
 };
-export type IssueListQuery$variables = {
+export type IssueListPaginationQuery$variables = {
   cursor?: string | null | undefined;
   filter?: issuesFilter | null | undefined;
-  first: number;
+  first?: number | null | undefined;
 };
-export type IssueListQuery$data = {
-  readonly labelsCollection: {
-    readonly edges: ReadonlyArray<{
-      readonly node: {
-        readonly color: string;
-        readonly name: string;
-        readonly nodeId: string;
-        readonly number: number;
-      };
-    }>;
-  } | null | undefined;
-  readonly usersCollection: {
-    readonly edges: ReadonlyArray<{
-      readonly node: {
-        readonly avatar_url: string | null | undefined;
-        readonly id: string;
-        readonly name: string;
-        readonly nodeId: string;
-      };
-    }>;
-  } | null | undefined;
+export type IssueListPaginationQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"IssueList_query">;
 };
-export type IssueListQuery = {
-  response: IssueListQuery$data;
-  variables: IssueListQuery$variables;
+export type IssueListPaginationQuery = {
+  response: IssueListPaginationQuery$data;
+  variables: IssueListPaginationQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "cursor"
-},
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "cursor"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "filter"
+  },
+  {
+    "defaultValue": 20,
+    "kind": "LocalArgument",
+    "name": "first"
+  }
+],
 v1 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "filter"
-},
-v2 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "first"
-},
-v3 = {
   "kind": "Variable",
   "name": "filter",
   "variableName": "filter"
 },
-v4 = {
+v2 = {
   "kind": "Variable",
   "name": "first",
   "variableName": "first"
 },
-v5 = {
-  "kind": "Literal",
-  "name": "orderBy",
-  "value": [
-    {
-      "name": "AscNullsLast"
-    }
-  ]
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "nodeId",
-  "storageKey": null
-},
-v7 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "number",
-  "storageKey": null
-},
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v9 = [
-  (v6/*: any*/),
-  (v7/*: any*/),
-  (v8/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "color",
-    "storageKey": null
-  }
-],
-v10 = {
-  "alias": null,
-  "args": [
-    (v5/*: any*/)
-  ],
-  "concreteType": "labelsConnection",
-  "kind": "LinkedField",
-  "name": "labelsCollection",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "labelsEdge",
-      "kind": "LinkedField",
-      "name": "edges",
-      "plural": true,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "labels",
-          "kind": "LinkedField",
-          "name": "node",
-          "plural": false,
-          "selections": (v9/*: any*/),
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    }
-  ],
-  "storageKey": "labelsCollection(orderBy:[{\"name\":\"AscNullsLast\"}])"
-},
-v11 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "avatar_url",
-  "storageKey": null
-},
-v12 = {
-  "alias": null,
-  "args": [
-    {
-      "kind": "Literal",
-      "name": "first",
-      "value": 100
-    },
-    (v5/*: any*/)
-  ],
-  "concreteType": "usersConnection",
-  "kind": "LinkedField",
-  "name": "usersCollection",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "usersEdge",
-      "kind": "LinkedField",
-      "name": "edges",
-      "plural": true,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "users",
-          "kind": "LinkedField",
-          "name": "node",
-          "plural": false,
-          "selections": [
-            (v6/*: any*/),
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "id",
-              "storageKey": null
-            },
-            (v8/*: any*/),
-            (v11/*: any*/)
-          ],
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    }
-  ],
-  "storageKey": "usersCollection(first:100,orderBy:[{\"name\":\"AscNullsLast\"}])"
-},
-v13 = [
+v3 = [
   {
     "kind": "Variable",
     "name": "after",
     "variableName": "cursor"
   },
-  (v3/*: any*/),
-  (v4/*: any*/),
+  (v1/*: any*/),
+  (v2/*: any*/),
   {
     "kind": "Literal",
     "name": "orderBy",
@@ -291,17 +140,34 @@ v13 = [
       }
     ]
   }
-];
+],
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "nodeId",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "number",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+};
 return {
   "fragment": {
-    "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/),
-      (v2/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "IssueListQuery",
+    "name": "IssueListPaginationQuery",
     "selections": [
       {
         "args": [
@@ -310,31 +176,25 @@ return {
             "name": "cursor",
             "variableName": "cursor"
           },
-          (v3/*: any*/),
-          (v4/*: any*/)
+          (v1/*: any*/),
+          (v2/*: any*/)
         ],
         "kind": "FragmentSpread",
         "name": "IssueList_query"
-      },
-      (v10/*: any*/),
-      (v12/*: any*/)
+      }
     ],
     "type": "Query",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [
-      (v2/*: any*/),
-      (v0/*: any*/),
-      (v1/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "IssueListQuery",
+    "name": "IssueListPaginationQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v13/*: any*/),
+        "args": (v3/*: any*/),
         "concreteType": "issuesConnection",
         "kind": "LinkedField",
         "name": "issuesCollection",
@@ -356,8 +216,8 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v6/*: any*/),
-                  (v7/*: any*/),
+                  (v4/*: any*/),
+                  (v5/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -387,9 +247,15 @@ return {
                     "name": "users",
                     "plural": false,
                     "selections": [
-                      (v8/*: any*/),
-                      (v11/*: any*/),
-                      (v6/*: any*/)
+                      (v6/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "avatar_url",
+                        "storageKey": null
+                      },
+                      (v4/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -423,7 +289,7 @@ return {
                             "name": "node",
                             "plural": false,
                             "selections": [
-                              (v6/*: any*/),
+                              (v4/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -431,7 +297,18 @@ return {
                                 "kind": "LinkedField",
                                 "name": "labels",
                                 "plural": false,
-                                "selections": (v9/*: any*/),
+                                "selections": [
+                                  (v4/*: any*/),
+                                  (v5/*: any*/),
+                                  (v6/*: any*/),
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "color",
+                                    "storageKey": null
+                                  }
+                                ],
                                 "storageKey": null
                               }
                             ],
@@ -493,7 +370,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v13/*: any*/),
+        "args": (v3/*: any*/),
         "filters": [
           "filter"
         ],
@@ -501,22 +378,20 @@ return {
         "key": "IssueList_query_issuesCollection",
         "kind": "LinkedHandle",
         "name": "issuesCollection"
-      },
-      (v10/*: any*/),
-      (v12/*: any*/)
+      }
     ]
   },
   "params": {
-    "cacheID": "8ab1d547ce64cd1b0008dd2777ffe009",
+    "cacheID": "8f26bc71d61287d3585477f1180b603c",
     "id": null,
     "metadata": {},
-    "name": "IssueListQuery",
+    "name": "IssueListPaginationQuery",
     "operationKind": "query",
-    "text": "query IssueListQuery(\n  $first: Int!\n  $cursor: Cursor\n  $filter: issuesFilter\n) {\n  ...IssueList_query_ui5P\n  labelsCollection(orderBy: [{name: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        name\n        color\n      }\n    }\n  }\n  usersCollection(first: 100, orderBy: [{name: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        id\n        name\n        avatar_url\n      }\n    }\n  }\n}\n\nfragment IssueList_query_ui5P on Query {\n  issuesCollection(first: $first, after: $cursor, filter: $filter, orderBy: [{created_at: DescNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        title\n        status\n        priority\n        assignee: users {\n          name\n          avatar_url\n          nodeId\n        }\n        issue_labelsCollection(first: 10) {\n          edges {\n            node {\n              nodeId\n              labels {\n                nodeId\n                number\n                name\n                color\n              }\n            }\n          }\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n"
+    "text": "query IssueListPaginationQuery(\n  $cursor: Cursor\n  $filter: issuesFilter\n  $first: Int = 20\n) {\n  ...IssueList_query_ui5P\n}\n\nfragment IssueList_query_ui5P on Query {\n  issuesCollection(first: $first, after: $cursor, filter: $filter, orderBy: [{created_at: DescNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        title\n        status\n        priority\n        assignee: users {\n          name\n          avatar_url\n          nodeId\n        }\n        issue_labelsCollection(first: 10) {\n          edges {\n            node {\n              nodeId\n              labels {\n                nodeId\n                number\n                name\n                color\n              }\n            }\n          }\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "78549f036b4810294cb0106ae57ec789";
+(node as any).hash = "94d18e6e2a04fce128de414230e06652";
 
 export default node;

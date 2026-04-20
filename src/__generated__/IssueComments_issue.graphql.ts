@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8401669c6714ed72ccb6e59440d6e4cf>>
+ * @generated SignedSource<<d2ff8622a788f8cb86b0800405d38407>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,6 +24,10 @@ export type IssueComments_issue$data = {
         readonly number: number;
       };
     }>;
+    readonly pageInfo: {
+      readonly endCursor: string | null | undefined;
+      readonly hasNextPage: boolean;
+    };
   } | null | undefined;
   readonly nodeId: string;
   readonly number: number;
@@ -34,15 +38,20 @@ export type IssueComments_issue$key = {
   readonly " $fragmentSpreads": FragmentRefs<"IssueComments_issue">;
 };
 
+import IssueCommentsPaginationQuery_graphql from './IssueCommentsPaginationQuery.graphql';
+
 const node: ReaderFragment = (function(){
-var v0 = {
+var v0 = [
+  "commentsCollection"
+],
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "nodeId",
   "storageKey": null
 },
-v1 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -50,24 +59,51 @@ v1 = {
   "storageKey": null
 };
 return {
-  "argumentDefinitions": [],
+  "argumentDefinitions": [
+    {
+      "defaultValue": 10,
+      "kind": "LocalArgument",
+      "name": "count"
+    },
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "cursor"
+    }
+  ],
   "kind": "Fragment",
   "metadata": {
     "connection": [
       {
-        "count": null,
-        "cursor": null,
+        "count": "count",
+        "cursor": "cursor",
         "direction": "forward",
-        "path": [
-          "commentsCollection"
-        ]
+        "path": (v0/*: any*/)
       }
-    ]
+    ],
+    "refetch": {
+      "connection": {
+        "forward": {
+          "count": "count",
+          "cursor": "cursor"
+        },
+        "backward": null,
+        "path": (v0/*: any*/)
+      },
+      "fragmentPathInResult": [
+        "node"
+      ],
+      "operation": IssueCommentsPaginationQuery_graphql,
+      "identifierInfo": {
+        "identifierField": "nodeId",
+        "identifierQueryVariableName": "nodeId"
+      }
+    }
   },
   "name": "IssueComments_issue",
   "selections": [
-    (v0/*: any*/),
     (v1/*: any*/),
+    (v2/*: any*/),
     {
       "alias": "commentsCollection",
       "args": null,
@@ -92,8 +128,8 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v0/*: any*/),
                 (v1/*: any*/),
+                (v2/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -165,14 +201,14 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "endCursor",
+              "name": "hasNextPage",
               "storageKey": null
             },
             {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "hasNextPage",
+              "name": "endCursor",
               "storageKey": null
             }
           ],
@@ -187,6 +223,6 @@ return {
 };
 })();
 
-(node as any).hash = "ac3e39ecea073a24eca1e657ab254a4d";
+(node as any).hash = "37327b2bff6332f12d7eb5b2fe2e2aa2";
 
 export default node;

@@ -24,9 +24,6 @@ export function TitleEditor({ nodeId, number, title }: { nodeId: string; number:
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [commit, isInFlight] = useMutation<TitleEditorUpdateMutation>(mutation);
 
-  useEffect(() => {
-    if (!editing) setValue(title);
-  }, [title, editing]);
 
   useEffect(() => {
     if (editing) inputRef.current?.select();
@@ -75,7 +72,10 @@ export function TitleEditor({ nodeId, number, title }: { nodeId: string; number:
     return (
       <button
         type="button"
-        onClick={() => setEditing(true)}
+        onClick={() => {
+          setEditing(true);
+          setValue(title);
+        }}
         aria-label="Edit title"
         className="text-left w-full rounded -mx-1 px-1 py-0.5 hover:bg-bg-hover transition-colors cursor-text"
       >

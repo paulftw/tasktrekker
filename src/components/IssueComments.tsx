@@ -1,20 +1,28 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { graphql, useFragment, useMutation, ConnectionHandler } from 'react-relay';
+import { graphql, useFragment, usePaginationFragment, useMutation, ConnectionHandler } from 'react-relay';
 import { UserAvatar } from './UserAvatar';
 import { ShortcutTextarea } from './ShortcutTextarea';
 import { toast } from 'sonner';
 import type { IssueComments_issue$key } from '@/__generated__/IssueComments_issue.graphql';
+import type { IssueCommentsPaginationQuery } from '@/__generated__/IssueCommentsPaginationQuery.graphql';
 import type { IssueComments_query$key } from '@/__generated__/IssueComments_query.graphql';
 import { usePlatformEditorHint } from '@/lib/usePlatformEditorHint';
 import type { IssueCommentsAddMutation } from '@/__generated__/IssueCommentsAddMutation.graphql';
 
+const COMMENTS_PAGE_SIZE = 10;
+
 const issueFragment = graphql`
-  fragment IssueComments_issue on issues {
+  fragment IssueComments_issue on issues
+  @refetchable(queryName: "IssueCommentsPaginationQuery")
+  @argumentDefinitions(
+    count: { type: "Int", defaultValue: 10 }
+    cursor: { type: "Cursor" }
+  ) {
     nodeId
     number
-    commentsCollection(first: 50, orderBy: [{ number: AscNullsLast }])
+    commentsCollection(first: $count, after: $cursor, orderBy: [{ number: AscNullsLast }])
       @connection(key: "IssueComments_issue__commentsCollection", filters: []) {
       edges {
         node {
@@ -27,6 +35,10 @@ const issueFragment = graphql`
             avatar_url
           }
         }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
       }
     }
   }
@@ -69,7 +81,10 @@ const DATE_FORMAT = new Intl.DateTimeFormat('en-US', {
 });
 
 export function IssueComments({ issue, query }: { issue: IssueComments_issue$key; query: IssueComments_query$key }) {
-  const data = useFragment(issueFragment, issue);
+  const { data, loadNext, hasNext, isLoadingNext } = usePaginationFragment<IssueCommentsPaginationQuery, IssueComments_issue$key>(
+    issueFragment,
+    issue
+  );
   const queryData = useFragment(queryFragment, query);
   const [commit, isInFlight] = useMutation<IssueCommentsAddMutation>(addCommentMutation);
   const [body, setBody] = useState('');
@@ -141,6 +156,18 @@ export function IssueComments({ issue, query }: { issue: IssueComments_issue$key
               </div>
             </div>
           ))}
+          {hasNext && (
+            <div className="pt-2 text-center">
+              <button
+                type="button"
+                disabled={isLoadingNext}
+                onClick={() => loadNext(COMMENTS_PAGE_SIZE)}
+                className="px-4 py-2 bg-bg-raised text-text-secondary hover:text-text border border-border-muted rounded-md text-[12px] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoadingNext ? 'Loading...' : 'Load more comments'}
+              </button>
+            </div>
+          )}
         </div>
       )}
 

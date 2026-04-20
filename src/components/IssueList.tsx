@@ -1,8 +1,8 @@
 'use client';
 
-import { graphql, useLazyLoadQuery } from 'react-relay';
+import { graphql, useLazyLoadQuery, usePaginationFragment } from 'react-relay';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { useRealtimeRefetch } from '@/lib/useRealtimeRefetch';
@@ -14,9 +14,16 @@ import { FilterBar } from './FilterBar';
 import type { IssueStatus, IssuePriority } from '@/types/enums';
 import type { IssueListQuery } from '@/__generated__/IssueListQuery.graphql';
 
-const query = graphql`
-  query IssueListQuery($first: Int!, $filter: issuesFilter) {
-    issuesCollection(first: $first, filter: $filter, orderBy: [{ created_at: DescNullsLast }]) {
+const fragment = graphql`
+  fragment IssueList_query on Query
+  @refetchable(queryName: "IssueListPaginationQuery")
+  @argumentDefinitions(
+    first: { type: "Int", defaultValue: 20 }
+    cursor: { type: "Cursor" }
+    filter: { type: "issuesFilter" }
+  ) {
+    issuesCollection(first: $first, after: $cursor, filter: $filter, orderBy: [{ created_at: DescNullsLast }])
+    @connection(key: "IssueList_query_issuesCollection", filters: ["filter"]) {
       edges {
         node {
           nodeId
@@ -43,7 +50,17 @@ const query = graphql`
           }
         }
       }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
     }
+  }
+`;
+
+const query = graphql`
+  query IssueListQuery($first: Int!, $cursor: Cursor, $filter: issuesFilter) {
+    ...IssueList_query @arguments(first: $first, cursor: $cursor, filter: $filter)
     labelsCollection(orderBy: [{ name: AscNullsLast }]) {
       edges {
         node {
@@ -69,8 +86,13 @@ const query = graphql`
 
 const GROUP_ORDER: IssueStatus[] = ['in_progress', 'todo', 'backlog', 'done', 'cancelled'];
 const DEFAULT_COLLAPSED: IssueStatus[] = ['done', 'cancelled'];
+const ISSUE_PAGE_SIZE = 20;
 
-type Issue = NonNullable<NonNullable<IssueListQuery['response']['issuesCollection']>['edges'][number]>['node'];
+import type { IssueList_query$key } from '@/__generated__/IssueList_query.graphql';
+
+type Issue = NonNullable<
+  NonNullable<NonNullable<IssueListPaginationQuery['response']['issuesCollection']>['edges']>[number]
+>['node'];
 
 export function IssueList() {
   const searchParams = useSearchParams();
@@ -79,7 +101,7 @@ export function IssueList() {
   const selectedLabels = new Set(searchParams.getAll('label'));
   const selectedAssignees = new Set(searchParams.getAll('assignee'));
 
-  const filter: any = {};
+  const filter: Record<string, unknown> = {};
   if (selectedPriority) filter.priority = { eq: selectedPriority };
   if (selectedStatuses.size > 0) filter.status = { in: Array.from(selectedStatuses) };
   if (selectedAssignees.size > 0) {
@@ -95,22 +117,44 @@ export function IssueList() {
   }
 
   const vars = {
-    first: 20,
+    first: ISSUE_PAGE_SIZE,
     filter: Object.keys(filter).length > 0 ? filter : null,
   };
 
-  const data = useLazyLoadQuery<IssueListQuery>(query, vars);
+  const queryData = useLazyLoadQuery<IssueListQuery>(query, vars);
   useRealtimeRefetch('issues-list', [{ table: 'issues' }, { table: 'issue_labels' }], query, vars);
 
-  let nodes: Issue[] = (data.issuesCollection?.edges ?? []).map(e => e.node);
-  const labels = (data.labelsCollection?.edges ?? []).map(e => e.node);
-  const users = (data.usersCollection?.edges ?? []).map(e => e.node);
+  return <IssueListContent queryData={queryData} selectedPriority={selectedPriority} selectedStatuses={selectedStatuses} selectedLabels={selectedLabels} selectedAssignees={selectedAssignees} />;
+}
+
+function IssueListContent({
+  queryData,
+  selectedPriority,
+  selectedStatuses,
+  selectedLabels,
+  selectedAssignees,
+}: {
+  queryData: IssueListQuery['response'];
+  selectedPriority: IssuePriority | null;
+  selectedStatuses: Set<IssueStatus>;
+  selectedLabels: Set<string>;
+  selectedAssignees: Set<string>;
+}) {
+  const { data, loadNext, hasNext, isLoadingNext } = usePaginationFragment<IssueListPaginationQuery, IssueList_query$key>(
+    fragment,
+    queryData
+  );
+
+  type IssueEdge = NonNullable<NonNullable<IssueListPaginationQuery['response']['issuesCollection']>['edges']>[number];
+  let nodes: Issue[] = (data.issuesCollection?.edges ?? []).map((e) => (e as IssueEdge).node);
+  const labels = (queryData.labelsCollection?.edges ?? []).map((e) => e!.node);
+  const users = (queryData.usersCollection?.edges ?? []).map((e) => e!.node);
 
   if (selectedLabels.size > 0) {
     nodes = nodes.filter(issue => {
       const issueLabelNames = new Set(
         issue.issue_labelsCollection?.edges
-          .map(e => e.node.labels?.name)
+          .map((e) => e!.node.labels?.name)
           .filter(Boolean)
       );
       return Array.from(selectedLabels).every(label => issueLabelNames.has(label));
@@ -169,37 +213,68 @@ export function IssueList() {
       <div className="flex-1 overflow-auto">
         {GROUP_ORDER.filter(s => selectedStatuses.size === 0 || selectedStatuses.has(s)).map(s => {
           const items = groups.get(s) ?? [];
-        const isCollapsed = collapsed.has(s);
-        const cfg = STATUS_CONFIG[s];
-        return (
-          <section key={s}>
-            <button
-              type="button"
-              onClick={() => toggle(s)}
-              className="shell-pad sticky top-0 z-[2] bg-bg-raised border-b border-border-muted h-8 w-full flex items-center gap-[10px] text-[12px] font-medium text-text cursor-pointer"
-              aria-expanded={!isCollapsed}
-            >
-              <span
-                className="w-[18px] inline-flex items-center justify-center text-text-muted transition-transform duration-[120ms]"
-                style={{ transform: isCollapsed ? 'rotate(-90deg)' : 'none' }}
-                aria-hidden
+          const isCollapsed = collapsed.has(s);
+          const cfg = STATUS_CONFIG[s];
+          return (
+            <section key={s}>
+              <button
+                type="button"
+                onClick={() => toggle(s)}
+                className="shell-pad sticky top-0 z-[2] bg-bg-raised border-b border-border-muted h-8 w-full flex items-center gap-[10px] text-[12px] font-medium text-text cursor-pointer"
+                aria-expanded={!isCollapsed}
               >
-                <ChevronDown className="size-3" strokeWidth={2} />
-              </span>
-              <StatusIcon status={s} size={14} />
-              <span>{cfg.label}</span>
-              <span className="mono text-text-muted">{items.length}</span>
-            </button>
-            {!isCollapsed && items.length === 0 && (
-              <div className="shell-pad py-2.5 text-[12px] text-text-muted">No issues</div>
-            )}
-            {!isCollapsed && items.map(issue => <IssueRow key={issue.nodeId} issue={issue} />)}
-          </section>
-        );
-      })}
+                <span
+                  className="w-[18px] inline-flex items-center justify-center text-text-muted transition-transform duration-[120ms]"
+                  style={{ transform: isCollapsed ? 'rotate(-90deg)' : 'none' }}
+                  aria-hidden
+                >
+                  <ChevronDown className="size-3" strokeWidth={2} />
+                </span>
+                <StatusIcon status={s} size={14} />
+                <span>{cfg.label}</span>
+                <span className="mono text-text-muted">{items.length}</span>
+              </button>
+              {!isCollapsed && items.length === 0 && (
+                <div className="shell-pad py-2.5 text-[12px] text-text-muted">No issues</div>
+              )}
+              {!isCollapsed && items.map(issue => <IssueRow key={issue.nodeId} issue={issue} />)}
+            </section>
+          );
+        })}
+        
+        {hasNext && (
+          <InfiniteScrollTrigger
+            onIntersect={() => {
+              if (!isLoadingNext) loadNext(ISSUE_PAGE_SIZE);
+            }}
+          />
+        )}
+        {isLoadingNext && (
+          <div className="shell-pad py-4 text-center text-[12px] text-text-muted">Loading more...</div>
+        )}
       </div>
     </div>
   );
+}
+
+function InfiniteScrollTrigger({ onIntersect }: { onIntersect: () => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting) {
+          onIntersect();
+        }
+      },
+      { rootMargin: '100px' }
+    );
+
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [onIntersect]);
+
+  return <div ref={ref} className="h-4 w-full" aria-hidden />;
 }
 
 function IssueRow({ issue }: { issue: Issue }) {
