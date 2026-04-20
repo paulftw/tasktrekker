@@ -22,14 +22,16 @@ function Topbar() {
       <Link href="/" className="flex items-center gap-1.5 rounded hover:opacity-80 transition-opacity">
         <div
           aria-hidden
-          className="size-[18px] rounded-[5px] grid place-items-center text-white font-bold text-[10px] shrink-0"
+          className="size-[18px] rounded-[5px] grid place-items-center text-white shrink-0"
           style={{
             background:
               'linear-gradient(135deg, var(--color-accent) 0%, oklch(0.72 0.12 calc(var(--accent-h) + 40)) 100%)',
             boxShadow: '0 1px 2px rgba(0,0,0,0.15)',
           }}
         >
-          T
+          <svg viewBox="0 0 32 32" className="size-[12px]" fill="none" stroke="currentColor" strokeWidth="3" strokeLinejoin="round" strokeLinecap="round">
+            <path d="M5 23 L12 12 L16 17 L21 7 L27 23" />
+          </svg>
         </div>
         <span className="text-[13px] font-semibold">TaskTrekker</span>
       </Link>
