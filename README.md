@@ -185,22 +185,21 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 
 ### Maybe Later
 
-- Filter on multiple labels is done clientside, it messes with the infinite scroll. Add pg procedure to handle this?
 - Group components into folders (FilterTab and components, icons/pills? Dropdowns?)
 - CSS Cleanup.
 - Alphabetic sorting of labels everywhere in UI lists.
 - check if avatar url is used, seems like placeholeder is always generated
 - mobile responsiveness
-- Change filter by priority to multiselect - spec seems to imply that.
 
 
 ### Punted (would do with more time)
 
-- Auth: Supabase Auth with OAuth, RLS policies. Current TODO on top: remove the first-seeded-user fallback that stands in for "me" until auth exists.
 - Read/unread comment count on issue list.
 - Create label after search should prepopulate with search text.
 - Command palette and a broader keyboard-shortcut layer.
 
 ## Tools
 
-Built with Claude Code as a development partner. Used for accelerating boilerplate, researching the Relay/pg_graphql integration, brainstorming.
+- Claude Code as a development partner -- accelerating boilerplate, researching the Relay/pg_graphql integration, brainstorming.
+- Claude Design for better than nothing UI design (that's why font sizes are chaotic).
+- Codex and Gemini for sanity-checking, code review and consensus on modern best practices.
