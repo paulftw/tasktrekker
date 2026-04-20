@@ -178,7 +178,6 @@ The short-ID and per-issue numbering work (`/issues/3`, `#comment-3`) is where I
 
 ### Maybe Later
 
-- remove label does not propagate cross browser tabs.
 - Filter on multiple labels is done clientside, it messes with the infinite scroll. Add pg procedure to handle this?
 - Group components into folders (FilterTab and components, icons/pills? Dropdowns?)
 - Cleanup CSS.
