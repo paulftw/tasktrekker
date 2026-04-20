@@ -1,7 +1,9 @@
 import Link from 'next/link';
-import type { ReactNode } from 'react';
+import { Suspense, type ReactNode } from 'react';
 import { CreateIssueLauncher } from './CreateIssueLauncher';
+import { CurrentUserMenu } from './CurrentUserMenu';
 import { RealtimeIndicator } from './RealtimeIndicator';
+import { UserAvatar } from './UserAvatar';
 
 export function AppShell({ children }: { children: ReactNode }) {
   return (
@@ -33,6 +35,9 @@ function Topbar() {
       </Link>
       <div className="ml-auto flex items-center gap-1.5">
         <RealtimeIndicator />
+        <Suspense fallback={<UserAvatar user={null} size={22} />}>
+          <CurrentUserMenu />
+        </Suspense>
         <CreateIssueLauncher />
       </div>
     </header>
