@@ -1,4 +1,4 @@
-# TaskTrekker
+# <img src="./src/app/icon.svg" width="32" valign="middle" alt=""/> TaskTrekker
 
 > **Live:** https://tasktrekker-drab.vercel.app
 > **Repo:** https://github.com/paulftw/tasktrekker
