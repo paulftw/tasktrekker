@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d60afdaaddfd7de4e59d5ad7e280ec46>>
+ * @generated SignedSource<<38496ccb9e3680301c41456e77e0f517>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -141,15 +141,22 @@ v4 = {
   "name": "first",
   "variableName": "first"
 },
-v5 = {
-  "kind": "Literal",
-  "name": "orderBy",
-  "value": [
-    {
-      "name": "AscNullsLast"
-    }
-  ]
-},
+v5 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 100
+  },
+  {
+    "kind": "Literal",
+    "name": "orderBy",
+    "value": [
+      {
+        "name": "AscNullsLast"
+      }
+    ]
+  }
+],
 v6 = {
   "alias": null,
   "args": null,
@@ -185,9 +192,7 @@ v9 = [
 ],
 v10 = {
   "alias": null,
-  "args": [
-    (v5/*: any*/)
-  ],
+  "args": (v5/*: any*/),
   "concreteType": "labelsConnection",
   "kind": "LinkedField",
   "name": "labelsCollection",
@@ -215,7 +220,7 @@ v10 = {
       "storageKey": null
     }
   ],
-  "storageKey": "labelsCollection(orderBy:[{\"name\":\"AscNullsLast\"}])"
+  "storageKey": "labelsCollection(first:100,orderBy:[{\"name\":\"AscNullsLast\"}])"
 },
 v11 = {
   "alias": null,
@@ -226,14 +231,7 @@ v11 = {
 },
 v12 = {
   "alias": null,
-  "args": [
-    {
-      "kind": "Literal",
-      "name": "first",
-      "value": 100
-    },
-    (v5/*: any*/)
-  ],
+  "args": (v5/*: any*/),
   "concreteType": "usersConnection",
   "kind": "LinkedField",
   "name": "usersCollection",
@@ -507,16 +505,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "8ab1d547ce64cd1b0008dd2777ffe009",
+    "cacheID": "360a900b676e85f275316177ebb2ce0f",
     "id": null,
     "metadata": {},
     "name": "IssueListQuery",
     "operationKind": "query",
-    "text": "query IssueListQuery(\n  $first: Int!\n  $cursor: Cursor\n  $filter: issuesFilter\n) {\n  ...IssueList_query_ui5P\n  labelsCollection(orderBy: [{name: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        name\n        color\n      }\n    }\n  }\n  usersCollection(first: 100, orderBy: [{name: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        id\n        name\n        avatar_url\n      }\n    }\n  }\n}\n\nfragment IssueList_query_ui5P on Query {\n  issuesCollection(first: $first, after: $cursor, filter: $filter, orderBy: [{created_at: DescNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        title\n        status\n        priority\n        assignee: users {\n          name\n          avatar_url\n          nodeId\n        }\n        issue_labelsCollection(first: 10) {\n          edges {\n            node {\n              nodeId\n              labels {\n                nodeId\n                number\n                name\n                color\n              }\n            }\n          }\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n"
+    "text": "query IssueListQuery(\n  $first: Int!\n  $cursor: Cursor\n  $filter: issuesFilter\n) {\n  ...IssueList_query_ui5P\n  labelsCollection(first: 100, orderBy: [{name: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        name\n        color\n      }\n    }\n  }\n  usersCollection(first: 100, orderBy: [{name: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        id\n        name\n        avatar_url\n      }\n    }\n  }\n}\n\nfragment IssueList_query_ui5P on Query {\n  issuesCollection(first: $first, after: $cursor, filter: $filter, orderBy: [{created_at: DescNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        title\n        status\n        priority\n        assignee: users {\n          name\n          avatar_url\n          nodeId\n        }\n        issue_labelsCollection(first: 10) {\n          edges {\n            node {\n              nodeId\n              labels {\n                nodeId\n                number\n                name\n                color\n              }\n            }\n          }\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "78549f036b4810294cb0106ae57ec789";
+(node as any).hash = "4861b0e34776b98bd383eb9f4155650a";
 
 export default node;

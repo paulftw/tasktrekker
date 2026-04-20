@@ -11,9 +11,9 @@ const supabase = createClient(
 
 test('issue list infinite scroll loads more issues', async ({ page }) => {
   const prefix = `PaginationTest_${Date.now()}`;
-  
-  // We create 21 issues to ensure we exceed the 20 items limit
-  const newIssues = Array.from({ length: 21 }).map((_, i) => ({
+
+  // Create more than IssueList's page size (30) so the second page exists.
+  const newIssues = Array.from({ length: 31 }).map((_, i) => ({
     title: `${prefix} Issue ${i + 1}`,
     description: 'Test issue for pagination',
     status: 'todo',
@@ -34,14 +34,12 @@ test('issue list infinite scroll loads more issues', async ({ page }) => {
   const trigger = page.locator('.h-4.w-full');
   await trigger.scrollIntoViewIfNeeded();
 
-  // Verify that the 21st issue is loaded eventually
-  // Note: we created them in bulk, the ordering by created_at might be arbitrary if timestamps are identical
-  // However, pg_graphql will return 20, and the 21st will be on page 2.
-  // We can just verify that 21 instances of the prefix exist in the page.
+  // All 31 test-created issues should be visible after scrolling past the
+  // first page boundary (page size 30 + cursor-paginated next page).
   await expect(async () => {
     const count = await page.getByText(new RegExp(`${prefix} Issue \\d+`)).count();
-    expect(count).toBeGreaterThanOrEqual(21);
-  }).toPass({ timeout: 5000 });
+    expect(count).toBeGreaterThanOrEqual(31);
+  }).toPass({ timeout: 10_000 });
 });
 
 test('comment list load more button loads older comments', async ({ page }) => {
@@ -67,8 +65,8 @@ test('comment list load more button loads older comments', async ({ page }) => {
   if (!users || users.length === 0) throw new Error('No users available for comment pagination test');
   const authorId = users[0].id;
 
-  // Create 11 comments
-  const newComments = Array.from({ length: 11 }).map((_, i) => ({
+  // Exceed IssueComments' page size (30) by one so a second page exists.
+  const newComments = Array.from({ length: 31 }).map((_, i) => ({
     issue_id: issue.id,
     author_id: authorId,
     body: `${prefix} Comment ${i + 1}`,
@@ -79,14 +77,14 @@ test('comment list load more button loads older comments', async ({ page }) => {
 
   await page.goto(`/issues/${issue.id}`);
 
-  // Exactly 10 comments should be visible initially (our page size)
-  await expect(page.getByText(new RegExp(`${prefix} Comment \\d+`))).toHaveCount(10);
+  // Exactly one page's worth of comments should be visible initially.
+  await expect(page.getByText(new RegExp(`${prefix} Comment \\d+`))).toHaveCount(30);
 
   const loadMoreBtn = page.getByRole('button', { name: 'Load more comments' });
   await expect(loadMoreBtn).toBeVisible();
-  
+
   await loadMoreBtn.click();
-  
-  // All 11 comments should become visible
-  await expect(page.getByText(new RegExp(`${prefix} Comment \\d+`))).toHaveCount(11);
+
+  // After clicking, all 31 should be visible.
+  await expect(page.getByText(new RegExp(`${prefix} Comment \\d+`))).toHaveCount(31);
 });

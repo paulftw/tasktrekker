@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f055e9d90ed8786c4ac0187e02f4d6ca>>
+ * @generated SignedSource<<6d3602cf32df6fc701904a1252d63942>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -162,7 +162,7 @@ v17 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 10
+    "value": 30
   },
   {
     "kind": "Literal",
@@ -478,7 +478,7 @@ return {
                         "storageKey": null
                       }
                     ],
-                    "storageKey": "commentsCollection(first:10,orderBy:[{\"number\":\"AscNullsLast\"}])"
+                    "storageKey": "commentsCollection(first:30,orderBy:[{\"number\":\"AscNullsLast\"}])"
                   },
                   {
                     "alias": null,
@@ -603,12 +603,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "91480d477e491700a110157b9a03f390",
+    "cacheID": "84001e541f1ba64832c2874f66f594e9",
     "id": null,
     "metadata": {},
     "name": "IssueDetailQuery",
     "operationKind": "query",
-    "text": "query IssueDetailQuery(\n  $number: Int!\n) {\n  issuesCollection(filter: {number: {eq: $number}}, first: 1) {\n    edges {\n      node {\n        nodeId\n        ...IssueHeader_issue\n        ...IssueDescription_issue\n        ...IssueSidebar_issue\n        ...IssueComments_issue\n      }\n    }\n  }\n  ...IssueSidebar_query\n  ...IssueComments_query\n}\n\nfragment IssueComments_issue on issues {\n  nodeId\n  number\n  commentsCollection(first: 10, orderBy: [{number: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        body\n        created_at\n        author: users {\n          name\n          avatar_url\n          nodeId\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n\nfragment IssueComments_query on Query {\n  firstUser: usersCollection(first: 1, orderBy: [{name: AscNullsLast}]) {\n    edges {\n      node {\n        id\n        nodeId\n      }\n    }\n  }\n}\n\nfragment IssueDescription_issue on issues {\n  nodeId\n  number\n  description\n}\n\nfragment IssueHeader_issue on issues {\n  nodeId\n  number\n  title\n}\n\nfragment IssueSidebar_issue on issues {\n  nodeId\n  number\n  status\n  priority\n  created_at\n  assignee_id\n  assignee: users {\n    nodeId\n    id\n    name\n    avatar_url\n  }\n  issue_labelsCollection(first: 100) {\n    edges {\n      node {\n        nodeId\n        labels {\n          nodeId\n          number\n          name\n          color\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment IssueSidebar_query on Query {\n  usersCollection(first: 100, orderBy: [{name: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        id\n        name\n        avatar_url\n      }\n    }\n  }\n  labelsCollection(first: 100, orderBy: [{name: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "query IssueDetailQuery(\n  $number: Int!\n) {\n  issuesCollection(filter: {number: {eq: $number}}, first: 1) {\n    edges {\n      node {\n        nodeId\n        ...IssueHeader_issue\n        ...IssueDescription_issue\n        ...IssueSidebar_issue\n        ...IssueComments_issue\n      }\n    }\n  }\n  ...IssueSidebar_query\n  ...IssueComments_query\n}\n\nfragment IssueComments_issue on issues {\n  nodeId\n  number\n  commentsCollection(first: 30, orderBy: [{number: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        body\n        created_at\n        author: users {\n          name\n          avatar_url\n          nodeId\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n\nfragment IssueComments_query on Query {\n  firstUser: usersCollection(first: 1, orderBy: [{name: AscNullsLast}]) {\n    edges {\n      node {\n        id\n        nodeId\n      }\n    }\n  }\n}\n\nfragment IssueDescription_issue on issues {\n  nodeId\n  number\n  description\n}\n\nfragment IssueHeader_issue on issues {\n  nodeId\n  number\n  title\n}\n\nfragment IssueSidebar_issue on issues {\n  nodeId\n  number\n  status\n  priority\n  created_at\n  assignee_id\n  assignee: users {\n    nodeId\n    id\n    name\n    avatar_url\n  }\n  issue_labelsCollection(first: 100) {\n    edges {\n      node {\n        nodeId\n        labels {\n          nodeId\n          number\n          name\n          color\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment IssueSidebar_query on Query {\n  usersCollection(first: 100, orderBy: [{name: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        id\n        name\n        avatar_url\n      }\n    }\n  }\n  labelsCollection(first: 100, orderBy: [{name: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();

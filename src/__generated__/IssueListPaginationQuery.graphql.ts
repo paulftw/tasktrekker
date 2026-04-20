@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a4d31b4a90d09a9436c9f1be83d77d56>>
+ * @generated SignedSource<<165bc8d4fd17ac1adc7b77add47d5d55>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -108,7 +108,7 @@ var v0 = [
     "name": "filter"
   },
   {
-    "defaultValue": 20,
+    "defaultValue": 30,
     "kind": "LocalArgument",
     "name": "first"
   }
@@ -382,16 +382,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "8f26bc71d61287d3585477f1180b603c",
+    "cacheID": "4622ce9e3f4766623aee751442b6daff",
     "id": null,
     "metadata": {},
     "name": "IssueListPaginationQuery",
     "operationKind": "query",
-    "text": "query IssueListPaginationQuery(\n  $cursor: Cursor\n  $filter: issuesFilter\n  $first: Int = 20\n) {\n  ...IssueList_query_ui5P\n}\n\nfragment IssueList_query_ui5P on Query {\n  issuesCollection(first: $first, after: $cursor, filter: $filter, orderBy: [{created_at: DescNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        title\n        status\n        priority\n        assignee: users {\n          name\n          avatar_url\n          nodeId\n        }\n        issue_labelsCollection(first: 10) {\n          edges {\n            node {\n              nodeId\n              labels {\n                nodeId\n                number\n                name\n                color\n              }\n            }\n          }\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n"
+    "text": "query IssueListPaginationQuery(\n  $cursor: Cursor\n  $filter: issuesFilter\n  $first: Int = 30\n) {\n  ...IssueList_query_ui5P\n}\n\nfragment IssueList_query_ui5P on Query {\n  issuesCollection(first: $first, after: $cursor, filter: $filter, orderBy: [{created_at: DescNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        title\n        status\n        priority\n        assignee: users {\n          name\n          avatar_url\n          nodeId\n        }\n        issue_labelsCollection(first: 10) {\n          edges {\n            node {\n              nodeId\n              labels {\n                nodeId\n                number\n                name\n                color\n              }\n            }\n          }\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "94d18e6e2a04fce128de414230e06652";
+(node as any).hash = "50c2ca88d3f7bcb4f4917f6b97183a08";
 
 export default node;

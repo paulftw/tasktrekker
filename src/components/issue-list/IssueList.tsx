@@ -15,11 +15,14 @@ import { FilterBar } from './FilterBar';
 import type { IssueStatus, IssuePriority } from '@/types/enums';
 import type { IssueListQuery } from '@/__generated__/IssueListQuery.graphql';
 
+// Page size is pinned to 30 because pg_graphql caps collection pagination at
+// that many rows per request by default. Raising it would require a table
+// comment like @graphql({"max_rows": N}) applied to the demo Supabase.
 const fragment = graphql`
   fragment IssueList_query on Query
   @refetchable(queryName: "IssueListPaginationQuery")
   @argumentDefinitions(
-    first: { type: "Int", defaultValue: 20 }
+    first: { type: "Int", defaultValue: 30 }
     cursor: { type: "Cursor" }
     filter: { type: "issuesFilter" }
   ) {
@@ -62,7 +65,7 @@ const fragment = graphql`
 const query = graphql`
   query IssueListQuery($first: Int!, $cursor: Cursor, $filter: issuesFilter) {
     ...IssueList_query @arguments(first: $first, cursor: $cursor, filter: $filter)
-    labelsCollection(orderBy: [{ name: AscNullsLast }]) {
+    labelsCollection(first: 100, orderBy: [{ name: AscNullsLast }]) {
       edges {
         node {
           nodeId
@@ -86,7 +89,7 @@ const query = graphql`
 `;
 
 const DEFAULT_COLLAPSED: IssueStatus[] = ['done', 'cancelled'];
-const ISSUE_PAGE_SIZE = 20;
+const ISSUE_PAGE_SIZE = 30;
 
 import type { IssueList_query$data, IssueList_query$key } from '@/__generated__/IssueList_query.graphql';
 import type { IssueListPaginationQuery } from '@/__generated__/IssueListPaginationQuery.graphql';

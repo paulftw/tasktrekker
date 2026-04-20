@@ -11,13 +11,16 @@ import type { IssueComments_query$key } from '@/__generated__/IssueComments_quer
 import { usePlatformEditorHint } from '@/lib/usePlatformEditorHint';
 import type { IssueCommentsAddMutation } from '@/__generated__/IssueCommentsAddMutation.graphql';
 
-const COMMENTS_PAGE_SIZE = 10;
+// Capped at 30 to match pg_graphql's default collection page size (see the
+// matching note in IssueList.tsx). Raising it requires a table-level
+// @graphql({"max_rows": N}) directive applied to the demo Supabase.
+const COMMENTS_PAGE_SIZE = 30;
 
 const issueFragment = graphql`
   fragment IssueComments_issue on issues
   @refetchable(queryName: "IssueCommentsPaginationQuery")
   @argumentDefinitions(
-    count: { type: "Int", defaultValue: 10 }
+    count: { type: "Int", defaultValue: 30 }
     cursor: { type: "Cursor" }
   ) {
     nodeId

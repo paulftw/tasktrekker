@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b838ef8146b7d2fffc833c3ab9c713c3>>
+ * @generated SignedSource<<f981647f73d6dcb9c00c26d014a21a55>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -28,7 +28,7 @@ export type IssueCommentsPaginationQuery = {
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
-    "defaultValue": 10,
+    "defaultValue": 30,
     "kind": "LocalArgument",
     "name": "count"
   },
@@ -277,16 +277,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "9cc8f38be490f119449a374ed4c2f755",
+    "cacheID": "9ebeb8ad2498f6a95f5039c2ea492d05",
     "id": null,
     "metadata": {},
     "name": "IssueCommentsPaginationQuery",
     "operationKind": "query",
-    "text": "query IssueCommentsPaginationQuery(\n  $count: Int = 10\n  $cursor: Cursor\n  $nodeId: ID!\n) {\n  node(nodeId: $nodeId) {\n    __typename\n    ...IssueComments_issue_1G22uz\n    nodeId\n  }\n}\n\nfragment IssueComments_issue_1G22uz on issues {\n  nodeId\n  number\n  commentsCollection(first: $count, after: $cursor, orderBy: [{number: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        body\n        created_at\n        author: users {\n          name\n          avatar_url\n          nodeId\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n"
+    "text": "query IssueCommentsPaginationQuery(\n  $count: Int = 30\n  $cursor: Cursor\n  $nodeId: ID!\n) {\n  node(nodeId: $nodeId) {\n    __typename\n    ...IssueComments_issue_1G22uz\n    nodeId\n  }\n}\n\nfragment IssueComments_issue_1G22uz on issues {\n  nodeId\n  number\n  commentsCollection(first: $count, after: $cursor, orderBy: [{number: AscNullsLast}]) {\n    edges {\n      node {\n        nodeId\n        number\n        body\n        created_at\n        author: users {\n          name\n          avatar_url\n          nodeId\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "37327b2bff6332f12d7eb5b2fe2e2aa2";
+(node as any).hash = "b4429c65616e7dfc4ef257ad6410cc04";
 
 export default node;

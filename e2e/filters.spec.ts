@@ -1,4 +1,13 @@
 import { expect, test } from '@playwright/test';
+import * as dotenv from 'dotenv';
+import { createClient } from '@supabase/supabase-js';
+
+dotenv.config({ path: '.env.local' });
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+);
 
 test('filters update URL and issue list', async ({ page }) => {
   await page.goto('/');
@@ -88,18 +97,38 @@ test('label filter options are searchable', async ({ page }) => {
 
   await labelMenu.getByRole('menuitemcheckbox', { name: 'docs' }).click();
   await expect(page).toHaveURL(/\?.*label=docs/);
+  // Close the menu: Radix applies aria-hidden to sibling content while a
+  // menu is open, which suppresses accessible names and roles in the
+  // FilterBar behind it. Assertions on the docs chip need the menu closed.
+  await page.keyboard.press('Escape');
   await expect(page.getByRole('button', { name: /^docs/i })).toBeVisible();
 });
 
-// Known flake in full-suite runs: pagination.spec.ts seeds 21+ unassigned
-// issues newer than the seed, pushing Alice's 2 seeded issues off the first
-// page (page size 20). Filter logic is correct — passes in isolation and when
-// pagination.spec.ts is excluded. Real fix is pagination-spec cleanup.
 test('assignee filter supports unassigned and selected users together', async ({ page }) => {
+  // Guarantee an Alice-assigned issue lands on page 1. The shared demo DB
+  // accumulates unassigned issues from pagination tests, pushing Alice's seed
+  // issues past pg_graphql's 30-row cap on the first page.
+  const { data: alice, error: aliceError } = await supabase
+    .from('users')
+    .select('id')
+    .eq('name', 'Alice Johnson')
+    .single();
+  expect(aliceError).toBeNull();
+  const { error: issueError } = await supabase.from('issues').insert({
+    title: `AssigneeFilterTest_${Date.now()}`,
+    description: 'Fresh Alice-assigned issue for assignee filter test',
+    status: 'todo',
+    priority: 'low',
+    assignee_id: alice!.id,
+  });
+  expect(issueError).toBeNull();
+
   await page.goto('/');
   await page.waitForLoadState('networkidle');
 
-  const assigneeTrigger = page.getByRole('button', { name: /^Assignee/i });
+  // The Assignee chip's text swaps from "Assignee" to the selected value once
+  // an option is checked, so target it by position rather than accessible name.
+  const assigneeTrigger = page.locator('button.chip').first();
   await expect(assigneeTrigger).toBeVisible();
   await assigneeTrigger.click();
 
@@ -108,6 +137,9 @@ test('assignee filter supports unassigned and selected users together', async ({
 
   await assigneeMenu.getByRole('menuitemcheckbox', { name: 'Unassigned' }).click();
   await expect(page).toHaveURL(/\?.*assignee=unassigned/);
+  // Close the menu — Radix applies aria-hidden to sibling content while a
+  // menu is open, which makes issue-row accessible names come back empty.
+  await page.keyboard.press('Escape');
 
   const issueLinks = page.locator('a[href^="/issues/"]');
   const totalAfterUnassigned = await issueLinks.count();
@@ -116,9 +148,11 @@ test('assignee filter supports unassigned and selected users together', async ({
     await expect(issueLinks.nth(i)).toHaveAccessibleName(/Unassigned/);
   }
 
+  await assigneeTrigger.click();
   const searchInput = page.getByRole('textbox', { name: 'Search assignees' });
   await searchInput.fill('alice');
   await assigneeMenu.getByRole('menuitemcheckbox', { name: 'Alice Johnson' }).click();
+  await page.keyboard.press('Escape');
 
   const totalAfterBoth = await issueLinks.count();
   expect(totalAfterBoth).toBeGreaterThanOrEqual(totalAfterUnassigned);
@@ -130,6 +164,23 @@ test('assignee filter supports unassigned and selected users together', async ({
 });
 
 test('assignee filter shows assigned to me shortcut only before searching', async ({ page }) => {
+  // "Assigned to me" resolves to the first user (Alice) — same pollution
+  // concern as the sibling test above.
+  const { data: alice, error: aliceError } = await supabase
+    .from('users')
+    .select('id')
+    .eq('name', 'Alice Johnson')
+    .single();
+  expect(aliceError).toBeNull();
+  const { error: issueError } = await supabase.from('issues').insert({
+    title: `AssignedToMeTest_${Date.now()}`,
+    description: 'Fresh Alice-assigned issue for assigned-to-me test',
+    status: 'todo',
+    priority: 'low',
+    assignee_id: alice!.id,
+  });
+  expect(issueError).toBeNull();
+
   await page.goto('/');
   await page.waitForLoadState('networkidle');
 
@@ -158,5 +209,7 @@ test('assignee filter shows assigned to me shortcut only before searching', asyn
   await searchInput.clear();
   await assignedToMe.click();
   await expect(page).toHaveURL(/\?.*assignee=/);
+  // Close the menu — see the note in the Unassigned + Alice test above.
+  await page.keyboard.press('Escape');
   await expect(page.getByRole('link', { name: /Alice Johnson/ }).first()).toBeVisible();
 });
