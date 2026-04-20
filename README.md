@@ -18,7 +18,7 @@ A minimal issue tracker. Next.js, Relay, Supabase/pg_graphql, TypeScript strict,
 ## Setup
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/paulftw/tasktrekker.git
 cd TaskTrekker
 npm install
 ```
